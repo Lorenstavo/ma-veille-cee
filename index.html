@@ -1,0 +1,1722 @@
+<!doctype html><html><head><!-- frame-runtime --><script>window.__FRAME_PREAMBLE={"capabilities":{"comments":"comments.BaoaqR_K.js","db":"db.CfOZ1CRq.js","downloads":"downloads.BXsoAvg9.js","mcp":"mcp.CYSdpjo0.js","permissions":"permissions.DdITF2Mk.js","self":"self.DtZoNC4q.js","user":"user.Cr_h1ETf.js"},"transforms":"_transforms.VaITkagF.js","comments":"_comments.zwwDucaS.js","translate":"_translate.BOzFH2D9.js"}</script><script>(function(){"use strict";var re=["light","dark","system"];function ne(e){if(e===null||typeof e!="object")return!1;const t=e.__frame_init;return t!==null&&typeof t=="object"}function Y(e){return e!==null&&typeof e=="object"&&e.__frame_size_poke===!0}function se(e){if(e===null||typeof e!="object")return!1;const t=e.__frame_theme;if(t===null||typeof t!="object")return!1;const n=t.theme;return typeof n=="string"&&re.includes(n)}function oe(e){try{typeof reportError=="function"?reportError(e):setTimeout(()=>{throw e},0)}catch{}}var K=Object.freeze(Object.assign(Object.create(null),{user:Object.freeze(Object.assign(Object.create(null),{id:null,isOwner:!1,canEdit:!1,name:null,avatarUrl:null,email:null}))})),ie={};function x(e){if(window===top||e.type==="auxclick"&&e.button!==1)return;const t=e.composedPath?e.composedPath():[e.target];let n=null;for(let m=0;m<t.length;m++){const f=t[m];if(f&&f.matches&&f.matches("a[href],area[href]")){n=f;break}}if(!n&&e.target&&e.target.closest&&(n=e.target.closest("a[href],area[href]")),!n)return;const u=n.getAttribute("href");if(!u)return;let i,s;try{i=new URL(u,document.baseURI),s=new URL(document.baseURI).origin}catch{return}(i.protocol==="http:"||i.protocol==="https:")&&i.origin!==s&&(e.preventDefault(),parent.postMessage({__frame_nav:!0,url:i.href},"*"))}var J={};function I(e){if(window===top)return;const t=Date.now();t-(J[e]||0)<500||(J[e]=t,parent.postMessage({__frame_engaged:!0,kind:e},"*"))}var ae=2e3,G=["wheel","touchstart","touchmove","keydown","pointerdown"],X=0;function ce(e){e.isTrusted&&(X=Date.now())}function le(){addEventListener("click",x,!0),addEventListener("auxclick",x,!0)}function ue(){for(let e=0;e<G.length;e++)addEventListener(G[e],ce,{capture:!0,passive:!0});addEventListener("scroll",e=>{e.isTrusted&&Date.now()-X<ae&&I("scroll")},{capture:!0,passive:!0}),addEventListener("pointermove",e=>{e.isTrusted&&I("pointer")},{capture:!0,passive:!0}),addEventListener("click",e=>{e.isTrusted&&I("click")},{capture:!0,passive:!0})}var D="__frame_scroll",fe=150,de=310,pe=160,me=3e4;function he(){let e=0,t=!1,n=!1,u=!1,i=0,s=null;const m=l=>{try{sessionStorage.setItem(D,JSON.stringify({y:l}))}catch{}},f=()=>{if(clearTimeout(e),s===null)return;const l=s;s=null,m(l)},_=()=>{if(t){t=!1;return}n=!0,s=scrollY,clearTimeout(e),e=setTimeout(f,fe)};try{addEventListener("scroll",_,{passive:!0}),addEventListener("pagehide",f)}catch{}const y=()=>{let l;try{l=sessionStorage.getItem(D)}catch{return null}if(l===null)return null;let a;try{a=JSON.parse(l)}catch{a=null}const p=a?.y;if(!(typeof p=="number"&&Number.isFinite(p)&&p>=0)){try{sessionStorage.removeItem(D)}catch{}return null}return p};let o=!1;const c=l=>{try{const a=scrollY;scrollTo({top:l,left:0,behavior:"instant"}),i=l,u=!0,clearTimeout(e),s=null,m(l);const p=scrollY;p!==a&&(t=!0),p!==l&&!o&&(o=!0,addEventListener("load",()=>{try{if(scrollY===p){const g=y();c(g!==null?g:i)}}catch{}},{once:!0}))}catch{}},d=()=>{try{return!!location.hash}catch{return!0}};let h=!1;const v=()=>{try{if(h||innerWidth>de||innerHeight>pe)return;h=!0;const l=Date.now(),a=()=>{try{removeEventListener("resize",a)}catch{}if(Date.now()-l>me||n||d())return;const p=y();c(p!==null?p:i)};addEventListener("resize",a)}catch{}};let w=!1,S=!1;return{restore(){if(w||(w=!0,d()))return;const l=y();l!==null&&(c(l),v())},promoted(){if(S||(S=!0,d()))return;const l=y();l!==null?(c(l),v()):u&&c(i)}}}function ge(e,t,n){const u=[...t.values()].filter(i=>i.targets.some(s=>s.startsWith(e+".")));return{wrap(i,s){const m=`${e}.${i}`,f=u.filter(_=>_.targets.includes(m));return f.length===0?(..._)=>{try{return s(..._)}catch(y){return Promise.reject(y)}}:(..._)=>{let y=_;for(const c of f){const d=c.module.parameters;if(d)try{y=d(y)}catch{return Promise.reject({code:"transform_error",id:c.id,scope:e,message:"parameters transform failed"})}}let o;try{o=s(...y)}catch(c){o=Promise.reject(c)}return o.then(c=>{for(let d=f.length-1;d>=0;d--){const h=f[d],v=h.module.returns;if(v)try{c=v(c)}catch{return n({id:h.id,scope:e,leg:"returns"}),c}}return c},c=>{for(let d=f.length-1;d>=0;d--){const h=f[d],v=h.module.throws;if(v)try{c=v(c)}catch{return n({id:h.id,scope:e,leg:"throws"}),Promise.reject(c)}}return Promise.reject(c)})}}}}function ve(e,t,n,u=()=>{}){const i=new Set(e.changes??[]),s=new Map;for(const m of i){const f=t[m];f&&s.set(m,f)}return{contract:e.contract,changes:i,flags:new Set(e.flags??[]),capabilities:e.capabilities??{},capBudgets:e.capBudgets??{},transforms:s,shellOrigin:n.shellOrigin,mount:n.mount,pipe:m=>ge(m,s,u)}}var Oe="modulepreload",Se=function(e){return"/"+e},Ae={},_e=function(t,n,u){let i=Promise.resolve();function s(m){const f=new Event("vite:preloadError",{cancelable:!0});if(f.payload=m,window.dispatchEvent(f),!f.defaultPrevented)throw m}return i.then(m=>{for(const f of m||[])f.status==="rejected"&&s(f.reason);return t().catch(s)})};(function(){const e=Object.defineProperty,t=globalThis,n=["RTCPeerConnection","webkitRTCPeerConnection","RTCDataChannel","RTCIceCandidate","RTCSessionDescription","RTCRtpSender","RTCRtpReceiver"];let u=0;for(let i=0;i<n.length;i++){const s=n[i];try{e(t,s,{value:void 0,writable:!1,configurable:!1})}catch{try{delete t[s]}catch{}try{e(t,s,{value:void 0,writable:!1,configurable:!0})}catch{}}typeof t[s]=="function"&&u++}if(u&&window!==top)try{parent.postMessage({__frame_rtc_lockdown_failed:u},"*")}catch{}})();var ye=1e4,be=Object.freeze([...window.__FRAME_PREAMBLE?.origins??["https://claude.ai","https://preview.claude.ai"]]);function Q(e){for(const t of be)if(t.endsWith(":*"))try{const n=new URL(e);if(`${n.protocol}//${n.hostname}:*`===t)return!0}catch{}else if(e===t)return!0;return!1}var k=Object.freeze({...window.__FRAME_PREAMBLE?.capabilities}),q=window.__FRAME_PREAMBLE?.transforms,z=window.__FRAME_PREAMBLE?.comments,B=window.__FRAME_PREAMBLE?.translate,C=/^[\w.-]+\.js$/,Ee=/^[a-z][a-z0-9_-]{0,63}$/,V=null,R=null;function $(e,t,n){try{Object.defineProperty(e,t,{value:n,writable:!1,configurable:!1,enumerable:!0})}catch{try{Object.defineProperty(e,t,{value:n,writable:!1,configurable:!0,enumerable:!0})}catch{}}}var F=!1;function Z(e){const t=document.documentElement;e==="light"||e==="dark"?(t.dataset.theme=e,t.style.colorScheme=e,F=!0):F&&(delete t.dataset.theme,t.style.colorScheme="",F=!1)}var ee=256,L=Object.assign(Object.create(null),{mcp:Object.assign(Object.create(null),{watchTool:{handlerArg:3}})}),M=new Map;function te(e,t){const n=M.get(e);if(!n)return;const u=Object.assign(Object.create(null),t);Object.assign(n.impl,u),n.impl.__settled=()=>Promise.reject({code:"capability_removed",message:`${e}: method not in this runtime`});const i=n.queue;n.queue=[];for(const s of i){const m=u[s.method];if(m)if(L[e]?.[s.method])try{s.resolve(m(...s.args))}catch{T(s,L[e][s.method].handlerArg,{code:"transform_error",message:`${e}.${s.method} rejected its arguments`})}else m(...s.args).then(s.resolve,s.reject);else{const f={code:"capability_removed",message:`${e}.${s.method} is not in this runtime`},_=L[e]?.[s.method];if(_){T(s,_.handlerArg,f);continue}s.reject(f)}}}function we(e,t){const n=M.get(e);if(!n)return;n.impl.__settled=()=>Promise.reject(t);const u=n.queue;n.queue=[];for(const i of u){const s=L[e]?.[i.method];if(s){T(i,s.handlerArg,t);continue}i.reject(t)}}function N(e,t){const n=K[e];if(!n){we(e,t);return}te(e,Object.fromEntries(Object.entries(n).map(([u,i])=>[u,()=>Promise.resolve(i)])))}function T(e,t,n){if(e.syncState?.dead)return;const u=e.args[t];typeof u=="function"&&queueMicrotask(()=>{if(!e.syncState?.dead)try{u({type:"error",error:n})}catch(i){oe(i)}})}var H=Object.getOwnPropertyDescriptor(window,"claude");if(window!==top&&!(H&&H.writable===!1)){le(),ue();let e=null;try{e=he()}catch{}const t=H?.value??{};$(window,"claude",t);const n=o=>{const c={impl:Object.create(null),queue:[]};M.set(o,c);const d=c.impl,h=l=>({code:"queue_overflow",message:`${o}.${l}: pre-init call queue is full`}),v=(l,a)=>{if(c.queue.length>=ee){const p=K[o];return p&&l in p?Promise.resolve(p[l]):Promise.reject(h(l))}return new Promise((p,g)=>{c.queue.push({method:l,args:a,resolve:p,reject:g})})},w=ie[o],S=new Proxy(w===void 0?d:(()=>{}),{apply:(l,a,p)=>{const g=w,E=d[g]??d.__settled;return E?E(...p):v(g,p)},get:(l,a)=>{if(typeof a!="string"||a==="then"||a==="toJSON"||a==="valueOf")return;if(a==="toString")return Object.prototype.toString;if(w!==void 0&&(a==="call"||a==="apply"||a==="bind"))return Function.prototype[a];const p=L[o]?.[a];return p?(...g)=>{if(typeof g[p.handlerArg]!="function")throw new TypeError(`${o}.${a} requires a handler function`);const E=d[a];if(E)return E(...g);if(d.__settled){const b={dead:!1},U={args:[...g],syncState:b};return d.__settled().catch(r=>T(U,p.handlerArg,r)),()=>{b.dead=!0}}if(c.queue.length>=ee){const b={dead:!1};return T({args:[...g],syncState:b},p.handlerArg,h(a)),()=>{b.dead=!0}}let A=null;const j={dead:!1};return c.queue.push({method:a,args:g,resolve:b=>{A=typeof b=="function"?b:null,j.dead&&A?.()},reject:()=>{},syncState:j}),()=>{j.dead=!0,A?.()}}:(...g)=>{const E=d[a]??d.__settled;return E?E(...g):v(a,g)}},set:()=>!1});$(t,o,S)};for(const o of Object.keys(k)){if(t[o]!==void 0){$(t,o,t[o]);continue}n(o)}let u=null,i=null,s=0;const m=o=>{o.source!==parent||!Q(o.origin)||ne(o.data)&&(u=o.data.__frame_init,R=o.origin,removeEventListener("message",m),clearTimeout(s),i?.())};addEventListener("message",m),parent.postMessage({__frame_connect:!0},"*");const f=new Promise(o=>{i=o,s=setTimeout(()=>{removeEventListener("message",m),o()},ye)}),_=document.readyState==="loading"?new Promise(o=>document.addEventListener("DOMContentLoaded",()=>o(),{once:!0})):Promise.resolve();_.then(()=>{try{e?.restore()}catch{}});const y=o=>{if(!(o.source!==parent||!Q(o.origin))&&Y(o.data)){removeEventListener("message",y);try{e?.promoted()}catch{}}};addEventListener("message",y),f.then(async()=>{if(!u||!R){for(const r of M.keys())N(r,{code:"not_granted",message:"frame initialization did not arrive - capability unavailable"});return}Z(u.theme);const o=R;let c=!1,d=!1;addEventListener("message",r=>{if(r.source!==parent||r.origin!==o)return;se(r.data)&&Z(r.data.__frame_theme.theme);const O=r.data?.__fc_mode;O&&typeof O=="object"&&!c&&z&&C.test(z)&&(c=!0,h(z).then(W=>W.install?.(o,O.on===!0)).catch(()=>{}));const P=r.data?.__ft_cmd;P&&typeof P=="object"&&!d&&B&&C.test(B)&&(d=!0,h(B).then(W=>W.install?.(o,P)).catch(()=>{}))});const h=r=>_e(()=>import("/_runtime/"+r),void 0),v=Object.keys(u.capabilities??{});for(const r of v)Object.hasOwn(k,r)||Ee.test(r)&&t[r]===void 0&&(n(r),N(r,{code:"capability_disabled",message:"capability not in this runtime generation"}));const w=v.filter(r=>Object.hasOwn(k,r)).map(r=>[r,k[r]]).filter(r=>typeof r[1]=="string"&&C.test(r[1])),[S,...l]=await Promise.allSettled([q&&C.test(q)?h(q):Promise.resolve({}),...w.map(([,r])=>h(r))]),a=R;V=ve(u,S.status==="fulfilled"&&S.value?.TRANSFORMS||{},{shellOrigin:a,mount:te},r=>parent.postMessage({__frame_cap_telemetry:r},a));const p=r=>parent.postMessage({__frame_cap_telemetry:{kind:"cap-load-error",cap:r}},a),g=V;l.forEach((r,O)=>{const P=w[O][0];if(r.status!=="fulfilled"){p(P);return}try{r.value?.install?.(g)}catch{p(P)}});for(const[r,O]of M)if(!(O.queue.length===0&&Object.keys(O.impl).length>0)){if(v.includes(r)){N(r,{code:"capability_disabled",message:"capability not available in this session"});continue}N(r,{code:"not_granted",message:"capability not available in this session"})}await _,parent.postMessage({__frame_ready:!0},R);let E=-1,A=0;const j=()=>{A=0;const r=Math.max(document.documentElement.scrollHeight,document.body?document.body.scrollHeight:0);r!==E&&(E=r,parent.postMessage({__frame_size:!0,h:r},a))},b=()=>{A||(A=setTimeout(j,200))},U=new ResizeObserver(b);U.observe(document.documentElement),document.body&&U.observe(document.body),document.addEventListener("load",b,!0),document.fonts?.ready.then(b,()=>{}),addEventListener("beforeprint",()=>{E=-1,j()}),b(),addEventListener("message",r=>{if(!(r.source!==parent||r.origin!==a)&&Y(r.data)){try{e?.promoted()}catch{}E=-1,b()}})})}})();</script><!-- /frame-runtime --><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}</style></head><body>
+<title>Veille CEE — Registre réglementaire</title>
+<style>
+  :root {
+    --bg: #f6f8fb;
+    --surface: #ffffff;
+    --surface-2: #eef2f8;
+    --ink: #12161d;
+    --ink-muted: #4b5566;
+    --ink-faint: #7c8797;
+    --line: #e3e8f0;
+    --line-strong: #cdd5e3;
+    --primary: #1868db;
+    --primary-strong: #0f4fae;
+    --primary-tint: #e9f1fd;
+    --impact-high: #cf3a2b;
+    --impact-high-tint: #fdece9;
+    --impact-high-line: #f0bcb3;
+    --impact-medium: #a9760a;
+    --impact-medium-tint: #fdf2db;
+    --impact-medium-line: #edcf87;
+    --impact-low: #1f8a4c;
+    --impact-low-tint: #e7f6ec;
+    --impact-low-line: #a9dcbb;
+    --impact-info: #3f68a8;
+    --impact-info-tint: #eaf1fa;
+    --impact-info-line: #bcd0e8;
+    --shadow: 0 2px 10px rgba(18,22,29,.06);
+    --font-ui: "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: "Cascadia Mono", ui-monospace, Consolas, "SFMono-Regular", Menlo, monospace;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1420;
+      --surface: #141c29;
+      --surface-2: #1a2433;
+      --ink: #e8ecf2;
+      --ink-muted: #a7b0bf;
+      --ink-faint: #71798a;
+      --line: #263142;
+      --line-strong: #354258;
+      --primary: #5b9bf5;
+      --primary-strong: #8ec0ff;
+      --primary-tint: #16283f;
+      --impact-high: #e58a7c;
+      --impact-high-tint: #3a2320;
+      --impact-high-line: #5e372f;
+      --impact-medium: #e3ba5c;
+      --impact-medium-tint: #372c12;
+      --impact-medium-line: #5c4a22;
+      --impact-low: #7bc496;
+      --impact-low-tint: #16281d;
+      --impact-low-line: #2e4a35;
+      --impact-info: #90b0dd;
+      --impact-info-tint: #182636;
+      --impact-info-line: #33475f;
+      --shadow: 0 2px 10px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0d1420; --surface: #141c29; --surface-2: #1a2433; --ink: #e8ecf2; --ink-muted: #a7b0bf; --ink-faint: #71798a;
+    --line: #263142; --line-strong: #354258; --primary: #5b9bf5; --primary-strong: #8ec0ff; --primary-tint: #16283f;
+    --impact-high: #e58a7c; --impact-high-tint: #3a2320; --impact-high-line: #5e372f;
+    --impact-medium: #e3ba5c; --impact-medium-tint: #372c12; --impact-medium-line: #5c4a22;
+    --impact-low: #7bc496; --impact-low-tint: #16281d; --impact-low-line: #2e4a35;
+    --impact-info: #90b0dd; --impact-info-tint: #182636; --impact-info-line: #33475f;
+    --shadow: 0 2px 10px rgba(0,0,0,.35);
+  }
+  :root[data-theme="light"] {
+    --bg: #f6f8fb; --surface: #ffffff; --surface-2: #eef2f8; --ink: #12161d; --ink-muted: #4b5566; --ink-faint: #7c8797;
+    --line: #e3e8f0; --line-strong: #cdd5e3; --primary: #1868db; --primary-strong: #0f4fae; --primary-tint: #e9f1fd;
+    --impact-high: #cf3a2b; --impact-high-tint: #fdece9; --impact-high-line: #f0bcb3;
+    --impact-medium: #a9760a; --impact-medium-tint: #fdf2db; --impact-medium-line: #edcf87;
+    --impact-low: #1f8a4c; --impact-low-tint: #e7f6ec; --impact-low-line: #a9dcbb;
+    --impact-info: #3f68a8; --impact-info-tint: #eaf1fa; --impact-info-line: #bcd0e8;
+    --shadow: 0 2px 10px rgba(18,22,29,.06);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-ui);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+
+  a { color: var(--primary-strong); }
+
+  .top-accent { height: 4px; background: var(--primary); }
+
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 20px 96px; }
+
+  /* ---------- Header ---------- */
+  header.top {
+    position: sticky; top: 0; z-index: 5;
+    background: var(--bg);
+    padding: 26px 0 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--primary-strong);
+    background: var(--primary-tint);
+    border-radius: 999px;
+    padding: 4px 10px;
+    margin: 0 0 10px;
+  }
+  h1 {
+    font-family: var(--font-ui);
+    font-weight: 800;
+    font-size: 28px;
+    letter-spacing: -.008em;
+    margin: 0 0 5px;
+    text-wrap: balance;
+    color: var(--ink);
+  }
+  .subhead {
+    color: var(--ink-muted);
+    font-size: 13.5px;
+    margin: 0 0 14px;
+    max-width: 68ch;
+  }
+
+  .trust-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+  .trust-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11.5px; font-weight: 600; color: var(--impact-low);
+    background: var(--impact-low-tint); border: 1px solid var(--impact-low-line);
+    border-radius: 999px; padding: 4px 11px;
+  }
+  .trust-badge .check { font-size: 11px; }
+
+  .meta-strip {
+    display: flex; flex-wrap: wrap; gap: 8px 14px;
+    align-items: center;
+    font-size: 12px;
+    color: var(--ink-muted);
+    padding: 8px 0;
+    border-top: 1px solid var(--line);
+  }
+  .meta-strip time, .meta-strip .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 600; }
+
+  #glossary { margin-top: 2px; }
+  #glossary summary {
+    cursor: pointer; font-size: 12px; color: var(--primary-strong);
+    font-weight: 700; list-style: none; padding: 2px 0;
+  }
+  #glossary summary::-webkit-details-marker { display: none; }
+  #glossary summary::before { content: "Qui fait quoi dans le dispositif CEE ? "; }
+  #glossary summary::after { content: "▾"; display: inline-block; margin-left: 4px; font-size: 9px; }
+  #glossary[open] summary::after { content: "▴"; }
+  .glossary-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px;
+    margin-top: 10px;
+  }
+  .glossary-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 14px 15px; box-shadow: var(--shadow);
+  }
+  .glossary-card .gc-head { display: flex; align-items: center; gap: 9px; margin-bottom: 7px; }
+  .glossary-card h4 {
+    font-family: var(--font-ui); font-weight: 700; font-size: 13.5px; margin: 0; color: var(--ink);
+  }
+  .glossary-card p { margin: 0; font-size: 12px; color: var(--ink-muted); line-height: 1.6; }
+
+  .mono-badge {
+    flex: none; width: 28px; height: 28px; border-radius: 50%;
+    background: var(--primary-tint); color: var(--primary-strong);
+    font-family: var(--font-mono); font-size: 10.5px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    letter-spacing: -.02em;
+  }
+
+  .stats-row {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    margin-top: 16px;
+  }
+  .stat-tile {
+    flex: 1 1 130px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 12px 15px; box-shadow: var(--shadow);
+  }
+  .stat-tile .n { font-family: var(--font-mono); font-size: 21px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1; }
+  .stat-tile .l { font-size: 11px; color: var(--ink-muted); margin-top: 5px; font-weight: 600; }
+  .stat-tile.total .n { color: var(--ink); }
+  .stat-tile.high .n { color: var(--impact-high); }
+  .stat-tile.medium .n { color: var(--impact-medium); }
+  .stat-tile.low .n { color: var(--impact-low); }
+
+  /* ---------- View tabs ---------- */
+  .view-tabs { display: flex; gap: 6px; margin-top: 18px; }
+  .view-tab {
+    font-family: var(--font-ui); font-size: 12.5px; font-weight: 700;
+    padding: 7px 15px; border-radius: 999px; border: 1px solid var(--line);
+    background: var(--surface); color: var(--ink-muted); cursor: pointer;
+  }
+  .view-tab:hover { border-color: var(--primary); color: var(--primary-strong); }
+  .view-tab.active { background: var(--primary); border-color: var(--primary); color: #fff; box-shadow: 0 2px 8px rgba(24,104,219,.22); }
+
+  /* ---------- Filter bar ---------- */
+  .filter-bar {
+    position: sticky; top: 138px; z-index: 4;
+    background: var(--bg);
+    padding: 14px 0 12px;
+    border-bottom: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .filter-row { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
+  .filter-row .label {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: .07em; text-transform: uppercase;
+    color: var(--ink-faint); margin-right: 4px; flex: none;
+  }
+  .chip {
+    font-family: var(--font-ui); font-size: 12px; font-weight: 600;
+    border: 1px solid var(--line); background: var(--surface);
+    color: var(--ink-muted);
+    border-radius: 999px; padding: 5px 13px; cursor: pointer;
+    transition: border-color .12s, color .12s, background .12s, box-shadow .12s;
+  }
+  .chip:hover { border-color: var(--primary); color: var(--primary-strong); }
+  .chip.active { background: var(--primary); border-color: var(--primary); color: #fff; box-shadow: 0 2px 8px rgba(24,104,219,.28); }
+
+  .search-row { display: flex; gap: 8px; align-items: center; }
+  input[type="search"] {
+    flex: 1; min-width: 160px;
+    font-family: var(--font-ui); font-size: 13px;
+    border: 1px solid var(--line); border-radius: var(--radius-sm);
+    background: var(--surface); color: var(--ink);
+    padding: 8px 12px;
+  }
+  input[type="search"]:focus-visible, .chip:focus-visible, button:focus-visible, .item-head:focus-visible {
+    outline: 2px solid var(--primary); outline-offset: 1px;
+  }
+  .btn {
+    font-family: var(--font-ui); font-size: 12.5px; font-weight: 700;
+    border: 1px solid var(--primary); background: var(--primary); color: #fff;
+    border-radius: 999px; padding: 8px 16px; cursor: pointer; white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(24,104,219,.22);
+  }
+  .btn:hover { background: var(--primary-strong); border-color: var(--primary-strong); color: var(--surface); }
+
+  /* ---------- Feed ---------- */
+  .feed { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; }
+  .empty-state {
+    padding: 36px 20px; text-align: center; color: var(--ink-muted);
+    font-size: 13px; border: 1px dashed var(--line-strong); border-radius: var(--radius);
+  }
+
+  .item {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--line-strong);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .item[data-impact="high"] { border-left-color: var(--impact-high); }
+  .item[data-impact="medium"] { border-left-color: var(--impact-medium); }
+  .item[data-impact="low"] { border-left-color: var(--impact-low); }
+  .item[data-impact="info"] { border-left-color: var(--impact-info); }
+
+  .item-head {
+    display: block; width: 100%; text-align: left;
+    background: none; border: none; cursor: pointer;
+    padding: 14px 16px 13px;
+    font-family: inherit; color: inherit;
+  }
+  .item-toprow {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 7px;
+    margin-bottom: 7px;
+  }
+  time.item-date {
+    font-family: var(--font-mono); font-size: 11.5px; font-variant-numeric: tabular-nums;
+    color: var(--ink-muted); font-weight: 600;
+  }
+  .ref-code {
+    font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-faint);
+  }
+  .tag {
+    font-size: 10.5px; font-weight: 700; letter-spacing: .01em;
+    padding: 3px 9px; border-radius: var(--radius-sm); border: 1px solid transparent;
+  }
+  .tag.cat { background: var(--surface-2); color: var(--ink-muted); border-color: var(--line); font-weight: 600; }
+  .tag.impact-high { background: var(--impact-high-tint); color: var(--impact-high); border-color: var(--impact-high-line); }
+  .tag.impact-medium { background: var(--impact-medium-tint); color: var(--impact-medium); border-color: var(--impact-medium-line); }
+  .tag.impact-low { background: var(--impact-low-tint); color: var(--impact-low); border-color: var(--impact-low-line); }
+  .tag.impact-info { background: var(--impact-info-tint); color: var(--impact-info); border-color: var(--impact-info-line); }
+  .tag.new { background: var(--primary); color: #fff; border-radius: 999px; }
+  .tag.status { background: none; color: var(--ink-faint); border-color: var(--line); font-weight: 500; }
+
+  h3.item-title {
+    font-family: var(--font-ui); font-weight: 700; font-size: 16px;
+    margin: 0 0 4px; text-wrap: balance; color: var(--ink); letter-spacing: -.003em;
+  }
+  .item-summary { font-size: 13px; color: var(--ink-muted); margin: 0; max-width: 70ch; }
+
+  .fiches { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+  .fiche-code {
+    font-family: var(--font-mono); font-size: 10.5px;
+    background: var(--surface-2); border: 1px solid var(--line); color: var(--ink-muted);
+    padding: 2px 7px; border-radius: 999px;
+  }
+
+  .chev { float: right; color: var(--ink-faint); font-size: 11px; transition: transform .15s; }
+  .item.open .chev { transform: rotate(180deg); }
+
+  .item-body {
+    display: none;
+    padding: 0 16px 16px 16px;
+    border-top: 1px solid var(--line);
+    margin-top: 2px;
+  }
+  .item.open .item-body { display: block; }
+  .impact-block {
+    background: var(--surface-2);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    margin-top: 13px;
+  }
+  .impact-block .h {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--ink-faint); margin: 0 0 5px;
+  }
+  .impact-block p { margin: 0; font-size: 13px; color: var(--ink); }
+
+  .actor-block-h {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--ink-faint); margin: 15px 0 8px;
+  }
+  .actor-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px;
+  }
+  .actor-card {
+    border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 10px 11px 11px; background: var(--surface);
+  }
+  .actor-name {
+    display: flex; align-items: center; justify-content: space-between; gap: 6px;
+    margin-bottom: 7px;
+  }
+  .actor-name-label {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 700; color: var(--ink-muted);
+  }
+  .actor-mono {
+    flex: none; width: 19px; height: 19px; border-radius: 50%;
+    background: var(--surface-2); color: var(--ink-faint);
+    font-family: var(--font-mono); font-size: 8.5px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .actor-level {
+    font-family: var(--font-ui); font-size: 9.5px; font-weight: 700; letter-spacing: .01em;
+    padding: 2px 8px; border-radius: 999px; border: 1px solid transparent; white-space: nowrap;
+  }
+  .actor-level.high { background: var(--impact-high-tint); color: var(--impact-high); border-color: var(--impact-high-line); }
+  .actor-level.medium { background: var(--impact-medium-tint); color: var(--impact-medium); border-color: var(--impact-medium-line); }
+  .actor-level.low { background: var(--impact-low-tint); color: var(--impact-low); border-color: var(--impact-low-line); }
+  .actor-level.info { background: var(--impact-info-tint); color: var(--impact-info); border-color: var(--impact-info-line); }
+  .actor-level.none { background: var(--surface-2); color: var(--ink-faint); border-color: var(--line); }
+  .actor-card p { margin: 0; font-size: 12px; color: var(--ink); line-height: 1.5; }
+
+  .attach-block {
+    margin-top: 13px; border: 1px solid var(--line); border-radius: var(--radius-sm);
+    background: var(--surface); overflow: hidden;
+  }
+  .attach-head {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    padding: 10px 13px; background: var(--surface-2); border-bottom: 1px solid var(--line);
+  }
+  .attach-clip { font-size: 13px; flex: none; }
+  .attach-title { font-size: 12.5px; font-weight: 700; color: var(--ink); flex: 1 1 auto; }
+  .attach-badge {
+    font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .02em;
+    padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--ink-faint); flex: none;
+  }
+  .attach-badge.unofficial { background: var(--impact-medium-tint); color: var(--impact-medium); border-color: var(--impact-medium-line); }
+  .attach-body { padding: 12px 13px; }
+  .attach-note { font-size: 11.5px; color: var(--ink-muted); margin: 0 0 10px; line-height: 1.5; }
+  .attach-table-wrap { overflow-x: auto; }
+  table.attach-table { border-collapse: collapse; width: 100%; font-size: 12px; }
+  table.attach-table th, table.attach-table td {
+    text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line); white-space: nowrap;
+  }
+  table.attach-table th {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--ink-faint); font-weight: 700;
+  }
+  table.attach-table td { color: var(--ink); font-variant-numeric: tabular-nums; }
+  table.attach-table tr:last-child td { border-bottom: none; }
+  ul.attach-list { margin: 0; padding-left: 18px; font-size: 12.5px; color: var(--ink); }
+  ul.attach-list li { margin-bottom: 4px; }
+  .attach-foot { margin-top: 10px; padding-top: 9px; border-top: 1px dashed var(--line); font-size: 11.5px; color: var(--ink-faint); display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  .attach-foot a { font-weight: 700; }
+
+  .item-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; gap: 10px; flex-wrap: wrap; }
+  .source-link { font-size: 12px; font-weight: 700; text-decoration: none; border-bottom: 1px solid currentColor; }
+  .official-tag { font-size: 10.5px; color: var(--ink-faint); }
+
+  /* ---------- Chronology view ---------- */
+  .chrono-note {
+    font-size: 12.5px; color: var(--ink-muted); line-height: 1.55;
+    background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-sm);
+    padding: 12px 14px; margin: 16px 0 4px;
+  }
+  .chrono-note strong { color: var(--ink); }
+  .chrono-list {
+    display: flex; flex-direction: column;
+    margin-top: 14px; border-left: 2px solid var(--line); margin-left: 17px;
+  }
+  .chrono-row {
+    display: flex; gap: 14px; padding: 12px 0 12px 20px; position: relative;
+  }
+  .chrono-num {
+    flex: none; width: 34px; height: 34px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-weight: 800; font-size: 12px;
+    margin-left: -37px; background: var(--surface); border: 2px solid var(--primary); color: var(--primary-strong);
+  }
+  .chrono-row.gap .chrono-num { border: 2px dashed var(--line-strong); color: var(--ink-faint); background: var(--bg); }
+  .chrono-body { flex: 1; padding-top: 3px; }
+  .chrono-title { font-weight: 700; font-size: 13.5px; color: var(--ink); }
+  .chrono-row.gap .chrono-title { color: var(--ink-faint); font-style: italic; font-weight: 500; }
+  .chrono-meta { font-size: 11.5px; color: var(--ink-faint); margin-top: 3px; font-family: var(--font-mono); }
+  .chrono-link { font-size: 12px; font-weight: 600; margin-top: 5px; display: inline-block; }
+
+  /* ---------- Catalogue view ---------- */
+  .catalog-note {
+    font-size: 12.5px; color: var(--ink-muted); line-height: 1.55;
+    background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-sm);
+    padding: 12px 14px; margin: 16px 0 4px;
+  }
+  .catalog-note strong { color: var(--ink); }
+  .catalog-search-row { display: flex; gap: 8px; margin-top: 12px; }
+  .catalog-search-row input[type="search"] { flex: 1; }
+  .catalog-stats { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .sector-block { margin-top: 22px; }
+  .sector-title {
+    font-family: var(--font-ui); font-weight: 800; font-size: 15px; color: var(--ink);
+    display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+  }
+  .sector-count { font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); font-weight: 600; }
+  .fiche-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 8px; }
+  .fiche-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm);
+    padding: 10px 12px; box-shadow: var(--shadow);
+  }
+  .fiche-card.is-abrogee { opacity: .6; }
+  .fiche-card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 5px; }
+  .fiche-code-lg { font-family: var(--font-mono); font-size: 12.5px; font-weight: 800; color: var(--primary-strong); }
+  .fiche-status { font-size: 9.5px; font-weight: 700; padding: 1px 7px; border-radius: 999px; border: 1px solid transparent; text-transform: uppercase; letter-spacing: .01em; }
+  .fiche-status.active { background: var(--impact-low-tint); color: var(--impact-low); border-color: var(--impact-low-line); }
+  .fiche-status.abrogee { background: var(--surface-2); color: var(--ink-faint); border-color: var(--line); }
+  .fiche-card-title { font-size: 12.5px; color: var(--ink); line-height: 1.4; }
+  .fiche-evolution { margin-top: 7px; padding-top: 7px; border-top: 1px dashed var(--line); font-size: 11px; }
+  .fiche-evolution a { font-weight: 600; }
+  .no-evolution { font-size: 11px; color: var(--ink-faint); margin-top: 7px; padding-top: 7px; border-top: 1px dashed var(--line); }
+
+  footer.page-foot {
+    margin-top: 36px; padding-top: 16px; border-top: 1px solid var(--line);
+    font-size: 11.5px; color: var(--ink-faint); display: flex; flex-direction: column; gap: 6px;
+  }
+  footer.page-foot a { color: var(--ink-muted); }
+  #raw-data summary { cursor: pointer; color: var(--ink-muted); }
+  #raw-data summary:hover { color: var(--ink); }
+  #raw-data pre {
+    margin-top: 10px; padding: 12px 14px; background: var(--surface-2);
+    border: 1px solid var(--line); border-radius: var(--radius-sm);
+    font-family: var(--font-mono); font-size: 10.5px; line-height: 1.5; color: var(--ink-muted);
+    max-height: 320px; overflow: auto;
+  }
+
+  @media (max-width: 560px) {
+    .filter-bar { top: 168px; }
+    h1 { font-size: 23px; }
+  }
+</style>
+
+<div class="top-accent"></div>
+<div class="wrap">
+
+  <header class="top">
+    <span class="eyebrow">Registre réglementaire · Dispositif CEE</span>
+    <h1>Veille des évolutions CEE</h1>
+    <p class="subhead">Suivi centralisé des textes, fiches d'opérations standardisées, Q/R et consultations publiques qui touchent le dispositif des Certificats d'Économies d'Énergie — avec, pour chaque entrée, l'impact concret sur l'instruction d'une fiche et sur chacun des acteurs de la chaîne.</p>
+    <div class="trust-row">
+      <span class="trust-badge"><span class="check">✓</span> Sources officielles (Légifrance, ecologie.gouv.fr, PNCEE)</span>
+      <span class="trust-badge"><span class="check">✓</span> Mise à jour automatique chaque jour ouvré</span>
+    </div>
+    <div class="meta-strip">
+      <span>Dernier contrôle : <time id="lastRun" datetime="">—</time></span>
+      <span>·</span>
+      <span><span class="num" id="sourceCount">0</span> sources surveillées</span>
+      <span>·</span>
+      <span>Prochain contrôle : jour ouvré suivant, 8h00 (Paris)</span>
+    </div>
+    <details id="glossary">
+      <summary></summary>
+      <div class="glossary-grid">
+        <div class="glossary-card">
+          <div class="gc-head"><span class="mono-badge">DM</span><h4>Délégataire / Mandataire</h4></div>
+          <p>Le délégataire est la structure à qui un obligé (fournisseur d'énergie soumis à obligation légale) délègue tout ou partie de son obligation d'économies d'énergie, par convention enregistrée au PNCEE ; il doit alors se procurer lui-même le volume de CEE correspondant, sous peine de pénalité libératoire. Le mandataire agit sur mandat (art. R.221-22 du code de l'énergie) pour réaliser les démarches d'obtention des CEE ; s'il porte le rôle actif et incitatif (RAI), il doit prouver une contribution — prime, bon d'achat, prêt bonifié, audit, conseil — antérieure à l'engagement des travaux. En interne : gestion du portefeuille d'obligation, contractualisation avec apporteurs d'affaires et professionnels RGE, montage et dépôt des dossiers.</p>
+        </div>
+        <div class="glossary-card">
+          <div class="gc-head"><span class="mono-badge">BC</span><h4>Bureau de contrôle</h4></div>
+          <p>Organisme d'inspection accrédité COFRAC (norme NF EN ISO/CEI 17020, type A), indépendant de la conception, de la réalisation ou de la commercialisation des équipements contrôlés. Choisi par le demandeur sur une liste, il réalise les contrôles sur pièces (« de contact ») et sur site des opérations, selon des taux minimaux définis par fiche.</p>
+        </div>
+        <div class="glossary-card">
+          <div class="gc-head"><span class="mono-badge">PR</span><h4>Professionnel (RGE)</h4></div>
+          <p>Entreprise du bâtiment qualifiée « Reconnu Garant de l'Environnement » par un organisme accrédité (Qualibat, Qualit'ENR, Qualifelec…), condition d'éligibilité pour la plupart des fiches résidentielles. Justifie d'une expérience minimale, désigne un référent technique formé et certifié, et signe les attestations sur l'honneur nécessaires au dossier.</p>
+        </div>
+      </div>
+    </details>
+    <div class="stats-row" id="counts"></div>
+    <div class="view-tabs">
+      <button class="view-tab active" id="tabFeed" data-view="feed">Registre</button>
+      <button class="view-tab" id="tabChrono" data-view="chrono">Chronologie des arrêtés</button>
+      <button class="view-tab" id="tabCatalog" data-view="catalog">Catalogue des fiches (FOS)</button>
+    </div>
+  </header>
+
+  <div class="filter-bar" id="filterBar">
+    <div class="filter-row" id="catRow">
+      <span class="label">Type</span>
+    </div>
+    <div class="filter-row" id="impactRow">
+      <span class="label">Impact</span>
+    </div>
+    <div class="filter-row" id="actorRow">
+      <span class="label">Acteur concerné</span>
+    </div>
+    <div class="search-row">
+      <input type="search" id="search" placeholder="Rechercher un titre, une fiche (ex. BAR-TH-171)…" aria-label="Rechercher" />
+      <button class="btn" id="markRead">Tout marquer comme lu</button>
+    </div>
+  </div>
+
+  <main class="feed" id="feed"></main>
+
+  <div id="chronoView" style="display:none;">
+    <p class="chrono-note">
+      <strong>Numérotation « N<sup>e</sup> arrêté »</strong> : convention informelle utilisée par la presse spécialisée CEE (Calcul CEE, Hellio, etc.) pour désigner, dans l'ordre, les arrêtés modifiant l'arrêté du 22 décembre 2014 définissant les opérations standardisées. Légifrance ne publie pas ce numéro directement. Les numéros grisés en pointillés n'ont pas été identifiés avec certitude — à vérifier au besoin sur Légifrance avant de vous y fier.
+    </p>
+    <div class="chrono-list" id="chronoList"></div>
+  </div>
+
+  <div id="catalogView" style="display:none;">
+    <p class="catalog-note">
+      <strong>Catalogue des fiches d'opérations standardisées (FOS)</strong> — extrait du catalogue officiel consolidé publié par la DGEC (arrêté du 22 décembre 2014 modifié). Les intitulés et statuts sont issus d'une extraction automatisée du document officiel : en cas de doute sur une fiche précise, vérifiez-la sur le <a href="https://www.ecologie.gouv.fr/politiques-publiques/operations-standardisees-deconomies-denergie" target="_blank" rel="noopener">catalogue officiel</a>. Quand une fiche du catalogue a fait l'objet d'une évolution suivie dans le Registre, un lien apparaît sous sa carte.
+    </p>
+    <div class="catalog-stats" id="catalogStats"></div>
+    <div class="catalog-search-row">
+      <input type="search" id="catalogSearch" placeholder="Rechercher un code ou un intitulé (ex. BAR-TH-171)…" aria-label="Rechercher une fiche" />
+    </div>
+    <div class="filter-row" id="sectorRow" style="margin-top:10px;">
+      <span class="label">Secteur</span>
+    </div>
+    <div id="catalogSectors"></div>
+  </div>
+
+  <footer class="page-foot">
+    <div id="sourcesList"></div>
+    <div>Les résumés et analyses d'impact sont une aide à la lecture, pas un avis juridique — vérifiez toujours le texte officiel avant toute décision engageante sur un dossier.</div>
+    <details id="raw-data">
+      <summary>Journal de données (JSON) — support de la mise à jour automatique</summary>
+      <pre id="data-json">
+{
+  "meta": {
+    "lastRun": "2026-08-07",
+    "sources": [
+      { "name": "Énergies — ecologie.gouv.fr", "url": "https://www.ecologie.gouv.fr/politiques-publiques/energies" },
+      { "name": "Dispositif CEE — ecologie.gouv.fr", "url": "https://www.ecologie.gouv.fr/politiques-publiques/dispositif-certificats-deconomies-denergie" },
+      { "name": "Opérations standardisées — ecologie.gouv.fr", "url": "https://www.ecologie.gouv.fr/politiques-publiques/operations-standardisees-deconomies-denergie" },
+      { "name": "Questions-réponses CEE — ecologie.gouv.fr", "url": "https://www.ecologie.gouv.fr/politiques-publiques/questions-reponses-dispositif-cee" },
+      { "name": "Légifrance (JO, textes CEE)", "url": "https://www.legifrance.gouv.fr/" },
+      { "name": "Consultations publiques — developpement-durable.gouv.fr", "url": "https://www.consultations-publiques.developpement-durable.gouv.fr/" },
+      { "name": "PNCEE", "url": "https://www.ecologie.gouv.fr/politiques-publiques/dispositif-certificats-deconomies-denergie" },
+      { "name": "ATEE — Club C2E", "url": "https://atee.fr/efficacite-energetique/club-c2e/actualites-evenements" },
+      { "name": "Lettres d'information & Flash Info CEE — ecologie.gouv.fr", "url": "https://www.ecologie.gouv.fr/politiques-publiques/comites-pilotage-lettres-dinformation-statistiques-du-dispositif-certificats" },
+      { "name": "Conseil supérieur de l'énergie (CSE)", "url": "https://www.ecologie.gouv.fr/politiques-publiques/conseil-superieur-lenergie-cse" },
+      { "name": "Registre national EMMY", "url": "https://www.emmy.fr/public/registre" },
+      { "name": "Cour des comptes — publications CEE", "url": "https://www.ccomptes.fr/fr/publications/les-certificats-deconomies-denergie-0" },
+      { "name": "Programmes CEE d'accompagnement — ecologie.gouv.fr", "url": "https://www.ecologie.gouv.fr/politiques-publiques/cee-programmes-daccompagnement" },
+      { "name": "Liste des PAC agréées (bonus-pac.ademe.fr)", "url": "https://bonus-pac.ademe.fr/" }
+    ],
+    "arreteSeries": [
+      { "num": 71, "date": "2025-06-27", "title": "Suppression de 10 fiches et révision de 6 (critère TRI)", "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000051857168", "confirmed": true },
+      { "num": 72, "confirmed": false },
+      { "num": 73, "date": "2025-08-18", "title": "Création/révision de fiches et réforme du Coup de pouce Chauffage", "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000052125390", "confirmed": true },
+      { "num": 74, "confirmed": false },
+      { "num": 75, "confirmed": false },
+      { "num": 76, "confirmed": false },
+      { "num": 77, "confirmed": false },
+      { "num": 78, "date": "2025-12-15", "title": "PAC BAR-TH-171/172 — contrôle satisfaisant obligatoire, fin du cumul de fiches", "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000053043176", "confirmed": true },
+      { "num": 79, "date": "2025-12-27", "title": "Réseaux de chaleur — BAR-TH-143, BAR-TH-137, BAT-TH-127", "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000053202091", "confirmed": true },
+      { "num": 80, "date": "2026-01-07", "title": "Rénovation d'ampleur — BAR-TH-174, BAR-TH-175, BAR-TH-177", "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000053373748", "confirmed": true },
+      { "num": 81, "confirmed": false },
+      { "num": 82, "confirmed": false },
+      { "num": 83, "date": "2026-05-18", "title": "Véhicules électriques — TRA-EQ-114, 117, 128, 129", "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000054110613", "confirmed": true },
+      { "num": 84, "date": "2026-05-23", "title": "Chaleur fatale industrielle — IND-UT-137", "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000054126720", "confirmed": true }
+    ],
+    "ficheCatalog": [
+      { "c": "BAR-EN-101", "t": "Isolation de combles ou de toitures", "s": "Résidentiel" },
+      { "c": "BAR-EN-102", "t": "Isolation des murs", "s": "Résidentiel" },
+      { "c": "BAR-EN-103", "t": "Isolation d'un plancher", "s": "Résidentiel" },
+      { "c": "BAR-EN-104", "t": "Fenêtre ou porte-fenêtre complète avec vitrage isolant", "s": "Résidentiel" },
+      { "c": "BAR-EN-105", "t": "Isolation des toitures terrasses", "s": "Résidentiel" },
+      { "c": "BAR-EN-106", "t": "Isolation de combles ou de toitures (France d'outre-mer)", "s": "Résidentiel" },
+      { "c": "BAR-EN-107", "t": "Isolation des murs (France d'outre-mer)", "s": "Résidentiel" },
+      { "c": "BAR-EN-108", "t": "Fermeture isolante", "s": "Résidentiel" },
+      { "c": "BAR-EN-109", "t": "Réduction des apports solaires par la toiture (France d'outre-mer)", "s": "Résidentiel" },
+      { "c": "BAR-EN-110", "t": "Fenêtre ou porte-fenêtre avec vitrage pariétodynamique", "s": "Résidentiel", "a": true },
+      { "c": "BAR-EQ-101", "t": "Lampe fluo-compacte de classe A", "s": "Résidentiel" },
+      { "c": "BAR-EQ-102", "t": "Lave-linge ménager de classe A++ ou A+++", "s": "Résidentiel", "a": true },
+      { "c": "BAR-EQ-103", "t": "Lampe à LED de classe A+", "s": "Résidentiel" },
+      { "c": "BAR-EQ-110", "t": "Appareil de réfrigération ménager de classe A++ ou A+++", "s": "Résidentiel", "a": true },
+      { "c": "BAR-EQ-111", "t": "Luminaire à modules LED avec dispositif de contrôle pour les parties communes", "s": "Résidentiel" },
+      { "c": "BAR-EQ-112", "t": "Lampe à LED de classe A++", "s": "Résidentiel", "a": true },
+      { "c": "BAR-EQ-113", "t": "Dispositif d'affichage et d'interprétation des consommations (logement électricité)", "s": "Résidentiel", "a": true },
+      { "c": "BAR-EQ-114", "t": "Dispositif d'affichage et d'interprétation des consommations (logement combustible)", "s": "Résidentiel", "a": true },
+      { "c": "BAR-EQ-115", "t": "Dispositif d'affichage et d'interprétation des consommations d'énergie", "s": "Résidentiel" },
+      { "c": "BAR-SE-104", "t": "Réglage des organes d'équilibrage d'une installation de chauffage à eau chaude", "s": "Résidentiel" },
+      { "c": "BAR-SE-105", "t": "Contrat de Performance Énergétique Services (CPE Services)", "s": "Résidentiel" },
+      { "c": "BAR-SE-106", "t": "Service de suivi des consommations d'énergie", "s": "Résidentiel" },
+      { "c": "BAR-SE-107", "t": "Abaissement de la température de retour vers un réseau de chaleur", "s": "Résidentiel" },
+      { "c": "BAR-SE-108", "t": "Désembouage d'un réseau hydraulique individuel de chauffage", "s": "Résidentiel" },
+      { "c": "BAR-SE-109", "t": "Désembouage d'un réseau hydraulique de chauffage collectif", "s": "Résidentiel" },
+      { "c": "BAR-TH-101", "t": "Chauffe-eau solaire individuel (France métropolitaine)", "s": "Résidentiel" },
+      { "c": "BAR-TH-102", "t": "Chauffe-eau solaire collectif (France métropolitaine)", "s": "Résidentiel" },
+      { "c": "BAR-TH-104", "t": "Pompe à chaleur de type air/eau ou eau/eau", "s": "Résidentiel" },
+      { "c": "BAR-TH-106", "t": "Chaudière individuelle à haute performance énergétique", "s": "Résidentiel", "a": true },
+      { "c": "BAR-TH-107", "t": "Chaudière collective haute performance énergétique", "s": "Résidentiel", "a": true },
+      { "c": "BAR-TH-107-SE", "t": "Chaudière collective HPE avec contrat assurant la conduite de l'installation", "s": "Résidentiel", "a": true },
+      { "c": "BAR-TH-110", "t": "Radiateur basse température pour un chauffage central", "s": "Résidentiel" },
+      { "c": "BAR-TH-111", "t": "Régulation par sonde de température extérieure", "s": "Résidentiel" },
+      { "c": "BAR-TH-112", "t": "Appareil indépendant de chauffage au bois", "s": "Résidentiel" },
+      { "c": "BAR-TH-113", "t": "Chaudière biomasse individuelle", "s": "Résidentiel" },
+      { "c": "BAR-TH-115", "t": "Isolation d'un réseau hydraulique de chauffage", "s": "Résidentiel", "a": true },
+      { "c": "BAR-TH-116", "t": "Plancher chauffant hydraulique à basse température", "s": "Résidentiel" },
+      { "c": "BAR-TH-117", "t": "Robinet thermostatique", "s": "Résidentiel" },
+      { "c": "BAR-TH-118", "t": "Système de régulation par programmation d'intermittence", "s": "Résidentiel", "a": true },
+      { "c": "BAR-TH-121", "t": "Système de comptage individuel d'énergie de chauffage", "s": "Résidentiel", "a": true },
+      { "c": "BAR-TH-122", "t": "Récupérateur de chaleur à condensation", "s": "Résidentiel" },
+      { "c": "BAR-TH-123", "t": "Optimiseur de relance en chauffage collectif", "s": "Résidentiel" },
+      { "c": "BAR-TH-124", "t": "Chauffe-eau solaire individuel (France d'outre-mer)", "s": "Résidentiel" },
+      { "c": "BAR-TH-125", "t": "Système de ventilation double flux autoréglable ou modulé à haute performance", "s": "Résidentiel" },
+      { "c": "BAR-TH-127", "t": "Ventilation mécanique simple flux hygroréglable (France métropolitaine)", "s": "Résidentiel" },
+      { "c": "BAR-TH-129", "t": "Pompe à chaleur de type air/air", "s": "Résidentiel" },
+      { "c": "BAR-TH-130", "t": "Surperformance énergétique pour un bâtiment neuf (France métropolitaine)", "s": "Résidentiel" },
+      { "c": "BAR-TH-131", "t": "Isolation d'un réseau hydraulique d'eau chaude sanitaire", "s": "Résidentiel", "a": true },
+      { "c": "BAR-TH-135", "t": "Chauffe-eau solaire collectif (France d'outre-mer)", "s": "Résidentiel" },
+      { "c": "BAR-TH-137", "t": "Raccordement d'un bâtiment résidentiel à un réseau de chaleur", "s": "Résidentiel" },
+      { "c": "BAR-TH-139", "t": "Système de variation électronique de vitesse sur une pompe", "s": "Résidentiel" },
+      { "c": "BAR-TH-141", "t": "Climatiseur performant (France d'outre-mer)", "s": "Résidentiel" },
+      { "c": "BAR-TH-143", "t": "Système solaire combiné (France métropolitaine)", "s": "Résidentiel" },
+      { "c": "BAR-TH-145", "t": "Rénovation globale d'un bâtiment résidentiel (France métropolitaine)", "s": "Résidentiel", "a": true },
+      { "c": "BAR-TH-148", "t": "Chauffe-eau thermodynamique à accumulation", "s": "Résidentiel" },
+      { "c": "BAR-TH-150", "t": "Pompe à chaleur collective à absorption de type air/eau ou eau/eau", "s": "Résidentiel", "a": true },
+      { "c": "BAR-TH-155", "t": "Ventilation hybride hygroréglable (France métropolitaine)", "s": "Résidentiel" },
+      { "c": "BAR-TH-158", "t": "Émetteur électrique à régulation électronique à fonctions avancées", "s": "Résidentiel" },
+      { "c": "BAR-TH-159", "t": "Pompe à chaleur hybride individuelle", "s": "Résidentiel" },
+      { "c": "BAR-TH-160", "t": "Isolation d'un réseau hydraulique de chauffage ou d'eau chaude sanitaire", "s": "Résidentiel", "a": true },
+      { "c": "BAR-TH-161", "t": "Isolation de points singuliers d'un réseau", "s": "Résidentiel" },
+      { "c": "BAR-TH-162", "t": "Système énergétique solaire photovoltaïque et thermique à circulation d'eau", "s": "Résidentiel" },
+      { "c": "BAR-TH-163", "t": "Conduit d'évacuation des produits de combustion", "s": "Résidentiel" },
+      { "c": "BAR-TH-164", "t": "Rénovation globale d'une maison individuelle (France métropolitaine)", "s": "Résidentiel", "a": true },
+      { "c": "BAR-TH-165", "t": "Chaudière biomasse collective", "s": "Résidentiel" },
+      { "c": "BAR-TH-166", "t": "Pompe à chaleur collective de type air/eau ou eau/eau", "s": "Résidentiel", "a": true },
+      { "c": "BAR-TH-167", "t": "Chauffe-bain individuel à haut rendement ou à condensation (France métropolitaine)", "s": "Résidentiel", "a": true },
+      { "c": "BAR-TH-168", "t": "Dispositif solaire thermique (France métropolitaine)", "s": "Résidentiel" },
+      { "c": "BAR-TH-169", "t": "Pompe à chaleur collective air/eau ou eau/eau pour l'eau chaude sanitaire", "s": "Résidentiel" },
+      { "c": "BAR-TH-170", "t": "Récupération de chaleur fatale de serveurs informatiques pour l'eau chaude sanitaire collective", "s": "Résidentiel" },
+      { "c": "BAR-TH-171", "t": "Pompe à chaleur de type air/eau", "s": "Résidentiel" },
+      { "c": "BAR-TH-172", "t": "Pompe à chaleur de type eau/eau ou sol/eau", "s": "Résidentiel" },
+      { "c": "BAR-TH-173", "t": "Système de régulation par programmation horaire pièce par pièce", "s": "Résidentiel" },
+      { "c": "BAR-TH-174", "t": "Rénovation d'ampleur d'une maison individuelle (France métropolitaine)", "s": "Résidentiel" },
+      { "c": "BAR-TH-175", "t": "Rénovation d'ampleur d'un appartement individuel (France métropolitaine)", "s": "Résidentiel" },
+      { "c": "BAR-TH-176", "t": "Système de régulation de la consommation d'un chauffe-eau électrique à effet Joule", "s": "Résidentiel" },
+      { "c": "BAR-TH-177", "t": "Rénovation globale d'un bâtiment résidentiel collectif (France métropolitaine)", "s": "Résidentiel" },
+      { "c": "BAR-TH-178", "t": "Système géothermique (résidentiel collectif)", "s": "Résidentiel" },
+      { "c": "BAR-TH-179", "t": "Pompe à chaleur collective de type air/eau", "s": "Résidentiel" },
+      { "c": "BAR-TH-180", "t": "Pompe à chaleur collective de type eau/eau ou eau glycolée/eau", "s": "Résidentiel" },
+      { "c": "BAT-EN-101", "t": "Isolation de combles ou de toitures", "s": "Tertiaire" },
+      { "c": "BAT-EN-102", "t": "Isolation des murs", "s": "Tertiaire" },
+      { "c": "BAT-EN-103", "t": "Isolation d'un plancher", "s": "Tertiaire" },
+      { "c": "BAT-EN-104", "t": "Fenêtre ou porte-fenêtre complète avec vitrage isolant", "s": "Tertiaire" },
+      { "c": "BAT-EN-106", "t": "Isolation de combles ou de toitures (France d'outre-mer)", "s": "Tertiaire" },
+      { "c": "BAT-EN-107", "t": "Isolation des toitures terrasses", "s": "Tertiaire" },
+      { "c": "BAT-EN-108", "t": "Isolation des murs (France d'outre-mer)", "s": "Tertiaire" },
+      { "c": "BAT-EN-109", "t": "Réduction des apports solaires par la toiture (France d'outre-mer)", "s": "Tertiaire" },
+      { "c": "BAT-EN-110", "t": "Protections des baies contre le rayonnement solaire (France d'outre-mer)", "s": "Tertiaire" },
+      { "c": "BAT-EN-111", "t": "Vitrage pariétodynamique (France métropolitaine)", "s": "Tertiaire" },
+      { "c": "BAT-EN-112", "t": "Revêtements réflectifs en toiture", "s": "Tertiaire" },
+      { "c": "BAT-EN-113", "t": "Façade rideau ou semi-rideau avec vitrage isolant", "s": "Tertiaire" },
+      { "c": "BAT-EQ-111", "t": "Luminaires à modules LED pour surfaces commerciales", "s": "Tertiaire" },
+      { "c": "BAT-EQ-114", "t": "Éclairage LED pour meubles frigorifiques verticaux", "s": "Tertiaire", "a": true },
+      { "c": "BAT-EQ-116", "t": "Lampe à LED de classe A+ (France d'outre-mer)", "s": "Tertiaire", "a": true },
+      { "c": "BAT-EQ-117", "t": "Installation frigorifique utilisant du CO2 subcritique ou transcritique", "s": "Tertiaire" },
+      { "c": "BAT-EQ-123", "t": "Moto-variateur synchrone à aimants permanents ou à réluctance", "s": "Tertiaire" },
+      { "c": "BAT-EQ-124", "t": "Fermeture des meubles frigorifiques de vente à température positive", "s": "Tertiaire" },
+      { "c": "BAT-EQ-125", "t": "Fermeture des meubles frigorifiques de vente à température négative", "s": "Tertiaire" },
+      { "c": "BAT-EQ-126", "t": "Lampe ou luminaire à modules LED pour l'éclairage d'accentuation", "s": "Tertiaire", "a": true },
+      { "c": "BAT-EQ-127", "t": "Luminaire d'éclairage général à modules LED", "s": "Tertiaire" },
+      { "c": "BAT-EQ-129", "t": "Lanterneaux d'éclairage zénithal (France métropolitaine)", "s": "Tertiaire", "a": true },
+      { "c": "BAT-EQ-130", "t": "Système de condensation frigorifique à haute efficacité", "s": "Tertiaire", "a": true },
+      { "c": "BAT-EQ-131", "t": "Conduits de lumière naturelle", "s": "Tertiaire", "a": true },
+      { "c": "BAT-EQ-132", "t": "Tubes à LED à éclairage hémisphérique", "s": "Tertiaire" },
+      { "c": "BAT-EQ-133", "t": "Systèmes hydro-économes (France métropolitaine)", "s": "Tertiaire" },
+      { "c": "BAT-EQ-134", "t": "Meuble frigorifique de vente performant avec groupe de production de froid intégré", "s": "Tertiaire" },
+      { "c": "BAT-EQ-135", "t": "Dispositif performant d'alimentation sans interruption", "s": "Tertiaire" },
+      { "c": "BAT-SE-103", "t": "Réglage des organes d'équilibrage d'une installation de chauffage à eau chaude", "s": "Tertiaire", "a": true },
+      { "c": "BAT-SE-104", "t": "Contrat de performance énergétique Services (CPE Services) Chauffage", "s": "Tertiaire" },
+      { "c": "BAT-SE-105", "t": "Abaissement de la température de retour vers un réseau de chaleur", "s": "Tertiaire" },
+      { "c": "BAT-TH-102", "t": "Chaudière collective haute performance énergétique", "s": "Tertiaire" },
+      { "c": "BAT-TH-103", "t": "Plancher chauffant hydraulique à basse température", "s": "Tertiaire" },
+      { "c": "BAT-TH-104", "t": "Robinet thermostatique", "s": "Tertiaire" },
+      { "c": "BAT-TH-105", "t": "Radiateur basse température pour un chauffage central", "s": "Tertiaire" },
+      { "c": "BAT-TH-106", "t": "Isolation d'un réseau hydraulique de chauffage", "s": "Tertiaire" },
+      { "c": "BAT-TH-108", "t": "Système de régulation par programmation d'intermittence", "s": "Tertiaire" },
+      { "c": "BAT-TH-109", "t": "Optimiseur de relance en chauffage collectif à fonction auto-adaptative", "s": "Tertiaire" },
+      { "c": "BAT-TH-110", "t": "Récupérateur de chaleur à condensation", "s": "Tertiaire" },
+      { "c": "BAT-TH-111", "t": "Chauffe-eau solaire collectif (France métropolitaine)", "s": "Tertiaire" },
+      { "c": "BAT-TH-112", "t": "Système de variation électronique de vitesse sur un moteur asynchrone", "s": "Tertiaire" },
+      { "c": "BAT-TH-113", "t": "Pompe à chaleur de type air/eau ou eau/eau", "s": "Tertiaire", "a": true },
+      { "c": "BAT-TH-115", "t": "Climatiseur performant (France d'outre-mer)", "s": "Tertiaire" },
+      { "c": "BAT-TH-116", "t": "Système de gestion technique du bâtiment (chauffage, ECS, climatisation, éclairage)", "s": "Tertiaire" },
+      { "c": "BAT-TH-119", "t": "Isolation d'un réseau hydraulique d'eau chaude sanitaire", "s": "Tertiaire" },
+      { "c": "BAT-TH-121", "t": "Chauffe-eau solaire (France d'outre-mer)", "s": "Tertiaire" },
+      { "c": "BAT-TH-122", "t": "Programmateur d'intermittence pour la climatisation (France d'outre-mer)", "s": "Tertiaire" },
+      { "c": "BAT-TH-125", "t": "Ventilation mécanique simple flux à débit constant ou modulé", "s": "Tertiaire" },
+      { "c": "BAT-TH-126", "t": "Ventilation mécanique double flux avec échangeur à débit constant ou modulé", "s": "Tertiaire" },
+      { "c": "BAT-TH-127", "t": "Raccordement d'un bâtiment tertiaire à un réseau de chaleur", "s": "Tertiaire" },
+      { "c": "BAT-TH-134", "t": "Régulation basse pression flottante sur groupe de production de froid (France métropolitaine)", "s": "Tertiaire" },
+      { "c": "BAT-TH-135", "t": "Régulation haute pression flottante sur groupe de production de froid (France d'outre-mer)", "s": "Tertiaire" },
+      { "c": "BAT-TH-139", "t": "Système de récupération de chaleur sur un groupe de production de froid", "s": "Tertiaire" },
+      { "c": "BAT-TH-140", "t": "Pompe à chaleur à absorption de type air/eau ou eau/eau", "s": "Tertiaire", "a": true },
+      { "c": "BAT-TH-141", "t": "Pompe à chaleur à moteur gaz de type air/eau", "s": "Tertiaire", "a": true },
+      { "c": "BAT-TH-142", "t": "Système de déstratification d'air", "s": "Tertiaire" },
+      { "c": "BAT-TH-143", "t": "Ventilo-convecteurs haute performance", "s": "Tertiaire" },
+      { "c": "BAT-TH-145", "t": "Régulation basse pression flottante sur groupe de production de froid (France métropolitaine)", "s": "Tertiaire" },
+      { "c": "BAT-TH-146", "t": "Isolation d'un réseau hydraulique de chauffage ou d'eau chaude sanitaire", "s": "Tertiaire", "a": true },
+      { "c": "BAT-TH-153", "t": "Système de confinement des allées froides et chaudes dans un Data Center", "s": "Tertiaire" },
+      { "c": "BAT-TH-154", "t": "Récupération instantanée de chaleur sur eaux grises", "s": "Tertiaire" },
+      { "c": "BAT-TH-155", "t": "Isolation de points singuliers d'un réseau", "s": "Tertiaire", "a": true },
+      { "c": "BAT-TH-156", "t": "Freecooling par eau de refroidissement en substitution d'un groupe froid pour la climatisation", "s": "Tertiaire" },
+      { "c": "BAT-TH-157", "t": "Chaudière biomasse collective", "s": "Tertiaire" },
+      { "c": "BAT-TH-158", "t": "Pompe à chaleur réversible de type air/air", "s": "Tertiaire" },
+      { "c": "BAT-TH-159", "t": "Raccordement d'un bâtiment tertiaire à un réseau de froid", "s": "Tertiaire", "a": true },
+      { "c": "BAT-TH-160", "t": "Vannes de régulation étanches à servomoteurs économes (France métropolitaine)", "s": "Tertiaire" },
+      { "c": "BAT-TH-161", "t": "Maintien en température des groupes électrogènes de secours par pompe à chaleur air/eau", "s": "Tertiaire" },
+      { "c": "BAT-TH-162", "t": "Système géothermique (tertiaire)", "s": "Tertiaire" },
+      { "c": "BAT-TH-163", "t": "Pompe à chaleur collective de type air/eau (tertiaire)", "s": "Tertiaire" },
+      { "c": "BAT-TH-164", "t": "Pompe à chaleur collective de type eau/eau ou eau glycolée/eau (tertiaire)", "s": "Tertiaire" },
+      { "c": "IND-BA-110", "t": "Dé-stratificateur ou brasseur d'air", "s": "Industrie" },
+      { "c": "IND-BA-112", "t": "Système de récupération de chaleur sur une tour aéroréfrigérante", "s": "Industrie", "a": true },
+      { "c": "IND-BA-113", "t": "Lanterneaux d'éclairage zénithal (France métropolitaine)", "s": "Industrie" },
+      { "c": "IND-BA-114", "t": "Conduits de lumière naturelle", "s": "Industrie" },
+      { "c": "IND-BA-115", "t": "Tubes à LED à éclairage hémisphérique", "s": "Industrie" },
+      { "c": "IND-BA-116", "t": "Luminaires à modules LED", "s": "Industrie" },
+      { "c": "IND-BA-117", "t": "Chauffage décentralisé performant", "s": "Industrie" },
+      { "c": "IND-EN-101", "t": "Isolation des murs (France d'outre-mer)", "s": "Industrie" },
+      { "c": "IND-EN-102", "t": "Isolation de combles ou de toitures (France d'outre-mer)", "s": "Industrie" },
+      { "c": "IND-UT-102", "t": "Système de variation électronique de vitesse sur un moteur asynchrone", "s": "Industrie" },
+      { "c": "IND-UT-103", "t": "Système de récupération de chaleur sur un compresseur d'air", "s": "Industrie" },
+      { "c": "IND-UT-104", "t": "Économiseur sur les effluents gazeux d'une chaudière de production de vapeur", "s": "Industrie" },
+      { "c": "IND-UT-105", "t": "Brûleur micromodulant sur chaudière industrielle", "s": "Industrie" },
+      { "c": "IND-UT-112", "t": "Moteur haut rendement de classe IE2", "s": "Industrie", "a": true },
+      { "c": "IND-UT-113", "t": "Système de condensation frigorifique à haute efficacité", "s": "Industrie" },
+      { "c": "IND-UT-114", "t": "Moto-variateur synchrone à aimants permanents ou à réluctance", "s": "Industrie" },
+      { "c": "IND-UT-115", "t": "Régulation basse pression flottante sur groupe de production de froid", "s": "Industrie" },
+      { "c": "IND-UT-116", "t": "Régulation haute pression flottante sur groupe de production de froid", "s": "Industrie" },
+      { "c": "IND-UT-117", "t": "Système de récupération de chaleur sur un groupe de production de froid", "s": "Industrie", "a": true },
+      { "c": "IND-UT-118", "t": "Brûleur avec dispositif de récupération de chaleur sur un four industriel", "s": "Industrie", "a": true },
+      { "c": "IND-UT-120", "t": "Compresseur d'air basse pression à vis ou centrifuge", "s": "Industrie" },
+      { "c": "IND-UT-121", "t": "Matelas pour l'isolation de points singuliers", "s": "Industrie" },
+      { "c": "IND-UT-122", "t": "Sécheur d'air comprimé à adsorption utilisant un apport calorifique pour sa régénération", "s": "Industrie" },
+      { "c": "IND-UT-123", "t": "Moteur premium de classe IE3", "s": "Industrie", "a": true },
+      { "c": "IND-UT-124", "t": "Séquenceur électronique pour le pilotage d'une centrale de production d'air comprimé", "s": "Industrie" },
+      { "c": "IND-UT-125", "t": "Traitement d'eau performant sur chaudière de production de vapeur", "s": "Industrie" },
+      { "c": "IND-UT-127", "t": "Système de transmission performant", "s": "Industrie" },
+      { "c": "IND-UT-129", "t": "Presse à injecter tout électrique ou hybride", "s": "Industrie" },
+      { "c": "IND-UT-130", "t": "Condenseur sur les effluents gazeux d'une chaudière de production de vapeur", "s": "Industrie" },
+      { "c": "IND-UT-131", "t": "Isolation thermique des parois planes ou cylindriques (installations industrielles)", "s": "Industrie" },
+      { "c": "IND-UT-132", "t": "Moteur asynchrone de classe IE4", "s": "Industrie" },
+      { "c": "IND-UT-133", "t": "Système électronique de pilotage d'un moteur électrique avec récupération d'énergie", "s": "Industrie" },
+      { "c": "IND-UT-134", "t": "Système de mesurage d'indicateurs de performance énergétique", "s": "Industrie" },
+      { "c": "IND-UT-135", "t": "Freecooling par eau de refroidissement en substitution d'un groupe froid", "s": "Industrie" },
+      { "c": "IND-UT-136", "t": "Systèmes moto-régulés", "s": "Industrie", "a": true },
+      { "c": "IND-UT-137", "t": "Système de pompe(s) à chaleur en rehausse de température de chaleur fatale récupérée", "s": "Industrie" },
+      { "c": "IND-UT-138", "t": "Conversion de chaleur fatale en électricité ou en air comprimé", "s": "Industrie" },
+      { "c": "IND-UT-139", "t": "Système de stockage de chaleur fatale", "s": "Industrie" },
+      { "c": "IND-UT-140", "t": "Mise en veille automatique d'une machine utilisant de l'air comprimé", "s": "Industrie" },
+      { "c": "AGRI-EQ-101", "t": "Module d'intégration de température installé sur un ordinateur climatique", "s": "Agriculture" },
+      { "c": "AGRI-EQ-102", "t": "Double écran thermique", "s": "Agriculture" },
+      { "c": "AGRI-EQ-104", "t": "Écrans thermiques latéraux", "s": "Agriculture" },
+      { "c": "AGRI-EQ-105", "t": "Stop & Start pour véhicules agricoles à moteur", "s": "Agriculture" },
+      { "c": "AGRI-EQ-106", "t": "Régulation de la ventilation des silos et installations de stockage en vrac de céréales", "s": "Agriculture" },
+      { "c": "AGRI-EQ-107", "t": "Isolation des parois de serre", "s": "Agriculture" },
+      { "c": "AGRI-EQ-108", "t": "Stockage d'eau pour une serre bioclimatique", "s": "Agriculture" },
+      { "c": "AGRI-EQ-109", "t": "Couverture performante de serre", "s": "Agriculture" },
+      { "c": "AGRI-EQ-110", "t": "Séchage solaire par insufflation des produits et co-produits agricoles et forestiers", "s": "Agriculture" },
+      { "c": "AGRI-EQ-111", "t": "Simple écran thermique", "s": "Agriculture" },
+      { "c": "AGRI-EQ-112", "t": "Double paroi gonflable", "s": "Agriculture" },
+      { "c": "AGRI-SE-101", "t": "Contrôle et préconisations de réglage du moteur d'un tracteur", "s": "Agriculture" },
+      { "c": "AGRI-TH-101", "t": "Dispositif de stockage d'eau chaude de type « Open Buffer »", "s": "Agriculture" },
+      { "c": "AGRI-TH-102", "t": "Dispositif de stockage d'eau chaude", "s": "Agriculture" },
+      { "c": "AGRI-TH-103", "t": "Pré-refroidisseur de lait", "s": "Agriculture" },
+      { "c": "AGRI-TH-104", "t": "Système de récupération de chaleur sur un groupe de production de froid hors tanks à lait", "s": "Agriculture" },
+      { "c": "AGRI-TH-105", "t": "Récupérateur de chaleur sur tank à lait", "s": "Agriculture" },
+      { "c": "AGRI-TH-108", "t": "Pompe à chaleur de type air/eau ou eau/eau", "s": "Agriculture" },
+      { "c": "AGRI-TH-109", "t": "Récupérateur de chaleur à condensation pour serres horticoles", "s": "Agriculture" },
+      { "c": "AGRI-TH-110", "t": "Chaudière à haute performance énergétique pour serres horticoles", "s": "Agriculture" },
+      { "c": "AGRI-TH-113", "t": "Échangeur récupérateur de chaleur air/air (bâtiment d'élevage de volailles)", "s": "Agriculture" },
+      { "c": "AGRI-TH-116", "t": "Récupération de chaleur fatale issue d'un procédé industriel (serre ou bâtiment d'élevage)", "s": "Agriculture", "a": true },
+      { "c": "AGRI-TH-117", "t": "Déshumidificateur thermodynamique pour serres", "s": "Agriculture" },
+      { "c": "AGRI-TH-118", "t": "Double tube de chauffage pour serres", "s": "Agriculture" },
+      { "c": "AGRI-TH-119", "t": "Système de déshumidification avec air extérieur", "s": "Agriculture" },
+      { "c": "AGRI-UT-101", "t": "Moto-variateur synchrone à aimants permanents ou à réluctance", "s": "Agriculture" },
+      { "c": "AGRI-UT-102", "t": "Système de variation électronique de vitesse sur un moteur asynchrone", "s": "Agriculture" },
+      { "c": "AGRI-UT-103", "t": "Régulation basse pression flottante sur un groupe de production de froid", "s": "Agriculture" },
+      { "c": "AGRI-UT-104", "t": "Régulation haute pression flottante sur un groupe de production de froid", "s": "Agriculture" },
+      { "c": "RES-CH-101", "t": "Valorisation de chaleur de récupération en réseau (France métropolitaine)", "s": "Réseaux", "a": true },
+      { "c": "RES-CH-103", "t": "Réhabilitation d'un poste de livraison de chaleur d'un bâtiment tertiaire", "s": "Réseaux" },
+      { "c": "RES-CH-104", "t": "Réhabilitation d'un poste de livraison de chaleur d'un bâtiment résidentiel", "s": "Réseaux" },
+      { "c": "RES-CH-105", "t": "Passage d'un réseau de chaleur en basse température", "s": "Réseaux" },
+      { "c": "RES-CH-106", "t": "Calorifugeage des canalisations d'un réseau de chaleur", "s": "Réseaux" },
+      { "c": "RES-CH-107", "t": "Isolation de points singuliers sur un réseau de chaleur", "s": "Réseaux", "a": true },
+      { "c": "RES-CH-108", "t": "Récupération de chaleur fatale pour valorisation sur un réseau de chaleur ou vers un tiers", "s": "Réseaux" },
+      { "c": "RES-EC-101", "t": "Système de régulation de tension en éclairage extérieur", "s": "Réseaux", "a": true },
+      { "c": "RES-EC-102", "t": "Système de maîtrise de la puissance réactive en éclairage extérieur", "s": "Réseaux", "a": true },
+      { "c": "RES-EC-103", "t": "Système de variation de puissance en éclairage extérieur", "s": "Réseaux", "a": true },
+      { "c": "RES-EC-104", "t": "Rénovation d'éclairage extérieur", "s": "Réseaux" },
+      { "c": "RES-EC-107", "t": "Horloge astronomique pour l'éclairage extérieur", "s": "Réseaux" },
+      { "c": "TRA-EQ-101", "t": "Unité de transport intermodal pour le transport combiné rail-route", "s": "Transport" },
+      { "c": "TRA-EQ-103", "t": "Télématique embarquée pour le suivi de la conduite d'un véhicule", "s": "Transport" },
+      { "c": "TRA-EQ-104", "t": "Lubrifiant économiseur d'énergie pour véhicules légers", "s": "Transport" },
+      { "c": "TRA-EQ-106", "t": "Pneus de véhicules légers à basse résistance au roulement", "s": "Transport" },
+      { "c": "TRA-EQ-107", "t": "Unité de transport intermodal pour le transport combiné fluvial-route", "s": "Transport" },
+      { "c": "TRA-EQ-108", "t": "Wagon d'autoroute ferroviaire", "s": "Transport" },
+      { "c": "TRA-EQ-109", "t": "Barge fluviale", "s": "Transport" },
+      { "c": "TRA-EQ-110", "t": "Automoteur fluvial", "s": "Transport" },
+      { "c": "TRA-EQ-111", "t": "Groupes frigorifiques autonomes haute efficacité (camions, semi-remorques, caisses mobiles)", "s": "Transport" },
+      { "c": "TRA-EQ-113", "t": "Lubrifiant économiseur d'énergie (transport de personnes ou de marchandises)", "s": "Transport" },
+      { "c": "TRA-EQ-114", "t": "Achat ou location d'un véhicule léger électrique neuf ou rétrofit (collectivités/personnes morales)", "s": "Transport" },
+      { "c": "TRA-EQ-115", "t": "Véhicules de transport de marchandises optimisé", "s": "Transport" },
+      { "c": "TRA-EQ-117", "t": "Achat ou location d'un véhicule léger électrique neuf ou rétrofit (personnes physiques)", "s": "Transport" },
+      { "c": "TRA-EQ-118", "t": "Lubrifiant économiseur d'énergie pour la pêche professionnelle", "s": "Transport" },
+      { "c": "TRA-EQ-119", "t": "Optimisation de la combustion et de la propreté des moteurs Diesel", "s": "Transport" },
+      { "c": "TRA-EQ-120", "t": "Hélice avec tuyère sur une unité de transport fluvial", "s": "Transport" },
+      { "c": "TRA-EQ-121", "t": "Vélo à assistance électrique", "s": "Transport" },
+      { "c": "TRA-EQ-122", "t": "« Stop & Start » pour engins automoteurs non routiers neufs", "s": "Transport" },
+      { "c": "TRA-EQ-123", "t": "Simulateur de conduite", "s": "Transport" },
+      { "c": "TRA-EQ-124", "t": "Branchement électrique des navires et bateaux à quai", "s": "Transport" },
+      { "c": "TRA-EQ-125", "t": "« Stop & Start » pour véhicules ferroviaires", "s": "Transport" },
+      { "c": "TRA-EQ-126", "t": "Remotorisation en propulsion électrique ou hybride d'un bateau en eaux intérieures", "s": "Transport" },
+      { "c": "TRA-EQ-128", "t": "Achat ou location d'un autocar ou autobus électrique neuf ou rétrofit", "s": "Transport" },
+      { "c": "TRA-EQ-129", "t": "Achat ou location d'un véhicule lourd électrique neuf de transport de marchandises ou rétrofit", "s": "Transport" },
+      { "c": "TRA-EQ-130", "t": "Achat ou location d'un quadricycle électrique neuf", "s": "Transport" },
+      { "c": "TRA-EQ-131", "t": "Achat ou location par une personne morale de vélos-cargos neufs ou reconditionnés", "s": "Transport" },
+      { "c": "TRA-EQ-132", "t": "Appareil de mesure, d'analyse et d'optimisation de la consommation de carburant (navire de pêche)", "s": "Transport" },
+      { "c": "TRA-SE-101", "t": "Formation d'un chauffeur de transport à la conduite économe", "s": "Transport" },
+      { "c": "TRA-SE-102", "t": "Formation d'un chauffeur de véhicule léger à la conduite économe", "s": "Transport" },
+      { "c": "TRA-SE-104", "t": "Station de gonflage des pneumatiques", "s": "Transport" },
+      { "c": "TRA-SE-105", "t": "Recreusage des pneumatiques", "s": "Transport" },
+      { "c": "TRA-SE-106", "t": "Mesure et optimisation des consommations de carburant (unité de transport fluvial)", "s": "Transport" },
+      { "c": "TRA-SE-107", "t": "Carénage sur une unité de transport fluvial", "s": "Transport" },
+      { "c": "TRA-SE-108", "t": "Gestion externalisée du poste pneumatique (transport de marchandises)", "s": "Transport" },
+      { "c": "TRA-SE-109", "t": "Gestion externalisée du poste pneumatique (transport de personnes)", "s": "Transport" },
+      { "c": "TRA-SE-110", "t": "Gestion optimisée du poste pneumatique (transport de marchandises)", "s": "Transport" },
+      { "c": "TRA-SE-111", "t": "Gestion optimisée du poste pneumatique (transport de personnes)", "s": "Transport" },
+      { "c": "TRA-SE-112", "t": "Service d'autopartage en boucle", "s": "Transport" },
+      { "c": "TRA-SE-113", "t": "Suivi des consommations de carburants grâce à des cartes privatives", "s": "Transport" },
+      { "c": "TRA-SE-114", "t": "Covoiturage de longue distance", "s": "Transport", "a": true },
+      { "c": "TRA-SE-115", "t": "Covoiturage de courte distance", "s": "Transport" },
+      { "c": "TRA-SE-116", "t": "Fret ferroviaire", "s": "Transport" },
+      { "c": "TRA-SE-117", "t": "Fret fluvial", "s": "Transport" }
+    ]
+  },
+  "items": [
+    {
+      "id": "consultation-2026-chauffe-eau-thermodynamique-bonification",
+      "date": "2026-08-10",
+      "category": "Consultation publique",
+      "statusLabel": "Consultation publique en cours — clôture le 10 août 2026",
+      "impactLevel": "high",
+      "ficheCodes": ["BAR-TH-101", "BAR-TH-143", "BAR-TH-148", "BAR-TH-162", "BAR-TH-168"],
+      "title": "Projet d'arrêté — nouvelles bonifications chauffe-eau thermodynamique et solaire (jusqu'à ×7)",
+      "summary": "Projet de texte créant des bonifications temporaires sur les fiches BAR-TH-101, BAR-TH-148, BAR-TH-162 et BAR-TH-168, et modifiant celle de BAR-TH-143, pour les opérations engagées entre le 1er septembre 2026 et le 1er janvier 2027, sous condition de sortie complète des équipements fossiles.",
+      "impactText": "Consultation ouverte jusqu'au 10 août 2026 : le texte n'est pas encore définitif. Tel que projeté, le coefficient de bonification du chauffe-eau thermodynamique (BAR-TH-148) atteindrait ×7 pour un ménage modeste et ×4 pour les autres cas, et des coefficients de ×4 à ×5 s'appliqueraient aux chauffe-eau solaires individuels, solaires hybrides et systèmes solaires combinés — sous réserve, dans tous les cas, d'une décarbonation complète du chauffage et/ou de l'eau chaude du logement après travaux. La fenêtre d'application resterait volontairement courte (4 mois, jusqu'au 1er janvier 2027), ce qui en fait une mesure d'accélération ponctuelle plutôt qu'un avantage pérenne.",
+      "actorImpacts": {
+        "delegataireMandataire": { "level": "high", "text": "Préparez dès maintenant vos grilles de valorisation avec ces coefficients potentiels (×7/×4 chauffe-eau thermodynamique, ×4 à ×5 solaire) pour être prêt à l'entrée en vigueur du 1er septembre 2026 si le texte est publié en l'état, et anticipez la fenêtre d'engagement courte (4 mois) dans votre planification commerciale." },
+        "bureauControle": { "level": "low", "text": "Si le texte est publié en l'état, un nouveau point de contrôle apparaîtra probablement sur la décarbonation complète du chauffage/eau chaude après travaux, condition cumulative aux bonifications projetées — à confirmer à la publication définitive." },
+        "professionnel": { "level": "medium", "text": "Si cette mesure entre en vigueur, une fenêtre commerciale courte (1er septembre 2026 au 1er janvier 2027) s'ouvrirait pour proposer chauffe-eau thermodynamiques et solaires avec une bonification très supérieure à l'actuelle — à condition d'assurer une sortie complète des équipements fossiles chez le client." }
+      },
+      "sourceName": "Consultations publiques",
+      "sourceUrl": "https://www.consultations-publiques.developpement-durable.gouv.fr/projet-d-arrete-creant-de-nouvelles-bonifications-a3398.html?lang=fr",
+      "official": true
+    },
+    {
+      "id": "consultation-2026-renovation-ampleur-trois-verrous",
+      "date": "2026-08-07",
+      "category": "Consultation publique",
+      "statusLabel": "Consultation publique en cours — clôture le 7 août 2026, avis du CSE attendu ensuite",
+      "impactLevel": "high",
+      "ficheCodes": ["BAR-TH-174", "BAR-TH-175", "BAR-TH-177"],
+      "title": "Projet d'arrêté — nouveau resserrement du Coup de pouce Rénovation d'ampleur au 1er septembre 2026",
+      "summary": "Projet de texte resserrant sur trois points le Coup de pouce CEE « Rénovation d'ampleur » à compter du 1er septembre 2026 : sortie obligatoire du chauffage fossile, éligibilité réservée aux logements classés E, F ou G, et recentrage du bonus ×2 sur le parc social.",
+      "impactText": "Signal amont fort et à échéance très proche : selon la presse spécialisée (non confirmé via le site officiel de consultation à ce stade — à vérifier directement sur consultations-publiques.developpement-durable.gouv.fr avant toute décision engageante), la consultation se clôt le 7 août 2026 et le Conseil supérieur de l'énergie doit ensuite rendre son avis avant publication définitive. Les curseurs (classes énergétiques éligibles, périmètre du bonus ×2) peuvent encore bouger. Si le texte est publié en l'état, les maisons chauffées au fossile et les logements non classés E/F/G sortiraient de l'éligibilité au Coup de pouce Rénovation d'ampleur au 1er septembre 2026, avec un maintien probable des règles actuelles pour les opérations déjà engagées avant le 31 août 2026, sous conditions.",
+      "actorImpacts": {
+        "delegataireMandataire": { "level": "high", "text": "Anticipez dès maintenant un possible resserrement des critères d'éligibilité (classe énergétique E/F/G, sortie fossile) et du périmètre du bonus ×2 (recentré sur le parc social) : accélérez si besoin l'engagement des dossiers actuellement éligibles avant le 31 août 2026, tout en gardant à l'esprit que le texte n'est pas encore publié et que les paramètres exacts peuvent encore évoluer après l'avis du CSE." },
+        "bureauControle": { "level": "info", "text": "Aucun nouveau protocole de contrôle identifié à ce stade ; surveillez la publication définitive pour d'éventuelles évolutions des pièces justificatives à vérifier (classe énergétique, statut du logement au regard du parc social)." },
+        "professionnel": { "level": "medium", "text": "Si vous réalisez des audits ou rénovations d'ampleur, informez vos clients du risque de resserrement des conditions d'éligibilité à partir du 1er septembre 2026 (sortie fossile, classe E/F/G) afin qu'ils puissent, le cas échéant, engager leur dossier avant cette échéance." }
+      },
+      "sourceName": "Selectra (presse spécialisée — à recouper avec la source officielle)",
+      "sourceUrl": "https://selectra.info/energie/actualites/renovation-energetique/coup-de-pouce-cee-renovation-ampleur-fin-fossile-septembre-2026",
+      "official": false
+    },
+    {
+      "id": "arrete-2026-07-16-tra-eq-117-bonification",
+      "date": "2026-07-16",
+      "category": "Arrêté",
+      "statusLabel": "Applicable au 1er septembre 2026 (article 5 en vigueur dès le 23 juillet 2026)",
+      "impactLevel": "medium",
+      "ficheCodes": ["TRA-EQ-114", "TRA-EQ-117", "TRA-EQ-129"],
+      "title": "Arrêté du 16 juillet 2026 — révision de la bonification TRA-EQ-117 et plafonds de revenus par décile",
+      "summary": "Modifie les niveaux de bonification de la fiche TRA-EQ-117 (acquisition ou location de véhicule électrique léger neuf, ou rétrofit électrique, par un particulier), fixe les plafonds de revenus par décile applicables aux opérations du secteur transport, et clarifie les conditions d'éligibilité de TRA-EQ-114 et TRA-EQ-129 en cas de sites de fabrication multiples pour un même type-variante de véhicule.",
+      "impactText": "L'essentiel des dispositions entre en vigueur le 1er septembre 2026, à l'exception de l'article 5 qui s'applique dès le lendemain de la publication (23 juillet 2026) — vérifiez lequel de vos dossiers en cours relève de l'une ou l'autre échéance. Les niveaux de bonification TRA-EQ-117 sont désormais différenciés par décile de revenu du bénéficiaire, ce qui complexifie le calcul de valorisation par rapport au barème simplifié antérieur.",
+      "actorImpacts": {
+        "delegataireMandataire": { "level": "medium", "text": "Mettez à jour vos simulateurs de valorisation TRA-EQ-117 avec le nouveau barème par décile de revenu avant le 1er septembre 2026, et vérifiez dès maintenant l'application de l'article 5 (en vigueur depuis le 23 juillet 2026) aux dossiers TRA-EQ-114/129 concernés par des véhicules fabriqués sur plusieurs sites." },
+        "bureauControle": { "level": "low", "text": "Vérifiez lors de l'instruction que le décile de revenu déclaré par le bénéficiaire correspond bien au niveau de bonification appliqué sur les dossiers TRA-EQ-117 engagés après le 1er septembre 2026." },
+        "professionnel": { "level": "medium", "text": "Les revendeurs de véhicules électriques doivent désormais collecter et vérifier le décile de revenu du client pour annoncer le bon niveau de bonification TRA-EQ-117 à partir du 1er septembre 2026." }
+      },
+      "sourceName": "Légifrance",
+      "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000054450931",
+      "official": true
+    },
+    {
+      "id": "arrete-2026-07-02-liste-pac-agreees",
+      "date": "2026-07-02",
+      "category": "Arrêté",
+      "statusLabel": "Liste publiée — condition de la bonification ×5 à partir du 1er septembre 2026",
+      "impactLevel": "high",
+      "ficheCodes": ["BAR-TH-171", "BAR-TH-172"],
+      "title": "Arrêté du 2 juillet 2026 — première liste des modèles de PAC agréés « qualité et résilience industrielle »",
+      "summary": "Publie, en application du décret n° 2026-413 du 29 mai 2026, la première liste des modèles de pompes à chaleur individuelles ayant obtenu l'agrément qualité et résilience industrielle : 1 588 modèles en agrément standard sans limite de durée et 204 modèles en agrément transitoire à durée de validité fixée modèle par modèle.",
+      "impactText": "Cette liste, publiée sur bonus-pac.ademe.fr et mise à jour chaque mois, est la pièce de référence conditionnant la bonification Coup de pouce Chauffage ×5 sur BAR-TH-171 et BAR-TH-172 pour les opérations engagées à compter du 1er septembre 2026 (voir aussi l'arrêté du 29 mai 2026 déjà suivi ci-dessous). Vérifiez que chaque modèle proposé ou en cours d'installation y figure bien avant cette date, et surveillez les mises à jour mensuelles qui peuvent faire entrer ou sortir des modèles de la liste.",
+      "actorImpacts": {
+        "delegataireMandataire": { "level": "high", "text": "Croisez systématiquement votre catalogue de modèles PAC avec la liste bonus-pac.ademe.fr avant tout engagement postérieur au 1er septembre 2026, et mettez en place une veille mensuelle sur cette liste puisqu'elle peut évoluer (ajout ou retrait de modèles) et affecter la valorisation de dossiers déjà engagés." },
+        "bureauControle": { "level": "medium", "text": "Ajoutez la vérification de présence du modèle sur la liste des PAC agréées (numéro de modèle, type d'agrément standard ou transitoire, durée de validité) à la checklist de contrôle des dossiers BAR-TH-171/172 déposés après le 1er septembre 2026." },
+        "professionnel": { "level": "high", "text": "Avant de vendre ou poser une PAC individuelle à compter du 1er septembre 2026, vérifiez que le modèle exact figure sur la liste des modèles agréés (et son type d'agrément) : un modèle non agréé ou dont l'agrément transitoire a expiré fait perdre la bonification ×5 au dossier." }
+      },
+      "sourceName": "Légifrance",
+      "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000054388298",
+      "official": true,
+      "attachments": [
+        {
+          "type": "table",
+          "title": "Répartition des annexes I et II — modèles de PAC agréés",
+          "note": "La liste nominative complète (marque, modèle, référence EPREL, référence commerciale, n° d'agrément — environ 1 800 lignes réparties sur 2 annexes) n'est pas reproduite ici pour fiabilité. Les effectifs ci-dessous sont ceux relayés par la presse spécialisée du secteur (Batirama, ABC Clim) au 22/07/2026, non recoupés ligne à ligne avec le texte officiel — vérifiez le modèle exact recherché directement dans l'arrêté avant toute décision engageante sur un dossier.",
+          "columns": ["Annexe", "Type d'agrément", "Marques", "Modèles"],
+          "rows": [
+            ["I", "Agrément standard (durée illimitée)", "27", "1 588"],
+            ["II", "Agrément transitoire (plan d'investissement, durée limitée)", "5", "204"]
+          ],
+          "official": false,
+          "sourceName": "Arrêté du 2 juillet 2026 (Légifrance)",
+          "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000054388298"
+        }
+      ]
+    },
+    {
+      "id": "decret-2026-560-2026-06-26-comptes-registre-emmy",
+      "date": "2026-06-26",
+      "category": "Décret",
+      "statusLabel": "En vigueur depuis le 1er juillet 2026 — régularisation jusqu'au 30 septembre 2026",
+      "impactLevel": "medium",
+      "ficheCodes": [],
+      "title": "Décret n° 2026-560 du 26 juin 2026 — ouverture de compte au registre national des CEE (Emmy)",
+      "summary": "Pris en application de la loi n° 2025-594 contre les fraudes aux aides publiques, ce décret soumet à autorisation préalable du ministre chargé de l'énergie l'ouverture d'un compte Emmy par toute personne morale qui n'est ni obligée ni éligible au sens des 1° à 6° de l'article L.221-7 du code de l'énergie.",
+      "impactText": "Depuis le 1er juillet 2026, toute structure souhaitant ouvrir un compte au registre national Emmy sans relever des catégories d'acteurs déjà identifiées par l'article L.221-7 (1° à 6°) doit d'abord obtenir l'accord du ministre chargé de l'énergie. Les titulaires de comptes déjà ouverts disposent d'une période de régularisation jusqu'au 30 septembre 2026 pour transmettre les pièces requises — vérifiez le statut de chacun de vos comptes Emmy annexes ou de structures partenaires avant cette échéance.",
+      "actorImpacts": {
+        "delegataireMandataire": { "level": "high", "text": "Si vous ou une structure de votre groupe détenez un compte Emmy en dehors des catégories 1° à 6° de l'article L.221-7 (ex. structure ad hoc, filiale dédiée), vérifiez sans délai si une autorisation ministérielle préalable est requise et transmettez les pièces de régularisation avant le 30 septembre 2026 pour éviter un blocage du compte." },
+        "bureauControle": { "level": "none", "text": "Pas d'impact direct identifié : ce texte concerne l'ouverture de comptes au registre national, pas les modalités de contrôle des opérations." },
+        "professionnel": { "level": "none", "text": "Pas d'impact direct identifié pour les professionnels RGE, sauf s'ils détiennent eux-mêmes un compte Emmy en nom propre hors des catégories habituelles." }
+      },
+      "sourceName": "Légifrance",
+      "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000054341076",
+      "official": true
+    },
+    {
+      "id": "arrete-2025-12-21-mise-en-oeuvre-p6",
+      "date": "2025-12-21",
+      "category": "Arrêté",
+      "statusLabel": "Dispositions échelonnées : 1er février, 1er avril et 1er juillet 2026",
+      "impactLevel": "high",
+      "ficheCodes": [],
+      "title": "Arrêté du 21 décembre 2025 — mise en œuvre de la sixième période du dispositif CEE",
+      "summary": "Texte transversal d'application de la P6 : durée de contractualisation portée à 5 ans, nouvelles pièces à fournir dans les dossiers, dérogation aux chartes Coup de pouce pour certains bénéficiaires agissant sur fonds propres, exigences d'accréditation renforcées pour les organismes d'inspection, et durée minimale de maintien en fonctionnement des équipements fixée à 6 ans.",
+      "impactText": "Ce texte modifie plusieurs arrêtés socles (dont celui du 29 décembre 2014 relatif aux modalités d'application) et échelonne ses effets : dès le 1er février 2026, les personnes éligibles hors obligés peuvent bénéficier des bonifications Coup de pouce sans signer de charte si elles agissent exclusivement sur fonds propres ; à compter du 1er avril 2026, les opérations engagées doivent respecter une durée minimale de maintien en fonctionnement des équipements de 6 ans (ou jusqu'à la fin de leur durée de vie conventionnelle si elle est plus courte), avec une attestation sur l'honneur modifiée (parties B et C) qui doit aussi mentionner le coût de l'opération et les autres aides publiques perçues. La durée maximale de contractualisation entre bénéficiaire et demandeur passe par ailleurs de 4 à 5 ans, et les organismes d'inspection doivent être accrédités NF EN ISO/CEI 17020 type A par un organisme signataire de l'accord EA, avec une périodicité d'évaluation resserrée à 12 mois maximum et un délai de carence de 6 mois après un refus ou un retrait d'accréditation.",
+      "actorImpacts": {
+        "delegataireMandataire": { "level": "high", "text": "Mettez à jour vos modèles de tableau récapitulatif et d'attestation sur l'honneur avant le 1er avril 2026 (mention du maintien en fonctionnement 6 ans, coût de l'opération, autres aides publiques) ; revoyez vos contrats de plus de 4 ans à la lumière du nouveau plafond de 5 ans ; et si vous mobilisez des bénéficiaires hors obligés agissant sur fonds propres, vérifiez s'ils peuvent désormais se dispenser de charte Coup de pouce depuis le 1er février 2026." },
+        "bureauControle": { "level": "high", "text": "Vérifiez que votre accréditation NF EN ISO/CEI 17020 type A est bien délivrée par un organisme signataire de l'accord EA, et anticipez le resserrement de la périodicité d'évaluation de compétence à 12 mois maximum ; en cas de refus ou de retrait d'accréditation, un délai de carence de 6 mois s'applique désormais avant toute nouvelle demande." },
+        "professionnel": { "level": "medium", "text": "Informez vos clients que les équipements posés à compter du 1er avril 2026 doivent rester en fonctionnement au moins 6 ans (ou jusqu'à la fin de leur durée de vie conventionnelle) sous peine d'invalider l'attestation sur l'honneur signée ; un remplacement anticipé de l'équipement avant ce terme ne pourra pas donner lieu à un nouveau dossier CEE sur une autre fiche." }
+      },
+      "sourceName": "Légifrance",
+      "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000053158200",
+      "official": true
+    },
+    {
+      "id": "flash-info-2026-02-24-recensement-bar-eq-110",
+      "date": "2026-02-24",
+      "category": "Flash info DGEC",
+      "statusLabel": "Recensement à transmettre — modalités précises à vérifier auprès de la source",
+      "impactLevel": "medium",
+      "ficheCodes": ["BAR-EQ-110", "BAT-EQ-127", "IND-BA-116"],
+      "title": "Flash Info DGEC du 24 février 2026 — recensement des opérations engagées",
+      "summary": "La DGEC demande aux obligés, délégataires et mandataires de recenser les opérations engagées sur les fiches BAR-EQ-110, BAT-EQ-127 et IND-BA-116, selon des modalités renouvelées.",
+      "impactText": "Ce flash info — canal officiel distinct des textes publiés au Journal officiel, diffusé par liste de diffusion DGEC — annonce une obligation de recensement des opérations engagées sur ces trois fiches. Le format exact, l'échéance précise et le destinataire du recensement ne sont pas entièrement lisibles depuis cet outil : consultez le PDF source avant toute action, et vérifiez si un texte réglementaire formel vient encadrer cette demande.",
+      "actorImpacts": {
+        "delegataireMandataire": { "level": "high", "text": "Identifiez sans délai vos dossiers en cours sur BAR-EQ-110, BAT-EQ-127 et IND-BA-116 et préparez le recensement demandé par la DGEC — ouvrez le flash info original pour le format et l'échéance exacts avant de répondre." },
+        "bureauControle": { "level": "low", "text": "Pas d'impact de contrôle direct identifié à ce stade ; restez attentif à un éventuel texte réglementaire qui formaliserait cette demande de recensement." },
+        "professionnel": { "level": "low", "text": "Impact indirect : si vous réalisez des opérations sous ces fiches, informez votre mandataire du recensement demandé par la DGEC." }
+      },
+      "sourceName": "DGEC — Flash Info CEE",
+      "sourceUrl": "https://www.ecologie.gouv.fr/sites/default/files/documents/2026-02-24%20Flash%20Info%20Recencement%20BAR-EQ-110%20BAT-EQ-127%20IND-BA-116.pdf",
+      "official": true
+    },
+    {
+      "id": "arrete-2025-09-06-pac-collective-geothermie",
+      "date": "2025-09-06",
+      "category": "Arrêté",
+      "statusLabel": "Applicable au 1er janvier 2026",
+      "impactLevel": "high",
+      "ficheCodes": ["BAR-TH-166", "BAT-TH-113", "BAR-TH-178", "BAR-TH-179", "BAR-TH-180", "BAT-TH-162", "BAT-TH-163", "BAT-TH-164"],
+      "title": "Arrêté du 6 septembre 2025 — refonte des fiches PAC collective et géothermie",
+      "summary": "Supprime BAR-TH-166 et BAT-TH-113 et crée six nouvelles fiches plus spécialisées (géothermie et PAC collective air/eau ou eau/eau, résidentiel et tertiaire), avec bonifications renforcées (coefficients ×3 à ×5).",
+      "impactText": "À compter du 1er janvier 2026, BAR-TH-166 et BAT-TH-113 ne sont plus mobilisables : tout dossier PAC collective ou géothermie doit être monté sur l'une des six nouvelles fiches (BAR-TH-178/179/180, BAT-TH-162/163/164), avec des coefficients de bonification renforcés (×3 à ×5) pour le remplacement de chaudières fossiles, engagement possible jusqu'au 31 décembre 2030.",
+      "actorImpacts": {
+        "delegataireMandataire": { "level": "high", "text": "Basculez sans délai vos dossiers PAC collective/géothermie en cours de montage vers les nouvelles fiches (BAR-TH-178/179/180, BAT-TH-162/163/164) avant le 1er janvier 2026 ; recalculez la valorisation avec les nouveaux coefficients de bonification." },
+        "bureauControle": { "level": "medium", "text": "Mettez à jour vos grilles de contrôle pour les six nouvelles fiches et retirez BAR-TH-166/BAT-TH-113 de vos référentiels actifs après le 1er janvier 2026." },
+        "professionnel": { "level": "medium", "text": "Formez vos équipes techniques aux nouvelles fiches géothermie/PAC collective et à leurs coefficients de bonification différenciés (×3 à ×5) avant de proposer ces opérations à vos clients." }
+      },
+      "sourceName": "Légifrance",
+      "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000052212366",
+      "official": true
+    },
+    {
+      "id": "arrete-2025-09-06-pac-individuelle-x5",
+      "date": "2025-09-06",
+      "category": "Arrêté",
+      "statusLabel": "En vigueur depuis le 1er octobre 2025",
+      "impactLevel": "high",
+      "ficheCodes": ["BAR-TH-171", "BAR-TH-172"],
+      "title": "Arrêté du 6 septembre 2025 — bonification ×5 des PAC individuelles",
+      "summary": "Porte à ×5 le coefficient de bonification Coup de pouce sur les fiches BAR-TH-171 et BAR-TH-172, supprime les montants minimaux d'incitation financière et exclut les résidences secondaires.",
+      "impactText": "Pour toute opération BAR-TH-171 ou BAR-TH-172 engagée entre le 1er octobre 2025 et le 31 décembre 2030 sur une résidence principale, le coefficient de bonification passe à ×5 et le montant minimal d'incitation financière disparaît. Les résidences secondaires sont exclues de cette bonification : vérifiez le statut du logement avant tout engagement.",
+      "actorImpacts": {
+        "delegataireMandataire": { "level": "high", "text": "Recalculez vos grilles de valorisation PAC individuelle avec le coefficient ×5 pour les opérations engagées depuis le 1er octobre 2025, et écartez systématiquement les résidences secondaires du calcul de bonification." },
+        "bureauControle": { "level": "medium", "text": "Vérifiez le statut résidence principale/secondaire et l'absence de montant minimal d'incitation exigé à tort sur les dossiers BAR-TH-171/172 engagés après le 1er octobre 2025." },
+        "professionnel": { "level": "medium", "text": "Mettez à jour vos argumentaires commerciaux avec le nouveau coefficient ×5 et vérifiez que le logement est bien une résidence principale avant de proposer la bonification à votre client." }
+      },
+      "sourceName": "Légifrance",
+      "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000052212320",
+      "official": true
+    },
+    {
+      "id": "arrete-2025-09-08-tra-eq-114-117-131",
+      "date": "2025-09-08",
+      "category": "Arrêté",
+      "statusLabel": "En vigueur depuis le 1er octobre 2025",
+      "impactLevel": "medium",
+      "ficheCodes": ["TRA-EQ-114", "TRA-EQ-117", "TRA-EQ-131"],
+      "title": "Arrêté du 8 septembre 2025 — révision TRA-EQ-114/117, exclusion partielle de TRA-EQ-131",
+      "summary": "Réajuste les montants de CEE sur TRA-EQ-114 et TRA-EQ-117 (véhicules électriques), avec bonification accrue pour les véhicules M1 électriques fabriqués dans l'Espace économique européen, et exclut TRA-EQ-131 (vélos-cargos électriques) de certaines bonifications.",
+      "impactText": "Depuis le 1er octobre 2025, les montants de CEE sur TRA-EQ-114 et TRA-EQ-117 sont différenciés selon le statut du bénéficiaire (précarité énergétique, ménages modestes, autres) et selon que le véhicule M1 électrique est fabriqué ou non dans l'Espace économique européen. TRA-EQ-131 (vélos-cargos électriques) perd l'accès à certaines bonifications : vérifiez l'impact sur vos dossiers en cours.",
+      "actorImpacts": {
+        "delegataireMandataire": { "level": "medium", "text": "Recalculez la valorisation TRA-EQ-114/117 selon le statut du bénéficiaire et l'origine de fabrication du véhicule, et vérifiez que vos dossiers TRA-EQ-131 en cours n'intègrent plus les bonifications désormais exclues." },
+        "bureauControle": { "level": "low", "text": "Vérifiez lors de l'instruction que le bon barème différencié (statut bénéficiaire, origine véhicule) a été appliqué pour les opérations engagées après le 1er octobre 2025." },
+        "professionnel": { "level": "medium", "text": "Informez vos clients que la bonification varie désormais selon leur statut social et l'origine de fabrication du véhicule électrique proposé ; ajustez vos argumentaires commerciaux TRA-EQ-114/117 et TRA-EQ-131." }
+      },
+      "sourceName": "Légifrance",
+      "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000052212572",
+      "official": true
+    },
+    {
+      "id": "arrete-2026-07-27-taux-non-conformite",
+      "date": "2026-07-27",
+      "category": "Arrêté",
+      "statusLabel": "Applicable aux dossiers déposés depuis le 30 juillet 2026",
+      "impactLevel": "high",
+      "ficheCodes": [],
+      "title": "Arrêté du 27 juillet 2026 — modalités de contrôle : resserrement du taux de non-conformité toléré",
+      "summary": "Resserre progressivement le taux de non-conformité toléré par lot de contrôle (14 % en 2026, 12 % en 2027, 10 % à partir de 2028) et relève le taux minimal de contrôle sur site (20 % en 2027, 100 % en 2028 pour les fiches PAC les plus exposées).",
+      "impactText": "Pour tout dossier de demande de CEE déposé à compter du 30 juillet 2026 (quelle que soit la date d'engagement des opérations), le taux d'opérations « non satisfaisantes » toléré par lot contrôlé tombe à 14 % en 2026, 12 % en 2027 puis 10 % à partir de 2028. Un lot qui dépasse ce seuil expose l'ensemble du lot à un refus ou une réfaction, pas seulement les dossiers individuellement non conformes.",
+      "actorImpacts": {
+        "delegataireMandataire": { "level": "high", "text": "Le risque de refus ou de réfaction d'un lot entier augmente mécaniquement à mesure que le seuil toléré se resserre (14 %→12 %→10 %) : renforcez le contrôle qualité interne avant dépôt, en particulier sur les fiches PAC qui passent à 100 % de contrôle sur site en 2028." },
+        "bureauControle": { "level": "high", "text": "Le taux minimal de contrôle sur site grimpe à 20 % en 2027 puis 100 % en 2028 pour les fiches PAC les plus exposées : anticipez la charge et les capacités nécessaires pour couvrir ces nouveaux volumes de contrôle sur site." },
+        "professionnel": { "level": "medium", "text": "La qualité de pose et de dossier (attestations, preuves) doit s'améliorer en continu : un taux de non-conformité élevé sur vos chantiers pénalise désormais plus vite le lot entier de votre mandataire, ce qui peut se répercuter sur la relation commerciale." }
+      },
+      "sourceName": "Légifrance",
+      "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000054541363",
+      "official": true
+    },
+    {
+      "id": "arrete-2026-05-23-ind-ut-137",
+      "date": "2026-05-23",
+      "category": "Arrêté",
+      "statusLabel": "En vigueur depuis le 25 mai 2026",
+      "impactLevel": "medium",
+      "ficheCodes": ["IND-UT-137"],
+      "title": "Arrêté du 23 mai 2026 (84ᵉ arrêté) — révision de la fiche IND-UT-137",
+      "summary": "Réécrit intégralement la fiche IND-UT-137 (PAC en réhausse de température sur chaleur fatale récupérée) : seuil de puissance thermique relevé de 2 à 5 MW, critères de température resserrés.",
+      "impactText": "Le seuil de puissance passe de 2 MW à 5 MW et le critère de température devient « au moins 90 jours par an à 25 °C ou plus (consécutifs ou non), moyenne annuelle supérieure à 18 °C », au lieu d'une exigence de maintien continu au-dessus de 25 °C. Les dossiers IND-UT-137 engagés après le 25 mai 2026 doivent être montés sur cette nouvelle version (A84.3), sous peine de rejet PNCEE.",
+      "actorImpacts": {
+        "delegataireMandataire": { "level": "high", "text": "Si votre portefeuille inclut des opérations de récupération de chaleur fatale industrielle, revoyez les dossiers IND-UT-137 en cours de montage : le référentiel technique change (seuil de puissance, critère de température) et l'ancienne version de la fiche n'est plus mobilisable après le 25 mai 2026." },
+        "bureauControle": { "level": "medium", "text": "Actualisez les grilles de contrôle IND-UT-137 avec les nouveaux seuils (5 MW) et critères de température (90 jours/an à ≥ 25 °C, moyenne annuelle > 18 °C)." },
+        "professionnel": { "level": "medium", "text": "Les bureaux d'études et intégrateurs industriels doivent requalifier les projets de récupération de chaleur fatale selon les nouveaux seuils avant de vendre l'opération sous IND-UT-137." }
+      },
+      "sourceName": "Légifrance",
+      "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000054126720",
+      "official": true
+    },
+    {
+      "id": "arrete-2026-05-29-pac-agrement",
+      "date": "2026-05-29",
+      "category": "Arrêté",
+      "statusLabel": "Applicable au 1er septembre 2026",
+      "impactLevel": "high",
+      "ficheCodes": ["BAR-TH-171", "BAR-TH-172"],
+      "title": "Arrêté du 29 mai 2026 — agrément qualité des PAC individuelles",
+      "summary": "Crée un agrément qualité / résilience industrielle pour les modèles de pompes à chaleur individuelles, instruit par l'ADEME, et modifie en conséquence les fiches BAR-TH-171 et BAR-TH-172.",
+      "impactText": "À compter du 1er septembre 2026, la bonification Coup de pouce Chauffage ×5 sur BAR-TH-171 et BAR-TH-172 est réservée aux modèles de PAC titulaires de cet agrément — son numéro devient une pièce obligatoire de l'attestation sur l'honneur. Vérifiez dès maintenant que les modèles installés ou en catalogue figurent sur la liste des modèles agréés : toute opération engagée après le 1er septembre sur un modèle non agréé perdra la bonification ×5.",
+      "actorImpacts": {
+        "delegataireMandataire": { "level": "high", "text": "Le volume de CEE bonifiés valorisables sur ces deux fiches dépend désormais d'une liste de modèles agréés : ajustez les grilles d'achat et de valorisation dès maintenant, et intégrez le numéro d'agrément comme pièce obligatoire du tableau récapitulatif et de l'attestation sur l'honneur pour tout dossier déposé après le 1er septembre 2026." },
+        "bureauControle": { "level": "high", "text": "Nouveau point de contrôle obligatoire sur pièces et sur site : présence et validité du numéro d'agrément, cohérence avec la liste ADEME des modèles agréés. Les checklists et grilles de contrôle doivent être mises à jour avant le 1er septembre." },
+        "professionnel": { "level": "medium", "text": "Les commerciaux et poseurs doivent vérifier, avant la vente et la pose, que le modèle proposé figure sur la liste des modèles agréés — une session de formation courte sur ce nouveau critère est recommandée avant la rentrée." }
+      },
+      "sourceName": "Légifrance",
+      "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000054152008",
+      "official": true
+    },
+    {
+      "id": "arrete-2026-05-18-tra-eq-ve",
+      "date": "2026-05-18",
+      "category": "Arrêté",
+      "statusLabel": "En vigueur depuis le 1er juin 2026",
+      "impactLevel": "medium",
+      "ficheCodes": ["TRA-EQ-114", "TRA-EQ-117", "TRA-EQ-128", "TRA-EQ-129"],
+      "title": "Arrêté du 18 mai 2026 — révision des fiches véhicules électriques",
+      "summary": "Modifie les fiches d'acquisition et de rétrofit électrique (TRA-EQ-114, 117, 128, 129) et les niveaux de bonification associés.",
+      "impactText": "Les montants forfaitaires et niveaux de bonification de ces quatre fiches transport changent : recalculez les simulations de valorisation CEE pour tout dossier VE engagé à partir du 1er juin 2026 avant de vous engager sur un devis client.",
+      "actorImpacts": {
+        "delegataireMandataire": { "level": "medium", "text": "Les nouveaux forfaits et niveaux de bonification changent le volume de CEE généré par opération : ajustez les grilles d'achat et les simulateurs/devis client avant tout engagement postérieur au 1er juin 2026." },
+        "bureauControle": { "level": "low", "text": "Vérifier lors de l'instruction que le bon barème (avant/après le 1er juin 2026) a été appliqué selon la date d'engagement de l'opération." },
+        "professionnel": { "level": "medium", "text": "Les revendeurs et installeurs de solutions de recharge/rétrofit doivent connaître les nouveaux montants pour argumenter correctement le reste à charge auprès du client." }
+      },
+      "sourceName": "Légifrance",
+      "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000054110613",
+      "official": true
+    },
+    {
+      "id": "arrete-2026-03-26-independance-organismes-inspection",
+      "date": "2026-03-26",
+      "category": "Arrêté",
+      "statusLabel": "En vigueur depuis le 1er avril 2026",
+      "impactLevel": "high",
+      "ficheCodes": [],
+      "title": "Arrêté du 26 mars 2026 — indépendance des organismes d'inspection",
+      "summary": "Renforce les règles d'indépendance capitalistique et organique entre les organismes d'inspection (bureaux de contrôle) et le demandeur de CEE, son mandataire RAI, ou toute entreprise liée à la conception, la réalisation ou la commercialisation des équipements contrôlés.",
+      "impactText": "Depuis le 1er avril 2026, tout lien de contrôle direct ou indirect entre le bureau de contrôle choisi et le demandeur, son mandataire portant le RAI, ou une entreprise liée à l'équipement contrôlé est interdit pour les opérations soumises à contrôle sur site. Un contrôle réalisé par un organisme non indépendant expose le dossier à une remise en cause lors de l'instruction PNCEE : vérifiez l'absence de tout lien capitalistique avant de désigner un bureau de contrôle.",
+      "actorImpacts": {
+        "delegataireMandataire": { "level": "high", "text": "Vérifiez l'absence de tout lien capitalistique ou organique entre le bureau de contrôle désigné et votre structure (ou celle de votre mandataire RAI) avant toute désignation à compter du 1er avril 2026 — un contrôle réalisé par un organisme non indépendant expose le dossier à un rejet." },
+        "bureauControle": { "level": "high", "text": "Vous devez désormais démontrer l'absence de tout contrôle direct ou indirect avec le demandeur, son mandataire RAI, ou les entreprises liées à l'équipement inspecté : mettez à jour vos procédures d'acceptation de mission et vos déclarations d'indépendance." },
+        "professionnel": { "level": "medium", "text": "Si votre entreprise a des liens capitalistiques avec un bureau de contrôle, celui-ci ne peut plus être désigné pour contrôler vos propres opérations à compter du 1er avril 2026 — vérifiez vos partenariats existants." }
+      },
+      "sourceName": "Légifrance",
+      "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000053734256",
+      "official": true
+    },
+    {
+      "id": "consultation-2026-projet-arrete-socle",
+      "date": "2026-05-01",
+      "category": "Consultation publique",
+      "statusLabel": "Consultation en cours — à surveiller",
+      "impactLevel": "medium",
+      "ficheCodes": [],
+      "title": "Projet d'arrêté modifiant le socle des opérations standardisées",
+      "summary": "Projet de texte modifiant les arrêtés définissant les opérations standardisées d'économies d'énergie et leurs modalités d'application — mis en ligne pour consultation publique.",
+      "impactText": "Signal amont : ce projet touche le socle réglementaire commun à toutes les fiches. Rien n'est encore figé, mais anticipez — surveillez la publication définitive au Journal officiel avant de bâtir des dossiers sur des hypothèses qui pourraient changer.",
+      "actorImpacts": {
+        "delegataireMandataire": { "level": "info", "text": "Rien à changer tant que le texte n'est pas publié, mais surveillez la publication définitive avant de bâtir des dossiers ou d'adapter vos outils sur la seule base du projet." },
+        "bureauControle": { "level": "none", "text": "Aucun impact tant que le texte n'est pas publié au Journal officiel." },
+        "professionnel": { "level": "none", "text": "Aucun impact direct à ce stade." }
+      },
+      "sourceName": "Consultations publiques",
+      "sourceUrl": "https://www.consultations-publiques.developpement-durable.gouv.fr/projet-d-arrete-modifiant-les-arretes-definissant-a2985.html?lang=fr",
+      "official": true
+    },
+    {
+      "id": "arrete-2026-01-07-renovation-ampleur",
+      "date": "2026-01-07",
+      "category": "Arrêté",
+      "statusLabel": "En vigueur depuis le 17 janvier 2026",
+      "impactLevel": "high",
+      "ficheCodes": ["BAR-TH-174", "BAR-TH-175", "BAR-TH-177"],
+      "title": "Arrêté du 7 janvier 2026 — rénovation d'ampleur, Coup de pouce prolongé",
+      "summary": "Prolonge sans échéance le Coup de pouce « Rénovation d'ampleur » et « Rénovation performante d'un bâtiment résidentiel collectif », supprime la condition de déperdition (Ubat) pour les sauts de 4 classes, exclut les résidences secondaires.",
+      "impactText": "Pour toute opération BAR-TH-174 / 175 / 177 engagée après le 17 janvier 2026 sur une résidence secondaire, la bonification Coup de pouce n'est plus mobilisable — mettez à jour vos grilles de simulation et écartez ces dossiers du calcul de bonification avant l'engagement.",
+      "actorImpacts": {
+        "delegataireMandataire": { "level": "high", "text": "Écartez systématiquement les résidences secondaires du calcul de bonification pour tout engagement postérieur au 17 janvier 2026, et mettez à jour vos grilles de simulation pour refléter la suppression de la condition Ubat sur les sauts de 4 classes — cela réduit le volume de dossiers bonifiés éligibles à intégrer dans vos prévisions d'approvisionnement." },
+        "bureauControle": { "level": "medium", "text": "Vérifier lors du contrôle le statut résidence principale/secondaire du logement pour toute opération engagée après le 17 janvier 2026, et que le saut de 4 classes est démontré sans exiger la condition Ubat désormais supprimée." },
+        "professionnel": { "level": "high", "text": "Les auditeurs énergétiques et artisans RGE réalisant l'étude doivent vérifier le statut du logement avant de proposer l'opération et connaître la nouvelle règle Ubat — un point à traiter en formation interne rapidement." }
+      },
+      "sourceName": "Légifrance",
+      "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000053373748",
+      "official": true
+    },
+    {
+      "id": "qr-cee-maj-2026-07-29",
+      "date": "2026-07-29",
+      "category": "Questions-réponses",
+      "statusLabel": "Document officiel mis à jour",
+      "impactLevel": "medium",
+      "ficheCodes": [],
+      "title": "Mise à jour du Questions-Réponses du dispositif CEE",
+      "summary": "Le document officiel de Questions-Réponses sur le dispositif CEE a été actualisé — nouvelles clarifications sur le fonctionnement général et l'application des fiches standardisées.",
+      "impactText": "Le Q/R fait référence en cas de contrôle PNCEE : relisez les rubriques touchant vos dossiers en cours (qualification RGE, durée de vie conventionnelle, codes NAF, rattachement sectoriel) avant de trancher un cas litigieux en instruction interne.",
+      "actorImpacts": {
+        "delegataireMandataire": { "level": "medium", "text": "Le Q/R fait référence en cas de litige avec le PNCEE sur l'interprétation d'un dossier : diffusez les clarifications pertinentes aux équipes d'instruction et de stratégie d'achat." },
+        "bureauControle": { "level": "medium", "text": "Sert de base de référence pour les positions d'interprétation retenues lors des contrôles sur pièces et sur site." },
+        "professionnel": { "level": "low", "text": "Impact indirect, transmis via le mandataire si une clarification concerne les conditions de réalisation des travaux." }
+      },
+      "sourceName": "ecologie.gouv.fr",
+      "sourceUrl": "https://www.ecologie.gouv.fr/politiques-publiques/questions-reponses-dispositif-cee",
+      "official": true
+    },
+    {
+      "id": "arrete-2025-12-15-pac-bar-th-171-172",
+      "date": "2025-12-15",
+      "category": "Arrêté",
+      "statusLabel": "En vigueur",
+      "impactLevel": "medium",
+      "ficheCodes": ["BAR-TH-171", "BAR-TH-172"],
+      "title": "Arrêté du 15 décembre 2025 — ajustements PAC air/eau et eau/eau",
+      "summary": "Modifie des dispositions relatives aux fiches BAR-TH-171 (PAC air/eau) et BAR-TH-172 (PAC eau/eau ou eau glycolée/eau), en amont de la réforme de l'agrément qualité de mai 2026.",
+      "impactText": "Ajustements techniques préparant l'arrivée de l'agrément qualité PAC (voir l'arrêté du 29 mai 2026 ci-dessus) : à lire en cohérence avec ce second texte pour les dossiers PAC en cours de montage.",
+      "actorImpacts": {
+        "delegataireMandataire": { "level": "medium", "text": "Ajustements préparatoires à anticiper dans le pipeline commercial PAC et dans le tableau récapitulatif avant l'entrée en vigueur de l'agrément qualité en septembre 2026." },
+        "bureauControle": { "level": "low", "text": "Changements essentiellement techniques, sans nouveau protocole de contrôle à ce stade." },
+        "professionnel": { "level": "low", "text": "Pas d'action immédiate, mais un signal que les modèles PAC vendus vont bientôt être soumis à agrément — anticiper le choix des gammes fournisseurs." }
+      },
+      "sourceName": "Légifrance",
+      "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000053043176",
+      "official": true
+    },
+    {
+      "id": "catalogue-fiches-v84",
+      "date": "2025-12-30",
+      "category": "Catalogue des fiches",
+      "statusLabel": "221 fiches en vigueur",
+      "impactLevel": "high",
+      "ficheCodes": ["BAR-TH-106", "BAR-TH-107", "BAR-TH-107-SE", "BAR-TH-150", "BAR-TH-167"],
+      "title": "Catalogue consolidé des fiches — version 84",
+      "summary": "Le catalogue officiel des opérations standardisées passe en version 84. Sortie du catalogue des fiches chauffage fossile résidentiel.",
+      "impactText": "BAR-TH-106, 107, 107-SE, 150 et 167 ne sont plus mobilisables pour de nouvelles opérations : vérifiez qu'aucun dossier en cours de montage ne s'appuie encore sur l'une de ces fiches avant dépôt au PNCEE.",
+      "actorImpacts": {
+        "delegataireMandataire": { "level": "high", "text": "Ne plus acheter, valoriser ni déposer de dossier reposant sur ces cinq fiches retirées : un dépôt sur une fiche caduque est un motif de rejet automatique au PNCEE — vérifiez sans délai le pipeline commercial et les dossiers en instruction." },
+        "bureauControle": { "level": "high", "text": "Nouveau motif de non-conformité à intégrer aux checklists : tout dossier référençant une de ces cinq fiches après leur sortie du catalogue doit être signalé." },
+        "professionnel": { "level": "high", "text": "Cessez de vendre et d'installer les équipements fossiles éligibles sous ces fiches ; une formation courte des équipes commerciales et techniques sur les alternatives désormais éligibles est nécessaire." }
+      },
+      "sourceName": "ecologie.gouv.fr",
+      "sourceUrl": "https://www.ecologie.gouv.fr/politiques-publiques/operations-standardisees-deconomies-denergie",
+      "official": true
+    },
+    {
+      "id": "arrete-2025-04-07-mandataire-rai",
+      "date": "2025-04-07",
+      "category": "Arrêté",
+      "statusLabel": "En vigueur depuis le 1er juillet 2025",
+      "impactLevel": "high",
+      "ficheCodes": [],
+      "title": "Arrêté du 7 avril 2025 — identité du mandataire RAI dans les tableaux récapitulatifs",
+      "summary": "Modifie l'arrêté du 4 septembre 2014 (pièces à archiver) et celui du 22 décembre 2014 (opérations standardisées) : le tableau récapitulatif de chaque opération doit désormais porter la raison sociale et le SIREN du mandataire assurant le rôle actif et incitatif (RAI).",
+      "impactText": "Ce champ est obligatoire sur toutes les fiches, tous secteurs confondus, pour les opérations engagées depuis le 1er juillet 2025 : un dossier sans identité RAI complète s'expose à un rejet ou une suspension en instruction PNCEE. Vérifiez que vos modèles de tableaux récapitulatifs et votre outil de montage de dossier intègrent bien ce champ.",
+      "actorImpacts": {
+        "delegataireMandataire": { "level": "high", "text": "Champ obligatoire depuis le 1er juillet 2025 : intégrez systématiquement la raison sociale et le SIREN du porteur du rôle actif et incitatif dans le tableau récapitulatif de chaque dossier, et adaptez vos modèles et logiciel métier — un dossier incomplet sur ce point expose à un rejet ou une suspension en instruction PNCEE." },
+        "bureauControle": { "level": "high", "text": "Nouveau point de contrôle obligatoire lors de l'instruction et des contrôles sur pièces : présence, exactitude et cohérence de l'identité RAI déclarée." },
+        "professionnel": { "level": "medium", "text": "Sachez identifier qui, dans la chaîne commerciale, porte le rôle actif et incitatif sur vos opérations, et transmettez cette information de façon fiable au mandataire lors du montage du dossier." }
+      },
+      "sourceName": "Légifrance",
+      "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000051515794",
+      "official": true
+    },
+    {
+      "id": "decret-2025-1048-p6",
+      "date": "2025-10-30",
+      "category": "Décret",
+      "statusLabel": "En vigueur depuis le 1er janvier 2026",
+      "impactLevel": "high",
+      "ficheCodes": [],
+      "title": "Décret n° 2025-1048 — sixième période du dispositif CEE (P6, 2026-2030)",
+      "summary": "Fixe le cadre de la sixième période : obligation totale de 5 250 TWh cumac (soit 1 050 TWh cumac/an, +27 % vs P5), objectif précarité énergétique porté à 500 TWh cumac (+40 %), et abaissement des seuils d'assujettissement à l'obligation (500 m³ / 2 000 t selon l'énergie).",
+      "impactText": "Ne modifie pas directement le contenu technique des fiches, mais recadre l'ensemble du dispositif dans lequel elles s'appliquent : les volumes d'obligation par énergie et les seuils d'assujettissement changent, ce qui déplace la demande de CEE et donc leur valorisation — à intégrer dans vos hypothèses commerciales et vos stratégies d'approvisionnement pour 2026-2030.",
+      "actorImpacts": {
+        "delegataireMandataire": { "level": "high", "text": "Les nouveaux volumes d'obligation par énergie et l'abaissement des seuils d'assujettissement redessinent la demande de CEE sur cinq ans : à revoir en profondeur dans la stratégie commerciale, d'achat et de dépôt pour 2026-2030 — les textes d'application viendront préciser les modalités concrètes de dépôt." },
+        "bureauControle": { "level": "low", "text": "Cadre général de la période, sans nouveau protocole de contrôle en tant que tel ; les arrêtés d'application ultérieurs préciseront d'éventuelles évolutions des modalités de contrôle." },
+        "professionnel": { "level": "info", "text": "Impact indirect via l'évolution de la demande de CEE et donc du niveau des primes proposées aux clients sur la période 2026-2030." }
+      },
+      "sourceName": "Légifrance",
+      "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000052486193",
+      "official": true
+    },
+    {
+      "id": "atee-webinaire-cee-news-2026-09-24",
+      "date": "2026-09-24",
+      "category": "Événement",
+      "statusLabel": "À venir",
+      "impactLevel": "info",
+      "ficheCodes": [],
+      "title": "Webinaire ATEE / ADEME « CEE News » — 24 septembre 2026",
+      "summary": "Rendez-vous de veille réglementaire du Club C2E (ATEE) avec l'ADEME, incluant des ateliers dédiés à l'industrie et aux collectivités.",
+      "impactText": "Pas d'impact réglementaire direct — utile pour anticiper les évolutions à venir et échanger avec d'autres directions techniques CEE.",
+      "actorImpacts": {
+        "delegataireMandataire": { "level": "info", "text": "Rendez-vous utile pour anticiper les évolutions du dispositif et clarifier en amont des points d'interprétation avec l'ADEME avant qu'ils ne deviennent des points de blocage en instruction." },
+        "bureauControle": { "level": "info", "text": "Pertinent pour suivre les orientations à venir en matière de contrôle." },
+        "professionnel": { "level": "none", "text": "Événement destiné aux fonctions réglementaires plutôt qu'aux équipes terrain." }
+      },
+      "sourceName": "ATEE — Club C2E",
+      "sourceUrl": "https://atee.fr/efficacite-energetique/club-c2e/actualites-evenements",
+      "official": false
+    }
+  ]
+}
+      </pre>
+    </details>
+  </footer>
+
+</div>
+
+<script>
+/* ============================================================
+   DATA — read from the <pre id="data-json"> block above, which is
+   the single source of truth (kept as plain visible text, not
+   inside a <script>, so a page-fetch tool that strips scripts can
+   still read it back). Structure:
+     meta: { lastRun, sources[], arreteSeries[] }
+     items[]: id, date (ISO), category, statusLabel,
+       impactLevel (high|medium|low|info), ficheCodes[], title,
+       summary, impactText, sourceName, sourceUrl, official (bool),
+       actorImpacts: {
+         delegataireMandataire, bureauControle, professionnel:
+           { level (high|medium|low|info|none), text }
+       }
+     arreteSeries[]: { num, date?, title?, sourceUrl?, confirmed }
+       — informal "Nth arrêté" numbering used by CEE trade press to
+       track sequential amendments to the 22 Dec 2014 catalogue
+       arrêté. Entries with confirmed:false are known gaps (number
+       not yet identified with a reliable source).
+   The daily monitoring routine reads this block, diffs item ids
+   against freshly fetched source pages, prepends any new entries
+   (each with a full actorImpacts breakdown), updates meta.lastRun,
+   and republishes the same file/url.
+   ============================================================ */
+const DATA = JSON.parse(document.getElementById("data-json").textContent);
+const META = DATA.meta;
+const ITEMS = DATA.items;
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+const IMPACT_LABEL = { high: "Impact fort", medium: "Impact modéré", low: "Impact faible", info: "Informatif" };
+const ACTORS = [
+  { key: "delegataireMandataire", label: "Délégataire / Mandataire", mono: "DM" },
+  { key: "bureauControle", label: "Bureau de contrôle", mono: "BC" },
+  { key: "professionnel", label: "Professionnel (RGE)", mono: "PR" }
+];
+const ACTOR_LEVEL_LABEL = { high: "Fort", medium: "Modéré", low: "Faible", info: "À suivre", none: "Aucun" };
+const CATS = [...new Set(ITEMS.map(i => i.category))];
+const state = { cats: new Set(), impacts: new Set(), actors: new Set(), q: "", view: "feed" };
+
+function fmtDate(iso) {
+  const d = new Date(iso + "T00:00:00");
+  return d.toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" });
+}
+
+function refCodeOf(url) {
+  const m = (url || "").match(/[A-Z]{3,}\d{6,}/);
+  return m ? m[0] : null;
+}
+
+function seenIds() {
+  try { return new Set(JSON.parse(localStorage.getItem("cee-veille-seen") || "[]")); }
+  catch (e) { return new Set(); }
+}
+function markAllSeen() {
+  localStorage.setItem("cee-veille-seen", JSON.stringify(ITEMS.map(i => i.id)));
+}
+
+function actorImpactOf(item, key) {
+  return (item.actorImpacts && item.actorImpacts[key]) || { level: "none", text: "Pas d'impact direct identifié pour cet acteur." };
+}
+
+function escAttr(s) {
+  return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+// Rendu des pièces jointes (listes / tableaux récapitulatifs cités dans un texte réglementaire).
+// Schéma attendu par entrée de item.attachments[] :
+//   { type: "table"|"list", title, note, columns?: string[], rows?: string[][], items?: string[],
+//     totalCount?: number, official?: bool, sourceName?: string, sourceUrl?: string }
+function renderAttachments(item) {
+  const atts = item.attachments;
+  if (!atts || !atts.length) return "";
+  return atts.map(a => {
+    const isUnofficial = a.official === false;
+    let bodyHtml = "";
+    if (a.type === "table" && a.columns && a.rows) {
+      bodyHtml = `<div class="attach-table-wrap"><table class="attach-table">
+        <thead><tr>${a.columns.map(c => `<th>${escAttr(c)}</th>`).join("")}</tr></thead>
+        <tbody>${a.rows.map(r => `<tr>${r.map(c => `<td>${escAttr(c)}</td>`).join("")}</tr>`).join("")}</tbody>
+      </table></div>`;
+    } else if (a.type === "list" && a.items) {
+      bodyHtml = `<ul class="attach-list">${a.items.map(li => `<li>${escAttr(li)}</li>`).join("")}</ul>`;
+    }
+    const countNote = (a.totalCount && a.rows && a.totalCount > a.rows.length)
+      ? `<div class="attach-foot"><span>${a.rows.length} ligne(s) affichée(s) sur ${a.totalCount} au total dans le texte source.</span>${a.sourceUrl ? `<a href="${a.sourceUrl}" target="_blank" rel="noopener">Voir la liste complète ↗</a>` : ""}</div>`
+      : (a.sourceUrl ? `<div class="attach-foot"><span>${a.sourceName || ""}</span><a href="${a.sourceUrl}" target="_blank" rel="noopener">Voir le texte source ↗</a></div>` : "");
+    return `<div class="attach-block">
+      <div class="attach-head">
+        <span class="attach-clip">📎</span>
+        <span class="attach-title">${a.title || "Annexe"}</span>
+        <span class="attach-badge${isUnofficial ? " unofficial" : ""}">${isUnofficial ? "à recouper" : "annexe"}</span>
+      </div>
+      <div class="attach-body">
+        ${a.note ? `<p class="attach-note">${a.note}</p>` : ""}
+        ${bodyHtml}
+        ${countNote}
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function buildFilters() {
+  const catRow = document.getElementById("catRow");
+  CATS.forEach(c => {
+    const chip = document.createElement("button");
+    chip.className = "chip"; chip.textContent = c; chip.dataset.cat = c;
+    chip.addEventListener("click", () => {
+      state.cats.has(c) ? state.cats.delete(c) : state.cats.add(c);
+      chip.classList.toggle("active");
+      render();
+    });
+    catRow.appendChild(chip);
+  });
+  const impactRow = document.getElementById("impactRow");
+  Object.entries(IMPACT_LABEL).forEach(([key, label]) => {
+    const chip = document.createElement("button");
+    chip.className = "chip"; chip.textContent = label; chip.dataset.impact = key;
+    chip.addEventListener("click", () => {
+      state.impacts.has(key) ? state.impacts.delete(key) : state.impacts.add(key);
+      chip.classList.toggle("active");
+      render();
+    });
+    impactRow.appendChild(chip);
+  });
+  const actorRow = document.getElementById("actorRow");
+  ACTORS.forEach(a => {
+    const chip = document.createElement("button");
+    chip.className = "chip"; chip.textContent = a.label; chip.dataset.actor = a.key;
+    chip.addEventListener("click", () => {
+      state.actors.has(a.key) ? state.actors.delete(a.key) : state.actors.add(a.key);
+      chip.classList.toggle("active");
+      render();
+    });
+    actorRow.appendChild(chip);
+  });
+}
+
+function buildCounts() {
+  const wrap = document.getElementById("counts");
+  const byImpact = { high: 0, medium: 0, low: 0, info: 0 };
+  ITEMS.forEach(i => byImpact[i.impactLevel]++);
+  const tiles = [
+    `<div class="stat-tile total"><div class="n">${ITEMS.length}</div><div class="l">Entrées suivies</div></div>`,
+    `<div class="stat-tile high"><div class="n">${byImpact.high}</div><div class="l">Impact fort</div></div>`,
+    `<div class="stat-tile medium"><div class="n">${byImpact.medium}</div><div class="l">Impact modéré</div></div>`,
+    `<div class="stat-tile low"><div class="n">${byImpact.low}</div><div class="l">Impact faible</div></div>`
+  ];
+  wrap.innerHTML = tiles.join("");
+}
+
+function buildSources() {
+  document.getElementById("sourceCount").textContent = META.sources.length;
+  document.getElementById("lastRun").textContent = fmtDate(META.lastRun);
+  document.getElementById("lastRun").setAttribute("datetime", META.lastRun);
+  const list = META.sources.map(s => `<a href="${s.url}" target="_blank" rel="noopener">${s.name}</a>`).join(" · ");
+  document.getElementById("sourcesList").innerHTML = "<strong>Sources surveillées :</strong> " + list;
+}
+
+function buildChrono() {
+  const wrap = document.getElementById("chronoList");
+  const series = (META.arreteSeries || []).slice().sort((a, b) => b.num - a.num);
+  wrap.innerHTML = series.map(e => {
+    if (!e.confirmed) {
+      return `<div class="chrono-row gap">
+        <div class="chrono-num">${e.num}</div>
+        <div class="chrono-body">
+          <div class="chrono-title">Non identifié — à vérifier</div>
+        </div>
+      </div>`;
+    }
+    return `<div class="chrono-row">
+      <div class="chrono-num">${e.num}</div>
+      <div class="chrono-body">
+        <div class="chrono-title">${e.title}</div>
+        <div class="chrono-meta">${fmtDate(e.date)}</div>
+        <a class="source-link chrono-link" href="${e.sourceUrl}" target="_blank" rel="noopener">Consulter sur Légifrance ↗</a>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+const SECTOR_LABEL = { "Résidentiel": "Résidentiel (BAR)", "Tertiaire": "Tertiaire (BAT)", "Industrie": "Industrie (IND)", "Agriculture": "Agriculture (AGRI)", "Réseaux": "Réseaux (RES)", "Transport": "Transport (TRA)" };
+const catalogState = { sectors: new Set(), q: "" };
+
+function codeToItemsMap() {
+  const map = {};
+  ITEMS.forEach(i => (i.ficheCodes || []).forEach(c => {
+    if (!map[c]) map[c] = [];
+    map[c].push(i);
+  }));
+  return map;
+}
+
+function buildCatalogStats() {
+  const cat = META.ficheCatalog || [];
+  const wrap = document.getElementById("catalogStats");
+  const active = cat.filter(f => !f.a).length;
+  const abrogees = cat.filter(f => f.a).length;
+  wrap.innerHTML = [
+    `<div class="stat-tile total"><div class="n">${cat.length}</div><div class="l">Fiches au catalogue</div></div>`,
+    `<div class="stat-tile low"><div class="n">${active}</div><div class="l">Actives</div></div>`,
+    `<div class="stat-tile medium"><div class="n">${abrogees}</div><div class="l">Abrogées / retirées</div></div>`
+  ].join("");
+}
+
+function buildSectorFilter() {
+  const row = document.getElementById("sectorRow");
+  const sectors = [...new Set((META.ficheCatalog || []).map(f => f.s))];
+  sectors.forEach(s => {
+    const chip = document.createElement("button");
+    chip.className = "chip"; chip.textContent = SECTOR_LABEL[s] || s; chip.dataset.sector = s;
+    chip.addEventListener("click", () => {
+      catalogState.sectors.has(s) ? catalogState.sectors.delete(s) : catalogState.sectors.add(s);
+      chip.classList.toggle("active");
+      renderCatalog();
+    });
+    row.appendChild(chip);
+  });
+}
+
+function renderCatalog() {
+  const wrap = document.getElementById("catalogSectors");
+  const cat = META.ficheCatalog || [];
+  const q = catalogState.q.trim().toLowerCase();
+  const byCode = codeToItemsMap();
+  const sectors = [...new Set(cat.map(f => f.s))];
+
+  const blocks = sectors.filter(s => !catalogState.sectors.size || catalogState.sectors.has(s)).map(sector => {
+    const fiches = cat.filter(f => f.s === sector && (!q || f.c.toLowerCase().includes(q) || f.t.toLowerCase().includes(q)));
+    if (!fiches.length) return "";
+    const cards = fiches.map(f => {
+      const related = (byCode[f.c] || []).slice().sort((a, b) => b.date.localeCompare(a.date));
+      const evo = related.length
+        ? `<div class="fiche-evolution">Dernière évolution suivie : <time>${fmtDate(related[0].date)}</time> — <a class="source-link" href="#" data-jump="${f.c}">${related[0].title}</a></div>`
+        : `<div class="no-evolution">Aucune évolution suivie dans le registre.</div>`;
+      return `<div class="fiche-card ${f.a ? 'is-abrogee' : ''}">
+        <div class="fiche-card-top">
+          <span class="fiche-code-lg">${f.c}</span>
+          <span class="fiche-status ${f.a ? 'abrogee' : 'active'}">${f.a ? 'Abrogée' : 'Active'}</span>
+        </div>
+        <div class="fiche-card-title">${f.t}</div>
+        ${evo}
+      </div>`;
+    }).join("");
+    return `<div class="sector-block">
+      <div class="sector-title">${SECTOR_LABEL[sector] || sector} <span class="sector-count">${fiches.length}</span></div>
+      <div class="fiche-grid">${cards}</div>
+    </div>`;
+  }).join("");
+
+  wrap.innerHTML = blocks || `<div class="empty-state">Aucune fiche ne correspond à ces filtres.</div>`;
+
+  wrap.querySelectorAll("[data-jump]").forEach(a => {
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      setView("feed");
+      state.q = a.dataset.jump;
+      document.getElementById("search").value = a.dataset.jump;
+      render();
+    });
+  });
+}
+
+function setView(view) {
+  state.view = view;
+  document.getElementById("tabFeed").classList.toggle("active", view === "feed");
+  document.getElementById("tabChrono").classList.toggle("active", view === "chrono");
+  document.getElementById("tabCatalog").classList.toggle("active", view === "catalog");
+  document.getElementById("filterBar").style.display = view === "feed" ? "" : "none";
+  document.getElementById("feed").style.display = view === "feed" ? "" : "none";
+  document.getElementById("chronoView").style.display = view === "chrono" ? "" : "none";
+  document.getElementById("catalogView").style.display = view === "catalog" ? "" : "none";
+}
+
+function render() {
+  const feed = document.getElementById("feed");
+  const seen = seenIds();
+  const q = state.q.trim().toLowerCase();
+
+  const filtered = ITEMS.filter(i => {
+    if (state.cats.size && !state.cats.has(i.category)) return false;
+    if (state.impacts.size && !state.impacts.has(i.impactLevel)) return false;
+    if (state.actors.size) {
+      const relevant = [...state.actors].some(a => actorImpactOf(i, a).level !== "none");
+      if (!relevant) return false;
+    }
+    if (q) {
+      const hay = (i.title + " " + i.summary + " " + i.ficheCodes.join(" ")).toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  }).sort((a, b) => b.date.localeCompare(a.date));
+
+  if (!filtered.length) {
+    feed.innerHTML = `<div class="empty-state">Aucune entrée ne correspond à ces filtres.</div>`;
+    return;
+  }
+
+  feed.innerHTML = filtered.map(i => {
+    const isNew = !seen.has(i.id);
+    const ref = refCodeOf(i.sourceUrl);
+    return `
+    <article class="item" data-impact="${i.impactLevel}" data-id="${i.id}">
+      <button class="item-head" aria-expanded="false">
+        <span class="chev">▾</span>
+        <div class="item-toprow">
+          <time class="item-date">${fmtDate(i.date)}</time>
+          ${ref ? `<span class="ref-code">réf. ${ref}</span>` : ""}
+          <span class="tag cat">${i.category}</span>
+          <span class="tag impact-${i.impactLevel}">${IMPACT_LABEL[i.impactLevel]}</span>
+          ${isNew ? '<span class="tag new">Nouveau</span>' : ''}
+        </div>
+        <h3 class="item-title">${i.title}</h3>
+        <p class="item-summary">${i.summary}</p>
+        ${i.ficheCodes.length ? `<div class="fiches">${i.ficheCodes.map(f => `<span class="fiche-code">${f}</span>`).join("")}</div>` : ""}
+      </button>
+      <div class="item-body">
+        <span class="tag status">${i.statusLabel}</span>
+        <div class="impact-block">
+          <p class="h">Impact sur le déroulement d'une fiche CEE</p>
+          <p>${i.impactText}</p>
+        </div>
+        <p class="actor-block-h">Impact par acteur</p>
+        <div class="actor-grid">
+          ${ACTORS.map(a => {
+            const ai = actorImpactOf(i, a.key);
+            return `<div class="actor-card">
+              <div class="actor-name">
+                <span class="actor-name-label"><span class="actor-mono">${a.mono}</span>${a.label}</span>
+                <span class="actor-level ${ai.level}">${ACTOR_LEVEL_LABEL[ai.level]}</span>
+              </div>
+              <p>${ai.text}</p>
+            </div>`;
+          }).join("")}
+        </div>
+        ${renderAttachments(i)}
+        <div class="item-foot">
+          <span class="official-tag">${i.official ? "Source officielle" : "Source professionnelle"} — ${i.sourceName}</span>
+          <a class="source-link" href="${i.sourceUrl}" target="_blank" rel="noopener">Consulter le texte source ↗</a>
+        </div>
+      </div>
+    </article>`;
+  }).join("");
+
+  feed.querySelectorAll(".item-head").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const item = btn.closest(".item");
+      const open = item.classList.toggle("open");
+      btn.setAttribute("aria-expanded", String(open));
+    });
+  });
+}
+
+document.getElementById("search").addEventListener("input", e => { state.q = e.target.value; render(); });
+document.getElementById("markRead").addEventListener("click", () => { markAllSeen(); render(); });
+document.getElementById("tabFeed").addEventListener("click", () => setView("feed"));
+document.getElementById("tabChrono").addEventListener("click", () => setView("chrono"));
+document.getElementById("tabCatalog").addEventListener("click", () => setView("catalog"));
+document.getElementById("catalogSearch").addEventListener("input", e => { catalogState.q = e.target.value; renderCatalog(); });
+
+buildFilters();
+buildCounts();
+buildSources();
+buildChrono();
+buildCatalogStats();
+buildSectorFilter();
+renderCatalog();
+render();
+</script>
+
+</body></html>
