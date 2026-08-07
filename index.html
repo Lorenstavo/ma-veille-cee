@@ -478,6 +478,11 @@
   .fiche-status.active { background: var(--impact-low-tint); color: var(--impact-low); border-color: var(--impact-low-line); }
   .fiche-status.abrogee { background: var(--surface-2); color: var(--ink-faint); border-color: var(--line); }
   .fiche-card-title { font-size: 12.5px; color: var(--ink); line-height: 1.4; }
+  .fiche-pdf-link {
+    display: inline-flex; align-items: center; gap: 4px; margin-top: 8px;
+    font-size: 11px; font-weight: 700; color: var(--primary-strong); text-decoration: none;
+  }
+  .fiche-pdf-link:hover { text-decoration: underline; }
   .fiche-evolution { margin-top: 7px; padding-top: 7px; border-top: 1px dashed var(--line); font-size: 11px; }
   .fiche-evolution a { font-weight: 600; }
   .no-evolution { font-size: 11px; color: var(--ink-faint); margin-top: 7px; padding-top: 7px; border-top: 1px dashed var(--line); }
@@ -1605,6 +1610,15 @@ function buildSectorFilter() {
   });
 }
 
+// Génère un lien de recherche ciblée vers le PDF officiel en vigueur d'une fiche.
+// Il n'existe pas d'URL gouvernementale stable par fiche (chaque PDF est nommé avec son
+// numéro de version, ex. "BAR-TH-171 vA78.4 à compter du 01-01-2026.pdf", et ce nom change
+// à chaque révision) : ce lien de recherche reste donc toujours valide, sans maintenance,
+// contrairement à un lien figé qui deviendrait obsolète à la prochaine évolution de la fiche.
+function pdfSearchUrl(code) {
+  return "https://www.google.com/search?q=" + encodeURIComponent('site:ecologie.gouv.fr "' + code + '" filetype:pdf');
+}
+
 function renderCatalog() {
   const wrap = document.getElementById("catalogSectors");
   const cat = META.ficheCatalog || [];
@@ -1626,6 +1640,7 @@ function renderCatalog() {
           <span class="fiche-status ${f.a ? 'abrogee' : 'active'}">${f.a ? 'Abrogée' : 'Active'}</span>
         </div>
         <div class="fiche-card-title">${f.t}</div>
+        <a class="fiche-pdf-link" href="${pdfSearchUrl(f.c)}" target="_blank" rel="noopener">📄 Voir le PDF en vigueur ↗</a>
         ${evo}
       </div>`;
     }).join("");
