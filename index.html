@@ -502,7 +502,12 @@
   }
 
   @media (max-width: 560px) {
-    .filter-bar { top: 168px; }
+    /* Sur petit écran, l'en-tête (titre + badges + glossaire + stats + onglets) dépasse
+       facilement la hauteur de l'écran. En position "sticky", il peut alors occuper tout
+       le viewport et masquer le registre en dessous. On désactive donc le collage sur
+       mobile : l'en-tête défile normalement avec le reste de la page. */
+    header.top { position: static; }
+    .filter-bar { position: static; top: auto; }
     h1 { font-size: 23px; }
   }
 </style>
