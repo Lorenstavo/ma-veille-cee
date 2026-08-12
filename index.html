@@ -2490,13 +2490,16 @@ function renderActiveFilters() {
   wrap.querySelectorAll("[data-remove-filter]").forEach(button => {
     button.addEventListener("click", () => {
       const [group, value] = button.dataset.removeFilter.split(":");
-      if (group === "personal") { state.personalOnly = false; document.getElementById("personalView").classList.remove("is-active"); renderActiveFilters(); render(); return; }
+      if (group === "personal") { state.personalOnly = false; buildTrackingPanel(); buildPrioritiesPanel(); renderActiveFilters(); render(); return; }
       if (group === "unread") { state.unreadOnly = false; buildPrioritiesPanel(); renderActiveFilters(); render(); return; }
       const set = group === "cat" ? state.cats : group === "impact" ? state.impacts : group === "actor" ? state.actors : group === "action" ? state.actions : state.tracking;
       set.delete(value);
       const chip = group === "action" ? document.querySelector(`[data-action-filter="${value}"]`) : group === "tracking" ? document.querySelector(`[data-tracking-filter="${value}"]`) : document.querySelector(`[data-${group}="${value}"]`);
       chip.classList.remove(group === "action" || group === "tracking" ? "is-active" : "active");
       if (group === "action" || group === "tracking") chip.setAttribute("aria-pressed", "false");
+      if (group === "action") buildActionPanel();
+      if (group === "tracking") buildTrackingPanel();
+      buildPrioritiesPanel();
       renderActiveFilters();
       render();
     });
@@ -2612,8 +2615,8 @@ function buildPrioritiesPanel() {
   panel.querySelectorAll("[data-priority-filter]").forEach(button => button.addEventListener("click", () => {
     const key = button.dataset.priorityFilter;
     setView("feed");
-    if (key === "todo" || key === "progress") { const status = key === "todo" ? "a-traiter" : "en-cours"; state.tracking.clear(); state.tracking.add(status); }
-    if (key === "deadline") { state.actions.clear(); state.actions.add("deadline"); }
+    if (key === "todo" || key === "progress") { const status = key === "todo" ? "a-traiter" : "en-cours"; if (state.tracking.size === 1 && state.tracking.has(status)) state.tracking.clear(); else { state.tracking.clear(); state.tracking.add(status); } }
+    if (key === "deadline") { if (state.actions.size === 1 && state.actions.has("deadline")) state.actions.clear(); else { state.actions.clear(); state.actions.add("deadline"); } }
     if (key === "unread") state.unreadOnly = !state.unreadOnly;
     buildTrackingPanel(); buildActionPanel(); buildPrioritiesPanel(); renderActiveFilters(); render();
   }));
