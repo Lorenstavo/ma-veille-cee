@@ -18,6 +18,31 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%E2%9A%A1%3C/text%3E%3C/svg%3E">
 <style>
   :root {
+    --navy-950: #0B1F3A;
+    --navy-900: #102A43;
+    --blue-600: #2563EB;
+    --blue-500: #3B82F6;
+    --blue-100: #DBEAFE;
+    --blue-50: #EFF6FF;
+    --page-bg: #F6F8FC;
+    --surface: #FFFFFF;
+    --surface-soft: #F8FAFC;
+    --text-primary: #14213D;
+    --text-secondary: #596579;
+    --text-muted: #8390A3;
+    --border: #E2E8F0;
+    --border-strong: #CBD5E1;
+    --red-600: #DC3C30;
+    --red-100: #FEE2E2;
+    --red-50: #FFF5F4;
+    --amber-600: #C47A08;
+    --amber-100: #FEF0C7;
+    --amber-50: #FFFAEB;
+    --green-600: #168653;
+    --green-100: #DDF5E8;
+    --green-50: #F0FAF5;
+  }
+  :root {
     --bg: #f6f8fb;
     --surface: #ffffff;
     --surface-2: #eef2f8;
@@ -560,6 +585,353 @@
   .item-actions { float: right; display: inline-flex; align-items: center; gap: 10px; }
   .item-actions .chev { float: none; }
   .bookmark-icon { width: 14px; height: 14px; color: var(--ink-faint); }
+
+  /* ---------- Compliance dashboard refresh (CEE France) ---------- */
+  :root {
+    --bg: #f4f6f9;
+    --surface: #ffffff;
+    --surface-2: #f8fafc;
+    --ink: #172033;
+    --ink-muted: #5e6b7f;
+    --ink-faint: #8792a5;
+    --line: #e4e9f1;
+    --line-strong: #ccd5e2;
+    --primary: #1463d8;
+    --primary-strong: #0d4fae;
+    --primary-tint: #edf4ff;
+    --shadow: 0 10px 28px rgba(28, 47, 78, .07);
+    --radius: 14px;
+    --radius-sm: 10px;
+    --font-ui: Inter, "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  }
+  body { background: var(--bg); letter-spacing: -.005em; }
+  .top-accent { height: 3px; background: linear-gradient(90deg, #0d4fae, #287ceb); }
+  .site-switch { max-width: none; margin: 0; padding: 0 max(20px, calc((100% - 1120px) / 2)); background: #fff; border-bottom: 1px solid var(--line); }
+  .site-tab { flex: 0 0 auto; min-width: 166px; padding: 15px 20px 13px; font-size: 12px; letter-spacing: .01em; background: transparent; border-bottom: 3px solid transparent; }
+  .site-tab.active { color: var(--primary-strong); border-bottom-color: var(--primary); background: transparent; }
+  .site-tab.active::after { content: "ACTIF"; margin-left: 9px; padding: 3px 6px; border-radius: 999px; background: var(--primary-tint); color: var(--primary-strong); font-size: 8.5px; letter-spacing: .08em; }
+  .wrap { max-width: 1120px; padding: 0 24px 80px; }
+  header.top { position: static; background: transparent; border: 0; padding: 37px 0 18px; }
+  .eyebrow { color: var(--primary-strong); font-weight: 800; letter-spacing: .11em; }
+  .eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 0 4px var(--primary-tint); }
+  .hero-row { align-items: center; gap: 28px; margin: 9px 0 13px; }
+  h1 { max-width: 760px; font-size: clamp(32px, 4vw, 47px); line-height: 1.08; letter-spacing: -.04em; margin-bottom: 12px; }
+  .subhead { max-width: 72ch; font-size: 14.5px; line-height: 1.62; }
+  .hero-illustration { display: block; padding: 8px; border-radius: 22px; background: radial-gradient(circle at 30% 25%, #fff, var(--primary-tint)); }
+  .trust-row { gap: 9px; margin: 15px 0 13px; }
+  .trust-badge { padding: 7px 11px; background: #fff; color: #2b6b48; border-color: #cfe9d9; box-shadow: 0 2px 8px rgba(25, 75, 46, .04); }
+  .trust-badge .check { color: var(--impact-low); font-weight: 900; }
+  .meta-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; padding: 0; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; box-shadow: var(--shadow); overflow: hidden; }
+  .meta-strip > span { padding: 11px 15px; border-right: 1px solid var(--line); }
+  .meta-strip > span:nth-child(even) { display: none; }
+  .meta-strip > span:last-child { border-right: 0; }
+  #glossary { margin-top: 12px; }
+  #glossary summary { background: transparent; border: 0; color: var(--ink-faint); padding: 4px 0; font-size: 11.5px; font-weight: 700; }
+  #glossary summary::before { content: none; }
+  #glossary summary::after { content: "→"; font-size: 12px; }
+  #glossary summary:hover { border-color: var(--primary); color: var(--primary-strong); }
+  .stats-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 20px; }
+  .stats-row::before { content: "À retenir"; grid-column: 1 / -1; margin-bottom: -4px; font-size: 11px; font-weight: 800; color: var(--ink-faint); letter-spacing: .1em; text-transform: uppercase; }
+  .stat-tile { min-height: 124px; padding: 47px 16px 13px; border-radius: var(--radius); border-color: var(--line); box-shadow: var(--shadow); transition: transform .18s ease, box-shadow .18s ease; }
+  .stat-tile:hover { transform: translateY(-3px); box-shadow: 0 14px 28px rgba(28, 47, 78, .11); }
+  .stat-spark { display: none; }
+  .kpi-filter { width: 100%; text-align: left; font: inherit; cursor: pointer; }
+  .kpi-filter:focus-visible { outline: 3px solid rgba(20, 99, 216, .28); outline-offset: 2px; }
+  .kpi-filter.kpi-active { background: var(--blue-50); border-color: #BFDBFE; }
+  .kpi-filter.high.kpi-active { background: var(--red-50); border-color: var(--red-100); }
+  .kpi-filter.medium.kpi-active { background: var(--amber-50); border-color: var(--amber-100); }
+  .kpi-filter.low.kpi-active { background: var(--green-50); border-color: var(--green-100); }
+  .stat-tile .n { font-size: 31px; font-weight: 900; letter-spacing: -.055em; }
+  .stat-tile .l { font-size: 12px; }
+  .stat-tile .stat-icon-wrap { top: 15px; left: 16px; width: 29px; height: 29px; }
+  .action-panel { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(220px, .8fr); gap: 12px; margin: 22px 0 22px; }
+  .priority-card, .update-card { min-height: 118px; padding: 15px 18px; border-radius: var(--radius); background: #fff; box-shadow: var(--shadow); }
+  .priority-card { border: 1px solid var(--impact-high-line); background: linear-gradient(100deg, #fff7f5, #fff); }
+  .update-card { border: 1px solid var(--line); }
+  .action-panel .action-label { margin: 0 0 3px; color: var(--impact-high); font-size: 10px; font-family: var(--font-mono); font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+  .action-panel h2 { margin: 0; color: var(--ink); font-size: 16px; letter-spacing: -.015em; }
+  .priority-count { color: var(--impact-high); font-size: 24px; font-weight: 900; }
+  .update-card .action-label { color: var(--primary-strong); }
+  .update-card p:last-child { margin: 7px 0 0; color: var(--ink-muted); font-size: 12px; line-height: 1.55; }
+  .update-state { color: var(--impact-low); font-weight: 800; }
+  .action-panel .action-link { margin-top: 9px; flex: none; border: 1px solid #e8aaa0; border-radius: 999px; background: #fff; color: #ad3024; padding: 6px 11px; font: 700 11.5px var(--font-ui); cursor: pointer; transition: background .15s, color .15s, transform .15s; }
+  .action-panel .action-link:hover { background: var(--impact-high); color: #fff; transform: translateX(2px); }
+  .view-tabs { gap: 2px; margin: 0; padding: 4px; width: fit-content; background: #e9eef5; border-radius: 11px; }
+  .view-tab { padding: 8px 13px; border: 0; border-radius: 8px; background: transparent; color: var(--ink-muted); box-shadow: none; }
+  .view-tab.active { background: #fff; color: var(--primary-strong); box-shadow: 0 2px 8px rgba(29, 58, 99, .1); }
+  .filter-bar { position: static; margin-top: 18px; padding: 15px 17px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; box-shadow: var(--shadow); }
+  .filter-controls { display: flex; gap: 9px; align-items: center; }
+  .filter-toggle { padding: 10px 14px; border: 1px solid var(--line-strong); border-radius: 999px; background: #fff; color: var(--ink-muted); font: 800 12px var(--font-ui); cursor: pointer; transition: border-color .15s, color .15s, background .15s; }
+  .filter-toggle:hover, .filter-toggle[aria-expanded="true"] { border-color: var(--primary); color: var(--primary-strong); background: var(--primary-tint); }
+  .filter-details { display: none; margin-top: 12px; }
+  .filter-bar.filters-open .filter-details { display: block; }
+  .active-filters { display: none; flex-wrap: wrap; align-items: center; gap: 7px; margin-top: 10px; padding-top: 10px; border-top: 1px solid #f0f2f6; }
+  .active-filters.has-filters { display: flex; }
+  .active-filters-label { color: var(--ink-faint); font: 800 10px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
+  .active-filter { display: inline-flex; align-items: center; gap: 6px; padding: 5px 7px 5px 9px; border: 1px solid #bad2f6; border-radius: 999px; background: var(--primary-tint); color: var(--primary-strong); font: 700 11px var(--font-ui); }
+  .active-filter button { display: grid; place-items: center; width: 16px; height: 16px; border: 0; border-radius: 50%; background: transparent; color: inherit; font: 700 14px/1 var(--font-ui); cursor: pointer; }
+  .active-filter button:hover { background: #d8e8fd; }
+  .filter-row { gap: 7px; }
+  .filter-row + .filter-row { padding-top: 12px; border-top: 1px solid #f0f2f6; }
+  .filter-row .label { min-width: 138px; color: var(--ink-faint); font-weight: 800; }
+  .chip { padding: 6px 11px; color: var(--ink-muted); transition: color .15s, border-color .15s, background .15s, transform .15s; }
+  .chip:hover { transform: translateY(-1px); background: var(--primary-tint); }
+  .search-row { margin-top: 0; padding-top: 0; border-top: 0; }
+  input[type="search"] { padding: 11px 13px 11px 39px; background: #fbfcfe; border-color: var(--line-strong); box-shadow: inset 0 1px 1px rgba(19, 35, 59, .02); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238792a5' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-4-4'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-size: 17px; background-position: 13px center; }
+  input[type="search"]:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(20, 99, 216, .12); outline: none; }
+  .btn { padding: 10px 15px; box-shadow: none; transition: transform .15s, background .15s; }
+  .btn:hover { transform: translateY(-1px); }
+  .feed { gap: 12px; margin-top: 16px; }
+  .item { position: relative; border-left-width: 5px; border-radius: var(--radius); box-shadow: var(--shadow); transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+  .item:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(28, 47, 78, .11); }
+  .item-head { padding: 18px 64px 17px 19px; }
+  h3.item-title { font-size: 17px; line-height: 1.35; margin-top: 5px; }
+  .item-summary { line-height: 1.6; }
+  .item-actors { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; margin-top: 10px; }
+  .item-actors-label { color: var(--ink-faint); font: 800 9.5px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; margin-right: 2px; }
+  .item-actor { padding: 3px 7px; border: 1px solid var(--line); border-radius: 999px; color: var(--ink-muted); background: var(--surface-2); font-size: 10.5px; font-weight: 700; }
+  .item-detail-link { display: inline-flex; margin-top: 13px; color: var(--primary-strong); font-size: 11.5px; font-weight: 800; }
+  .item-detail-link::after { content: "→"; margin-left: 6px; }
+  .bookmark-button { position: absolute; z-index: 2; top: 17px; right: 17px; width: 34px; height: 34px; padding: 0; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 9px; background: #fff; color: var(--ink-faint); cursor: pointer; transition: color .15s, border-color .15s, background .15s, transform .15s; }
+  .bookmark-button:hover { color: var(--primary); border-color: var(--primary); background: var(--primary-tint); transform: translateY(-1px); }
+  .bookmark-button.is-favorite { color: var(--primary); border-color: #b6d0f8; background: var(--primary-tint); }
+  .bookmark-button.is-favorite .bookmark-icon { fill: currentColor; }
+  .bookmark-icon { width: 16px; height: 16px; }
+  .item-actions { display: none; }
+  .item-body { padding: 0 19px 19px; }
+  .chrono-note, .catalog-note { margin-top: 20px; padding: 16px 18px; border-radius: var(--radius); background: #fff; box-shadow: var(--shadow); }
+  .fiche-card { border-radius: var(--radius-sm); transition: transform .15s, box-shadow .15s; }
+  .fiche-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  footer.page-foot { margin-top: 48px; }
+  @media (max-width: 760px) {
+    .wrap { padding-inline: 16px; }
+    header.top { padding-top: 30px; }
+    .hero-illustration { display: none; }
+    .meta-strip, .stats-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .meta-strip > span:nth-child(3) { border-right: 0; }
+    .meta-strip > span:last-child { grid-column: 1 / -1; border-top: 1px solid var(--line); }
+    .filter-row .label { min-width: 100%; }
+  }
+  @media (max-width: 560px) {
+    .site-switch { padding-inline: 8px; }
+    .site-tab { flex: 1; min-width: 0; padding: 13px 7px 11px; }
+    .site-tab.active::after { display: none; }
+    .stats-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .stat-tile { min-height: 126px; padding: 50px 13px 12px; }
+    .action-panel { grid-template-columns: 1fr; gap: 10px; }
+    .priority-card, .update-card { padding: 16px; }
+    .view-tabs { width: 100%; }
+    .view-tab { flex: 1; justify-content: center; padding-inline: 7px; font-size: 11px; }
+    .tab-icon { display: none; }
+    .filter-controls, .search-row { align-items: stretch; flex-direction: column; }
+    .filter-toggle { width: 100%; }
+    .item-head { padding: 16px 55px 16px 15px; }
+    .bookmark-button { top: 14px; right: 13px; }
+  }
+  @media (max-width: 360px) { .stats-row { grid-template-columns: 1fr; } }
+
+  /* ---------- Premium compliance palette ---------- */
+  :root, :root[data-theme="light"], :root[data-theme="dark"] {
+    --bg: var(--page-bg); --surface: #fff; --surface-2: var(--surface-soft);
+    --ink: var(--text-primary); --ink-muted: var(--text-secondary); --ink-faint: var(--text-muted);
+    --line: var(--border); --line-strong: var(--border-strong);
+    --primary: var(--blue-600); --primary-strong: var(--blue-600); --primary-tint: var(--blue-50);
+    --impact-high: var(--red-600); --impact-high-tint: var(--red-50); --impact-high-line: var(--red-100);
+    --impact-medium: var(--amber-600); --impact-medium-tint: var(--amber-50); --impact-medium-line: var(--amber-100);
+    --impact-low: var(--green-600); --impact-low-tint: var(--green-50); --impact-low-line: var(--green-100);
+    --impact-info: var(--blue-600); --impact-info-tint: var(--blue-50); --impact-info-line: var(--blue-100);
+    --shadow: 0 8px 24px rgba(15, 35, 65, .06);
+  }
+  body { background: var(--page-bg); color: var(--text-primary); }
+  .site-switch { background: #fff; box-shadow: 0 1px 0 var(--border); }
+  .site-tab { color: var(--navy-900); }
+  .site-tab.active { color: var(--blue-600); border-bottom-color: var(--blue-600); }
+  .site-tab.active::after { background: var(--blue-50); color: var(--blue-600); }
+  .top-accent { background: var(--blue-600); }
+  h1, h2, h3.item-title, .sector-title, .fiche-card-title { color: var(--navy-950); }
+  .subhead, .item-summary, .update-card p:last-child { color: var(--text-secondary); }
+  .meta-strip, .stat-tile, .priority-card, .update-card, .filter-bar, .item, .fiche-card, .chrono-note, .catalog-note { background: #fff; border-color: var(--border); }
+  .item:hover, .stat-tile:hover { box-shadow: 0 12px 30px rgba(15, 35, 65, .09); }
+  .eyebrow, .update-card .action-label, .item-detail-link, .source-link, .fiche-pdf-link { color: var(--blue-600); }
+  .trust-badge { background: #fff; color: var(--green-600); border-color: var(--green-100); }
+  .stat-tile.total .n, .stat-tile.total .stat-icon-wrap { color: var(--blue-600); }
+  .stat-tile.total .stat-icon-wrap { background: var(--blue-50); }
+  .stat-tile.high .n, .stat-tile.high .stat-icon-wrap { color: var(--red-600); }
+  .stat-tile.high .stat-icon-wrap { background: var(--red-50); }
+  .stat-tile.medium .n, .stat-tile.medium .stat-icon-wrap { color: var(--amber-600); }
+  .stat-tile.medium .stat-icon-wrap { background: var(--amber-50); }
+  .stat-tile.low .n, .stat-tile.low .stat-icon-wrap { color: var(--green-600); }
+  .stat-tile.low .stat-icon-wrap { background: var(--green-50); }
+  .priority-card { border-left: 4px solid var(--red-600); background: #fff; }
+  .action-panel .action-label { color: var(--red-600); }
+  .priority-count { color: var(--red-600); }
+  .action-panel .action-link { color: var(--red-600); border-color: #f0b8b3; }
+  .action-panel .action-link:hover { background: var(--red-600); border-color: var(--red-600); }
+  .update-state { color: var(--green-600); }
+  .view-tabs { background: var(--surface-soft); }
+  .view-tab.active { color: var(--blue-600); }
+  .btn { background: var(--blue-600); border-color: var(--blue-600); }
+  .btn:hover { background: #1D4ED8; border-color: #1D4ED8; }
+  .filter-toggle, .chip { color: var(--navy-900); border-color: var(--border); background: #fff; }
+  .filter-toggle:hover, .filter-toggle[aria-expanded="true"], .chip:hover { color: var(--blue-600); border-color: var(--blue-100); background: var(--blue-50); }
+  .chip.active { color: var(--blue-600); border-color: #BFDBFE; background: var(--blue-50); box-shadow: none; }
+  #impactRow .chip[data-impact="high"].active { color: var(--red-600); border-color: var(--red-100); background: var(--red-50); }
+  #impactRow .chip[data-impact="medium"].active { color: var(--amber-600); border-color: var(--amber-100); background: var(--amber-50); }
+  #impactRow .chip[data-impact="low"].active { color: var(--green-600); border-color: var(--green-100); background: var(--green-50); }
+  input[type="search"] { color: var(--navy-950); background-color: var(--surface-soft); border-color: var(--border); }
+  input[type="search"]:focus { border-color: var(--blue-600); box-shadow: 0 0 0 4px rgba(37, 99, 235, .12); }
+  .active-filter { color: var(--blue-600); border-color: #BFDBFE; background: var(--blue-50); }
+  .item { border-left-width: 4px; }
+  .tag.impact-high { color: var(--red-600); background: var(--red-50); border-color: var(--red-100); }
+  .tag.impact-medium { color: var(--amber-600); background: var(--amber-50); border-color: var(--amber-100); }
+  .tag.impact-low { color: var(--green-600); background: var(--green-50); border-color: var(--green-100); }
+  .tag.impact-info { color: var(--blue-600); background: var(--blue-50); border-color: var(--blue-100); }
+  .tag.new { background: var(--blue-600); }
+  .bookmark-button:hover, .bookmark-button.is-favorite { color: var(--blue-600); border-color: #BFDBFE; background: var(--blue-50); }
+
+  /* ---------- Register overview ---------- */
+  .register-overview { margin: 2px 0 20px; }
+  .overview-heading, .registry-heading { margin: 0 0 10px; color: var(--text-muted); font: 800 10px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
+  .overview-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .overview-panel { padding: 13px; border: 1px solid var(--border); border-top: 3px solid var(--blue-600); border-radius: var(--radius-sm); background: #fff; box-shadow: var(--shadow); }
+  .overview-panel.high { border-top-color: var(--red-600); }
+  .overview-panel.medium { border-top-color: var(--amber-600); }
+  .overview-panel-title { margin: 0 0 10px; color: var(--navy-950); font-size: 13px; font-weight: 800; }
+  .overview-list { display: grid; gap: 7px; }
+  .overview-card { padding: 9px; border: 1px solid var(--border); border-radius: 8px; background: #fff; }
+  .overview-meta { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; margin-bottom: 5px; }
+  .overview-date { color: var(--text-muted); font: 700 10px var(--font-mono); }
+  .overview-card .tag { padding: 2px 6px; font-size: 9px; }
+  .overview-title { display: -webkit-box; overflow: hidden; margin: 0; color: var(--navy-950); font-size: 11.5px; font-weight: 750; line-height: 1.35; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .overview-summary { display: -webkit-box; overflow: hidden; margin: 4px 0 0; color: var(--text-secondary); font-size: 10.5px; line-height: 1.4; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
+  .overview-see { margin-top: 6px; padding: 0; border: 0; background: transparent; color: var(--blue-600); font: 800 10.5px var(--font-ui); cursor: pointer; }
+  .overview-panel.high .overview-see { color: var(--red-600); }
+  .overview-panel.medium .overview-see { color: var(--amber-600); }
+  .overview-see:hover, .overview-all:hover { text-decoration: underline; }
+  .overview-all { margin-top: 10px; padding: 0; border: 0; background: transparent; color: var(--blue-600); font: 800 11px var(--font-ui); cursor: pointer; }
+  .overview-panel.high .overview-all { color: var(--red-600); }
+  .overview-panel.medium .overview-all { color: var(--amber-600); }
+  .registry-heading { margin: 0 0 -4px; padding-top: 1px; }
+  @media (max-width: 760px) { .overview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .overview-panel.medium { grid-column: 1 / -1; } }
+  @media (max-width: 560px) { .overview-grid { grid-template-columns: 1fr; } .overview-panel.medium { grid-column: auto; } }
+
+  /* ---------- Regulatory analysis detail ---------- */
+  .item-body { display: block; max-height: 0; margin-top: 0; padding: 0 19px; overflow: hidden; opacity: 0; border-top: 0; transition: max-height .28s ease, opacity .2s ease, padding .28s ease; }
+  .item.open .item-body { display: block; max-height: 5000px; margin-top: 2px; padding: 17px 19px 19px; opacity: 1; border-top: 1px solid var(--border); }
+  .analysis-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px; }
+  .analysis-section { padding: 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface-soft); }
+  .analysis-section.full { grid-column: 1 / -1; }
+  .analysis-section h4 { margin: 0 0 9px; color: var(--navy-950); font-size: 12px; font-weight: 800; }
+  .analysis-section p { margin: 0; color: var(--text-secondary); font-size: 12.5px; line-height: 1.6; }
+  .analysis-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+  .analysis-date { color: var(--text-secondary); font: 700 10.5px var(--font-mono); }
+  .analysis-actors { display: grid; gap: 7px; }
+  .analysis-actor { padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: #fff; }
+  .analysis-actor-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 5px; }
+  .analysis-actor-name { color: var(--navy-900); font-size: 11.5px; font-weight: 800; }
+  .analysis-actor p { font-size: 11.5px; line-height: 1.5; }
+  .analysis-fiches { display: flex; flex-wrap: wrap; gap: 6px; }
+  .analysis-fiches .fiche-code { background: #fff; color: var(--blue-600); border-color: var(--blue-100); padding: 4px 8px; }
+  .analysis-source { display: flex; flex-direction: column; align-items: flex-start; gap: 9px; }
+  .analysis-source-meta { color: var(--text-secondary); font-size: 11.5px; }
+  .analysis-source-link { display: inline-flex; align-items: center; padding: 7px 10px; border: 1px solid var(--border-strong); border-radius: 8px; background: #fff; color: var(--blue-600); font-size: 11.5px; font-weight: 800; text-decoration: none; transition: border-color .16s ease, background .16s ease; }
+  .analysis-source-link:hover { border-color: var(--blue-600); background: var(--blue-50); }
+  .analysis-attachments { margin-top: 11px; }
+  .analysis-attachments .attach-block { margin-top: 0; background: #fff; }
+  @media (max-width: 560px) { .analysis-grid { grid-template-columns: 1fr; } .analysis-section.full { grid-column: auto; } .item.open .item-body { padding-inline: 15px; } }
+
+  /* ---------- Operational actions ---------- */
+  .actions-panel { margin: 0 0 18px; }
+  .actions-title { margin: 0 0 9px; color: var(--text-muted); font: 800 10px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
+  .actions-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 9px; }
+  .action-filter { min-height: 63px; padding: 10px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; border: 1px solid var(--border); border-radius: var(--radius-sm); background: #fff; color: var(--navy-900); font: inherit; text-align: left; cursor: pointer; transition: border-color .16s ease, background .16s ease, box-shadow .16s ease, transform .16s ease; }
+  .action-filter:hover { transform: translateY(-1px); box-shadow: 0 8px 18px rgba(15, 35, 65, .07); }
+  .action-filter:focus-visible { outline: 3px solid rgba(37, 99, 235, .24); outline-offset: 2px; }
+  .action-filter-count { font: 900 20px/1 var(--font-mono); }
+  .action-filter-label { margin-top: 5px; font-size: 10.5px; font-weight: 750; }
+  .action-filter.analyze .action-filter-count { color: var(--blue-600); }
+  .action-filter.apply .action-filter-count { color: var(--red-600); }
+  .action-filter.monitor .action-filter-count { color: var(--amber-600); }
+  .action-filter.deadline .action-filter-count { color: #7C3AED; }
+  .action-filter.info .action-filter-count { color: var(--text-secondary); }
+  .action-filter.is-active.analyze { color: var(--blue-600); border-color: #BFDBFE; background: var(--blue-50); }
+  .action-filter.is-active.apply { color: var(--red-600); border-color: var(--red-100); background: var(--red-50); }
+  .action-filter.is-active.monitor { color: var(--amber-600); border-color: var(--amber-100); background: var(--amber-50); }
+  .action-filter.is-active.deadline { color: #6D28D9; border-color: #DDD6FE; background: #F5F3FF; }
+  .action-filter.is-active.info { color: var(--blue-600); border-color: #BFDBFE; background: var(--blue-50); }
+  .sort-control { display: inline-flex; align-items: center; gap: 6px; color: var(--text-secondary); font-size: 11.5px; font-weight: 700; white-space: nowrap; }
+  .sort-control select { padding: 8px 24px 8px 9px; border: 1px solid var(--border-strong); border-radius: 999px; background: #fff; color: var(--navy-900); font: inherit; cursor: pointer; }
+  .item-actions-label { margin: 10px 0 4px; color: var(--text-muted); font: 800 9.5px var(--font-mono); letter-spacing: .07em; text-transform: uppercase; }
+  .item-action-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .item-action-tag { padding: 3px 7px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface-soft); color: var(--text-secondary); font-size: 10px; font-weight: 800; }
+  .item-action-tag.apply { color: var(--red-600); border-color: var(--red-100); background: var(--red-50); }
+  .item-action-tag.monitor { color: var(--amber-600); border-color: var(--amber-100); background: var(--amber-50); }
+  .item-action-tag.analyze { color: var(--blue-600); border-color: var(--blue-100); background: var(--blue-50); }
+  .item-action-tag.deadline { color: #6D28D9; border-color: #DDD6FE; background: #F5F3FF; }
+  @media (max-width: 760px) { .actions-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .actions-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .sort-control { justify-content: space-between; } }
+
+  /* ---------- Personal tracking ---------- */
+  .tracking-panel { margin: 0 0 18px; padding: 13px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: #fff; box-shadow: var(--shadow); }
+  .tracking-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+  .tracking-title { margin: 0; color: var(--text-muted); font: 800 10px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
+  .tracking-tools { display: flex; gap: 6px; }
+  .tracking-tool { padding: 5px 8px; border: 1px solid var(--border-strong); border-radius: 7px; background: #fff; color: var(--blue-600); font: 800 10.5px var(--font-ui); cursor: pointer; }
+  .tracking-tool:hover { border-color: var(--blue-600); background: var(--blue-50); }
+  .tracking-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .tracking-filter { padding: 9px 10px; display: flex; align-items: baseline; gap: 7px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-soft); color: var(--navy-900); font: inherit; text-align: left; cursor: pointer; }
+  .tracking-filter:focus-visible, .tracking-select:focus-visible, .tracking-tool:focus-visible { outline: 3px solid rgba(37, 99, 235, .24); outline-offset: 2px; }
+  .tracking-filter-count { font: 900 20px/1 var(--font-mono); }
+  .tracking-filter-label { font-size: 11px; font-weight: 800; }
+  .tracking-filter.todo .tracking-filter-count { color: var(--red-600); }
+  .tracking-filter.progress .tracking-filter-count { color: var(--blue-600); }
+  .tracking-filter.done .tracking-filter-count { color: var(--green-600); }
+  .tracking-filter.is-active.todo { border-color: var(--red-100); background: var(--red-50); }
+  .tracking-filter.is-active.progress { border-color: #BFDBFE; background: var(--blue-50); }
+  .tracking-filter.is-active.done { border-color: var(--green-100); background: var(--green-50); }
+  .tracking-control { position: absolute; z-index: 2; top: 17px; right: 59px; display: flex; align-items: center; gap: 5px; }
+  .tracking-control label { color: var(--text-muted); font: 800 9px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
+  .tracking-select { max-width: 106px; padding: 6px 20px 6px 7px; border: 1px solid var(--border); border-radius: 8px; background: #fff; color: var(--text-secondary); font: 700 10px var(--font-ui); cursor: pointer; }
+  .tracking-select.status-todo { color: var(--red-600); border-color: var(--red-100); background: var(--red-50); }
+  .tracking-select.status-progress { color: var(--blue-600); border-color: #BFDBFE; background: var(--blue-50); }
+  .tracking-select.status-done { color: var(--green-600); border-color: var(--green-100); background: var(--green-50); }
+  @media (max-width: 560px) { .tracking-head { align-items: flex-start; flex-direction: column; } .tracking-grid { grid-template-columns: 1fr; } .tracking-tools { width: 100%; } .tracking-tool { flex: 1; } .tracking-control { top: 14px; right: 55px; } .tracking-control label { display: none; } .tracking-select { max-width: 102px; } }
+
+  /* ---------- Future account surface ---------- */
+  .account-zone { position: relative; margin-left: auto; align-self: center; }
+  .account-button { padding: 7px 10px; border: 1px solid var(--border-strong); border-radius: 8px; background: #fff; color: var(--navy-900); font: 800 11px var(--font-ui); cursor: pointer; }
+  .account-button:hover, .account-button[aria-expanded="true"] { border-color: var(--blue-600); color: var(--blue-600); background: var(--blue-50); }
+  .account-button:focus-visible { outline: 3px solid rgba(37, 99, 235, .24); outline-offset: 2px; }
+  .account-popover { position: absolute; z-index: 10; top: calc(100% + 8px); right: 0; width: min(310px, calc(100vw - 24px)); padding: 13px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: #fff; box-shadow: 0 12px 30px rgba(15, 35, 65, .12); }
+  .account-popover p { margin: 0; color: var(--text-secondary); font-size: 11.5px; line-height: 1.5; }
+  .account-counts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 7px; margin: 11px 0; }
+  .account-counts span { padding: 7px; border-radius: 7px; background: var(--surface-soft); color: var(--text-secondary); font-size: 10px; }
+  .account-counts b { display: block; margin-bottom: 2px; color: var(--navy-950); font: 900 16px/1 var(--font-mono); }
+  .account-popover small { color: var(--text-muted); font-size: 10px; }
+  .account-email { margin: 0 0 8px !important; color: var(--navy-950) !important; font-size: 11px !important; font-weight: 800; overflow-wrap: anywhere; }
+  .account-signout { width: 100%; margin-top: 10px; padding: 7px 9px; border: 1px solid var(--border-strong); border-radius: 7px; background: #fff; color: var(--navy-900); font: 800 11px var(--font-ui); cursor: pointer; }
+  .account-signout:hover { border-color: var(--blue-600); color: var(--blue-600); background: var(--blue-50); }
+  .auth-backdrop { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; padding: 18px; background: rgba(11, 31, 58, .46); }
+  .auth-modal { width: min(420px, 100%); padding: 20px; border: 1px solid var(--border); border-radius: 14px; background: #fff; box-shadow: 0 18px 48px rgba(11, 31, 58, .2); }
+  .auth-modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .auth-modal h2 { margin: 0; color: var(--navy-950); font-size: 20px; }
+  .auth-close { width: 30px; height: 30px; border: 1px solid var(--border); border-radius: 7px; background: #fff; color: var(--text-secondary); font-size: 19px; line-height: 1; cursor: pointer; }
+  .auth-tabs { display: flex; gap: 4px; margin: 17px 0; padding: 4px; border-radius: 9px; background: var(--surface-soft); }
+  .auth-tab { flex: 1; padding: 8px; border: 0; border-radius: 6px; background: transparent; color: var(--text-secondary); font: 800 12px var(--font-ui); cursor: pointer; }
+  .auth-tab.is-active { background: #fff; color: var(--blue-600); box-shadow: 0 1px 4px rgba(15, 35, 65, .1); }
+  .auth-form { display: grid; gap: 12px; }
+  .auth-backdrop[hidden], .auth-form[hidden] { display: none !important; }
+  .auth-field { display: grid; gap: 5px; color: var(--navy-900); font-size: 11.5px; font-weight: 800; }
+  .auth-field input { width: 100%; padding: 10px; border: 1px solid var(--border-strong); border-radius: 8px; color: var(--navy-950); font: 14px var(--font-ui); }
+  .auth-field input:focus { border-color: var(--blue-600); box-shadow: 0 0 0 3px rgba(37, 99, 235, .12); outline: none; }
+  .auth-resend { width: 100%; margin-top: 4px; padding: 8px; border: 0; background: transparent; color: var(--blue-600); font: 800 12px var(--font-ui); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+  .auth-submit { margin-top: 4px; padding: 10px 13px; border: 1px solid var(--blue-600); border-radius: 8px; background: var(--blue-600); color: #fff; font: 800 13px var(--font-ui); cursor: pointer; }
+  .auth-submit:hover:not(:disabled) { background: #1D4ED8; border-color: #1D4ED8; }
+  .auth-submit:disabled { opacity: .65; cursor: wait; }
+  .auth-message { min-height: 18px; margin: 2px 0 0; color: var(--text-secondary); font-size: 11.5px; line-height: 1.45; }
+  .auth-message.error { color: var(--red-600); }
+  .auth-message.success { color: var(--green-600); }
+  @media (max-width: 560px) { .account-zone { margin-left: 4px; } .account-button { padding: 7px; font-size: 10px; } }
 </style>
 </head>
 <body>
@@ -582,8 +954,19 @@
 <div class="site-switch">
   <button class="site-tab active" id="siteTabCee" type="button" data-frame-url="">🇫🇷 CEE France</button>
   <button class="site-tab" id="siteTabCae" type="button" data-frame-url="/cae-espagne/">🇪🇸 CAE Espagne</button>
+  <div class="account-zone"><button class="account-button" id="accountButton" type="button" aria-expanded="false" aria-controls="accountPanel">Mon espace</button><section class="account-popover" id="accountPanel" hidden><p class="account-email" id="accountEmail" hidden></p><p id="accountStorageMessage">Votre suivi est actuellement enregistré uniquement sur cet appareil.</p><div class="account-counts"><span><b id="accountTodo">0</b> À traiter</span><span><b id="accountProgress">0</b> En cours</span><span><b id="accountDone">0</b> Traité</span><span><b id="accountFavorites">0</b> favoris</span></div><small id="accountSyncStatus">Synchronisation multi-appareils bientôt disponible</small><button class="account-signout" id="accountSignout" type="button" hidden>Se déconnecter</button></section></div>
 </div>
 <div id="otherSiteFrameWrap"><iframe id="otherSiteFrame" class="site-frame" title="Autre site" loading="lazy"></iframe></div>
+<div class="auth-backdrop" id="authBackdrop" hidden>
+  <section class="auth-modal" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+    <div class="auth-modal-head"><h2 id="authTitle">Mon espace</h2><button class="auth-close" id="authClose" type="button" aria-label="Fermer">×</button></div>
+    <div class="auth-tabs" role="tablist" aria-label="Authentification"><button class="auth-tab is-active" id="authTabSignin" type="button" role="tab" aria-selected="true">Connexion</button><button class="auth-tab" id="authTabSignup" type="button" role="tab" aria-selected="false">Inscription</button></div>
+    <form class="auth-form" id="authSigninForm" novalidate><label class="auth-field">Adresse e-mail<input id="signinEmail" type="email" autocomplete="email" required></label><label class="auth-field">Mot de passe<input id="signinPassword" type="password" autocomplete="current-password" required></label><button class="auth-submit" type="submit">Se connecter</button></form>
+    <form class="auth-form" id="authSignupForm" novalidate hidden><label class="auth-field">Adresse e-mail<input id="signupEmail" type="email" autocomplete="email" required></label><label class="auth-field">Mot de passe<input id="signupPassword" type="password" autocomplete="new-password" required></label><label class="auth-field">Confirmer le mot de passe<input id="signupPasswordConfirm" type="password" autocomplete="new-password" required></label><button class="auth-submit" type="submit">Créer mon compte</button></form>
+    <p class="auth-message" id="authMessage" aria-live="polite"></p>
+    <button class="auth-resend" id="authResendConfirmation" type="button" hidden>Renvoyer l’e-mail de confirmation</button>
+  </section>
+</div>
 <div class="wrap" id="mainContent">
 
   <header class="top">
@@ -607,7 +990,7 @@
       <span class="meta-item"><svg class="meta-icon"><use href="#icon-clock"></use></svg>Prochain contrôle : jour ouvré suivant, 8h00 (Paris)</span>
     </div>
     <details id="glossary">
-      <summary></summary>
+      <summary>Comprendre le dispositif CEE</summary>
       <div class="glossary-grid">
         <div class="glossary-card">
           <div class="gc-head"><span class="mono-badge">DM</span><h4>Délégataire / Mandataire</h4></div>
@@ -624,6 +1007,9 @@
       </div>
     </details>
     <div class="stats-row" id="counts"></div>
+    <section class="action-panel" id="actionPanel" aria-label="Évolutions prioritaires"></section>
+    <section class="actions-panel" id="actionsPanel" aria-label="Actions à mener"></section>
+    <section class="tracking-panel" id="trackingPanel" aria-label="Mon suivi"></section>
     <div class="view-tabs">
       <button class="view-tab active" id="tabFeed" data-view="feed"><svg class="tab-icon"><use href="#icon-list"></use></svg><span>Registre</span></button>
       <button class="view-tab" id="tabChrono" data-view="chrono"><svg class="tab-icon"><use href="#icon-timeline"></use></svg><span>Chronologie des arrêtés</span></button>
@@ -632,18 +1018,25 @@
   </header>
 
   <div class="filter-bar" id="filterBar">
-    <div class="filter-row" id="catRow">
-      <span class="label">Type</span>
-    </div>
-    <div class="filter-row" id="impactRow">
-      <span class="label">Impact</span>
-    </div>
-    <div class="filter-row" id="actorRow">
-      <span class="label">Acteur concerné</span>
-    </div>
     <div class="search-row">
       <input type="search" id="search" placeholder="Rechercher un titre, une fiche (ex. BAR-TH-171)…" aria-label="Rechercher" />
-      <button class="btn" id="markRead">Tout marquer comme lu</button>
+      <div class="filter-controls">
+        <label class="sort-control">Trier par : <select id="sortOrder" aria-label="Trier le registre"><option value="recent">Plus récent</option><option value="priority">Priorité</option><option value="deadline">Échéance</option></select></label>
+        <button class="filter-toggle" id="filterToggle" type="button" aria-expanded="false" aria-controls="filterDetails">Filtres</button>
+        <button class="btn" id="markRead">Tout marquer comme lu</button>
+      </div>
+    </div>
+    <div class="active-filters" id="activeFilters" aria-live="polite"></div>
+    <div class="filter-details" id="filterDetails">
+      <div class="filter-row" id="catRow">
+        <span class="label">Type</span>
+      </div>
+      <div class="filter-row" id="impactRow">
+        <span class="label">Impact</span>
+      </div>
+      <div class="filter-row" id="actorRow">
+        <span class="label">Acteur concerné</span>
+      </div>
     </div>
   </div>
 
@@ -1525,6 +1918,7 @@
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function() {
   var tabs = [document.getElementById('siteTabCee'), document.getElementById('siteTabCae')];
@@ -1582,6 +1976,141 @@ const DATA = JSON.parse(document.getElementById("data-json").textContent);
 const META = DATA.meta;
 const ITEMS = DATA.items;
 
+/* Supabase Auth only. Regulatory tracking and favorites stay local for now. */
+const SUPABASE_URL = "https://jmlkjzinaqtzxoyemolr.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_aS52Gg2uF24juAyfWKcKfw_05XTQnDH";
+const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+}) : null;
+let currentUser = null;
+let syncInProgress = false;
+
+function getCurrentUser() { return currentUser; }
+function authRedirectUrl() {
+  return /^https?:$/.test(window.location.protocol) ? window.location.origin + window.location.pathname : null;
+}
+function friendlyAuthError(error) {
+  const message = String(error && error.message || "").toLowerCase();
+  if (message.includes("already registered") || message.includes("already been registered")) return "Un compte existe déjà pour cette adresse e-mail. Connectez-vous ou réinitialisez votre mot de passe.";
+  if (message.includes("email rate limit") || message.includes("rate limit")) return "Trop de tentatives ont été effectuées. Attendez quelques minutes avant de réessayer.";
+  if (message.includes("password") && (message.includes("weak") || message.includes("security"))) return "Choisissez un mot de passe plus robuste, puis réessayez.";
+  if (message.includes("redirect") || message.includes("redirect_to")) return "La redirection de confirmation n’est pas encore autorisée pour cette adresse du site.";
+  if (message.includes("email") && (message.includes("provider") || message.includes("smtp") || message.includes("sending"))) return "L’envoi de l’e-mail de confirmation est indisponible pour le moment. Réessayez plus tard.";
+  return "La création du compte a échoué. Vérifiez vos informations et réessayez.";
+}
+function setAuthMessage(message = "", kind = "") {
+  const el = document.getElementById("authMessage");
+  el.textContent = message; el.className = `auth-message ${kind}`;
+}
+function setConfirmationResend(email = "", visible = Boolean(email)) {
+  const button = document.getElementById("authResendConfirmation");
+  button.hidden = !visible;
+  button.dataset.email = email || "";
+}
+function setAuthMode(mode) {
+  const signup = mode === "signup";
+  document.getElementById("authSigninForm").hidden = signup;
+  document.getElementById("authSignupForm").hidden = !signup;
+  document.getElementById("authTabSignin").classList.toggle("is-active", !signup);
+  document.getElementById("authTabSignup").classList.toggle("is-active", signup);
+  document.getElementById("authTabSignin").setAttribute("aria-selected", String(!signup));
+  document.getElementById("authTabSignup").setAttribute("aria-selected", String(signup));
+  setAuthMessage();
+  setConfirmationResend();
+}
+function openAuthModal(mode = "signin") {
+  setAuthMode(mode);
+  const backdrop = document.getElementById("authBackdrop");
+  backdrop.hidden = false;
+  document.getElementById(mode === "signup" ? "signupEmail" : "signinEmail").focus();
+}
+function closeAuthModal() {
+  document.getElementById("authBackdrop").hidden = true;
+  setAuthMessage();
+  setConfirmationResend();
+}
+function updateAuthInterface(user) {
+  currentUser = user || null;
+  const button = document.getElementById("accountButton");
+  const email = document.getElementById("accountEmail");
+  const signout = document.getElementById("accountSignout");
+  const storageMessage = document.getElementById("accountStorageMessage");
+  const syncStatus = document.getElementById("accountSyncStatus");
+  button.textContent = currentUser ? "Mon espace · Connecté" : "Mon espace";
+  email.hidden = !currentUser;
+  signout.hidden = !currentUser;
+  if (currentUser) email.textContent = currentUser.email || "Compte connecté";
+  storageMessage.textContent = currentUser ? "Votre suivi est synchronisé avec ce compte et conservé sur cet appareil." : "Votre suivi est actuellement enregistré uniquement sur cet appareil.";
+  syncStatus.textContent = currentUser ? "Synchronisation multi-appareils active" : "Synchronisation multi-appareils bientôt disponible";
+}
+async function initializeAuth() {
+  if (!supabaseClient) return updateAuthInterface(null);
+  const { data, error } = await supabaseClient.auth.getSession();
+  if (!error) await handleAuthUser(data.session ? data.session.user : null);
+  const hash = new URLSearchParams(window.location.hash.slice(1));
+  if (hash.get("error_code") === "otp_expired") {
+    openAuthModal("signup");
+    setAuthMessage("Le lien de confirmation a expiré. Demandez un nouvel e-mail, puis ouvrez uniquement le message le plus récent.", "error");
+    setConfirmationResend(document.getElementById("signupEmail").value.trim(), true);
+    history.replaceState(null, "", window.location.pathname + window.location.search);
+  }
+  supabaseClient.auth.onAuthStateChange((event, session) => {
+    handleAuthUser(session ? session.user : null);
+    if (event === "SIGNED_IN") closeAuthModal();
+  });
+}
+async function submitSignIn(event) {
+  event.preventDefault();
+  const email = document.getElementById("signinEmail").value.trim();
+  const password = document.getElementById("signinPassword").value;
+  if (!email || !password) return setAuthMessage("Renseignez votre adresse e-mail et votre mot de passe.", "error");
+  const button = event.currentTarget.querySelector("button[type=submit]");
+  button.disabled = true;
+  if (!supabaseClient) { button.disabled = false; return setAuthMessage("Le service de connexion est temporairement indisponible.", "error"); }
+  const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  button.disabled = false;
+  if (error) return setAuthMessage(friendlyAuthError(error), "error");
+  setAuthMessage("Connexion réussie.", "success");
+}
+async function submitSignUp(event) {
+  event.preventDefault();
+  const email = document.getElementById("signupEmail").value.trim();
+  const password = document.getElementById("signupPassword").value;
+  const confirmation = document.getElementById("signupPasswordConfirm").value;
+  if (!email || !password || !confirmation) return setAuthMessage("Renseignez tous les champs.", "error");
+  if (password.length < 8) return setAuthMessage("Choisissez un mot de passe d'au moins 8 caractères.", "error");
+  if (password !== confirmation) return setAuthMessage("Les mots de passe ne correspondent pas.", "error");
+  const button = event.currentTarget.querySelector("button[type=submit]");
+  button.disabled = true;
+  const redirect = authRedirectUrl();
+  const options = redirect ? { emailRedirectTo: redirect } : undefined;
+  if (!supabaseClient) { button.disabled = false; return setAuthMessage("Le service de connexion est temporairement indisponible.", "error"); }
+  const { data, error } = await supabaseClient.auth.signUp({ email, password, options });
+  button.disabled = false;
+  if (error) return setAuthMessage(friendlyAuthError(error), "error");
+  if (!data.session) { setAuthMessage("Compte créé. Vérifiez votre e-mail pour confirmer votre inscription.", "success"); setConfirmationResend(email); return; }
+  setAuthMessage("Compte créé et connexion réussie.", "success");
+}
+async function resendConfirmation() {
+  const button = document.getElementById("authResendConfirmation");
+  const email = button.dataset.email || document.getElementById("signupEmail").value.trim();
+  if (!email) return setAuthMessage("Saisissez d’abord l’adresse e-mail utilisée lors de l’inscription.", "error");
+  if (!supabaseClient) return setAuthMessage("Le service de connexion est temporairement indisponible.", "error");
+  button.disabled = true;
+  const redirect = authRedirectUrl();
+  const options = redirect ? { emailRedirectTo: redirect } : undefined;
+  const { error } = await supabaseClient.auth.resend({ type: "signup", email, options });
+  button.disabled = false;
+  if (error) return setAuthMessage(friendlyAuthError(error), "error");
+  setAuthMessage("Un nouvel e-mail de confirmation vient d’être envoyé. Utilisez uniquement le lien le plus récent.", "success");
+}
+async function signOut() {
+  if (!supabaseClient) return;
+  await supabaseClient.auth.signOut();
+  document.getElementById("accountPanel").hidden = true;
+  document.getElementById("accountButton").setAttribute("aria-expanded", "false");
+}
+
 /* ============================================================
    RENDER
    ============================================================ */
@@ -1593,7 +2122,15 @@ const ACTORS = [
 ];
 const ACTOR_LEVEL_LABEL = { high: "Fort", medium: "Modéré", low: "Faible", info: "À suivre", none: "Aucun" };
 const CATS = [...new Set(ITEMS.map(i => i.category))];
-const state = { cats: new Set(), impacts: new Set(), actors: new Set(), q: "", view: "feed" };
+const state = { cats: new Set(), impacts: new Set(), actors: new Set(), actions: new Set(), tracking: new Set(), q: "", view: "feed", sort: "recent" };
+const ACTION_LABEL = { analyze: "À analyser", apply: "À appliquer", monitor: "À surveiller", deadline: "Échéance proche", info: "Information" };
+const ACTION_ORDER = { apply: 0, deadline: 1, analyze: 2, monitor: 3, info: 4 };
+const TRACKING_STORAGE_KEY = "cee-user-tracking";
+const FAVORITES_STORAGE_KEY = "cee-veille-favorites";
+const USER_STORAGE_KEY = "cee-user-data";
+const TRACKING_LABEL = { "non-suivi": "Non suivi", "a-traiter": "À traiter", "en-cours": "En cours", "traite": "Traité" };
+const TRACKING_FILTERS = ["a-traiter", "en-cours", "traite"];
+const MONTHS_FR = { "janvier": 0, "février": 1, "fevrier": 1, "mars": 2, "avril": 3, "mai": 4, "juin": 5, "juillet": 6, "août": 7, "aout": 7, "septembre": 8, "octobre": 9, "novembre": 10, "décembre": 11, "decembre": 11 };
 
 function fmtDate(iso) {
   const d = new Date(iso + "T00:00:00");
@@ -1611,6 +2148,191 @@ function seenIds() {
 }
 function markAllSeen() {
   localStorage.setItem("cee-veille-seen", JSON.stringify(ITEMS.map(i => i.id)));
+}
+
+function explicitFutureDeadline(item) {
+  const text = [item.title, item.statusLabel, item.summary, item.impactText].join(" ").toLowerCase();
+  const dates = [];
+  const numeric = /(\d{1,2})[\/.\-](\d{1,2})[\/.\-](20\d{2})/g;
+  const named = /(1er|\d{1,2})\s+(janvier|f\u00e9vrier|fevrier|mars|avril|mai|juin|juillet|ao\u00fbt|aout|septembre|octobre|novembre|d\u00e9cembre|decembre)\s+(20\d{2})/g;
+  let match;
+  while ((match = numeric.exec(text))) dates.push(new Date(Date.UTC(+match[3], +match[2] - 1, +match[1])));
+  while ((match = named.exec(text))) dates.push(new Date(Date.UTC(+match[3], MONTHS_FR[match[2]], match[1] === "1er" ? 1 : +match[1])));
+  const reference = new Date(META.lastRun + "T00:00:00Z");
+  const future = dates.filter(date => date > reference).sort((a, b) => a - b)[0];
+  return future ? { date: future, days: Math.round((future - reference) / 86400000) } : null;
+}
+
+function actionInfo(item) {
+  const text = [item.title, item.statusLabel, item.summary].join(" ").toLowerCase();
+  const actions = new Set();
+  const applies = /\ben vigueur\b|\bobligatoire\b|\bdoit\b|\bdoivent\b|\bapplicable\b|\bimpose\b|\bsupprime\b|\bretire\b|\bcesser\b/.test(text);
+  const monitors = item.category === "Consultation publique" || item.category === "Événement" || /\bconsultation\b|\bprojet\b|\bnon encore\b|\b\u00e0 suivre\b|\btexte d\u00e9finitif\b/.test(text);
+  const deadline = explicitFutureDeadline(item);
+  if (item.impactLevel === "high") actions.add("analyze");
+  if (applies) actions.add("apply");
+  if (monitors) actions.add("monitor");
+  if (deadline) actions.add("deadline");
+  if (item.impactLevel === "info" && !actions.size) actions.add("info");
+  return { actions: [...actions], deadline };
+}
+const userStorage = {
+  empty() { return { version: 1, tracking: {}, favorites: {}, preferences: { defaultSort: "recent", favoriteFilters: [], language: "fr", displayMode: "detailed" }, sync: { legacyMigrated: false, activeUserId: null, guestClaimedBy: null, guest: null, accounts: {} } }; },
+  read() {
+    try {
+      const stored = JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || "null");
+      return stored && typeof stored === "object" && !Array.isArray(stored) ? stored : null;
+    } catch (e) { return null; }
+  },
+  normalize(data) {
+    const base = this.empty(), source = data && typeof data === "object" ? data : {};
+    const sourceSync = source.sync && typeof source.sync === "object" && !Array.isArray(source.sync) ? source.sync : {};
+    return { version: 1, tracking: source.tracking && typeof source.tracking === "object" && !Array.isArray(source.tracking) ? source.tracking : {}, favorites: source.favorites && typeof source.favorites === "object" && !Array.isArray(source.favorites) ? source.favorites : {}, preferences: { ...base.preferences, ...(source.preferences && typeof source.preferences === "object" ? source.preferences : {}) }, sync: { ...base.sync, legacyMigrated: sourceSync.legacyMigrated === true, activeUserId: typeof sourceSync.activeUserId === "string" ? sourceSync.activeUserId : null, guestClaimedBy: typeof sourceSync.guestClaimedBy === "string" ? sourceSync.guestClaimedBy : null, guest: sourceSync.guest && typeof sourceSync.guest === "object" ? sourceSync.guest : null, accounts: sourceSync.accounts && typeof sourceSync.accounts === "object" && !Array.isArray(sourceSync.accounts) ? sourceSync.accounts : {} } };
+  },
+  migrate() {
+    const current = this.normalize(this.read());
+    if (current.sync.legacyMigrated) return current;
+    let legacyTracking = {}, legacyFavorites = [];
+    try { legacyTracking = JSON.parse(localStorage.getItem(TRACKING_STORAGE_KEY) || "{}") || {}; } catch (e) {}
+    try { legacyFavorites = JSON.parse(localStorage.getItem(FAVORITES_STORAGE_KEY) || "[]") || []; } catch (e) {}
+    if (legacyTracking && typeof legacyTracking === "object" && !Array.isArray(legacyTracking)) Object.entries(legacyTracking).forEach(([id, value]) => { if (!current.tracking[id]) current.tracking[id] = value; });
+    if (Array.isArray(legacyFavorites)) legacyFavorites.forEach(id => { if (typeof id === "string") current.favorites[id] = true; });
+    current.sync.legacyMigrated = true;
+    this.save(current);
+    return current;
+  },
+  get() { return this.normalize(this.read() || this.migrate()); },
+  save(data) { localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(this.normalize(data))); },
+  getTracking() { return this.get().tracking; },
+  saveTracking(tracking) { const data = this.get(); data.tracking = tracking; this.save(data); },
+  getFavorites() { return this.get().favorites; },
+  saveFavorites(favorites) { const data = this.get(); data.favorites = favorites; this.save(data); },
+  getPreferences() { return this.get().preferences; },
+  savePreferences(preferences) { const data = this.get(); data.preferences = { ...data.preferences, ...preferences }; this.save(data); },
+  snapshot(data) { return { tracking: data.tracking, favorites: data.favorites, preferences: data.preferences }; },
+  restore(data, snapshot) { const clean = this.normalize(snapshot || this.empty()); data.tracking = clean.tracking; data.favorites = clean.favorites; data.preferences = clean.preferences; },
+  switchContext(userId) {
+    const data = this.get();
+    if (data.sync.activeUserId === userId) return data;
+    if (data.sync.activeUserId) data.sync.accounts[data.sync.activeUserId] = this.snapshot(data);
+    else data.sync.guest = this.snapshot(data);
+    if (userId) {
+      if (data.sync.accounts[userId]) this.restore(data, data.sync.accounts[userId]);
+      else if (!data.sync.guestClaimedBy) { this.restore(data, data.sync.guest); data.sync.guestClaimedBy = userId; }
+      else this.restore(data, this.empty());
+    } else this.restore(data, data.sync.guest || this.empty());
+    data.sync.activeUserId = userId || null;
+    this.save(data);
+    return data;
+  }
+};
+function getUserTracking() { return userStorage.getTracking(); }
+function saveUserTracking(data) { userStorage.saveTracking(data); }
+function getTrackingForEntry(entryId) { const entry = getUserTracking()[entryId]; return entry && TRACKING_LABEL[entry.status] ? entry : null; }
+function setTrackingForEntry(entryId, status, updatedAt = new Date().toISOString()) { const tracking = getUserTracking(); tracking[entryId] = { status, updatedAt }; saveUserTracking(tracking); queueRemoteEntrySync(entryId); }
+function removeTrackingForEntry(entryId) { const tracking = getUserTracking(); delete tracking[entryId]; saveUserTracking(tracking); queueRemoteEntrySync(entryId); }
+function getUserFavorites() { const favorites = userStorage.getFavorites(); return new Set(Object.keys(favorites).filter(id => favorites[id])); }
+function setFavorite(entryId, value) { const favorites = userStorage.getFavorites(); value ? favorites[entryId] = true : delete favorites[entryId]; userStorage.saveFavorites(favorites); queueRemoteEntrySync(entryId); updateAccountPanel(); }
+function favoriteIds() { return getUserFavorites(); }
+function trackingData() { return getUserTracking(); }
+function trackingStatus(id) { const entry = getTrackingForEntry(id); return entry ? entry.status : "non-suivi"; }
+function setTrackingStatus(id, status, updatedAt = new Date().toISOString()) { status === "non-suivi" ? removeTrackingForEntry(id) : setTrackingForEntry(id, status, updatedAt); updateAccountPanel(); }
+function toggleFavorite(id) { setFavorite(id, !getUserFavorites().has(id)); }
+
+function setAccountSyncStatus(message) {
+  const status = document.getElementById("accountSyncStatus");
+  if (status) status.textContent = message;
+}
+function knownRegulationId(id) { return ITEMS.some(item => item.id === id); }
+function dateValue(value) { const timestamp = Date.parse(value || ""); return Number.isFinite(timestamp) ? timestamp : 0; }
+function remoteRowForEntry(id) {
+  if (!currentUser || !knownRegulationId(id)) return null;
+  const status = trackingStatus(id);
+  return { user_id: currentUser.id, regulation_id: id, status: TRACKING_FILTERS.includes(status) ? status : null, favorite: getUserFavorites().has(id) };
+}
+async function syncRemoteEntry(id) {
+  const row = remoteRowForEntry(id);
+  if (!row || !supabaseClient) return;
+  const { error } = await supabaseClient.from("user_regulation_tracking").upsert(row, { onConflict: "user_id,regulation_id" });
+  if (error) throw error;
+}
+async function syncRemotePreferences() {
+  if (!currentUser || !supabaseClient) return;
+  const preferences = userStorage.getPreferences();
+  const { error } = await supabaseClient.from("user_preferences").upsert({
+    user_id: currentUser.id,
+    default_sort: ["recent", "priority", "deadline"].includes(preferences.defaultSort) ? preferences.defaultSort : "recent",
+    language: preferences.language === "es" ? "es" : "fr",
+    compact_view: preferences.displayMode === "compact"
+  }, { onConflict: "user_id" });
+  if (error) throw error;
+}
+function queueRemoteEntrySync(id) {
+  if (!currentUser || syncInProgress) return;
+  syncRemoteEntry(id).then(() => setAccountSyncStatus("Synchronisation multi-appareils active")).catch(() => setAccountSyncStatus("Synchronisation en attente : vos données locales sont conservées."));
+}
+function queueRemotePreferencesSync() {
+  if (!currentUser || syncInProgress) return;
+  syncRemotePreferences().then(() => setAccountSyncStatus("Synchronisation multi-appareils active")).catch(() => setAccountSyncStatus("Synchronisation en attente : vos préférences locales sont conservées."));
+}
+async function synchronizeUserData(user) {
+  if (!user || !supabaseClient || syncInProgress) return;
+  syncInProgress = true;
+  setAccountSyncStatus("Synchronisation de votre suivi…");
+  try {
+    const [trackingResult, preferencesResult] = await Promise.all([
+      supabaseClient.from("user_regulation_tracking").select("regulation_id,status,favorite,updated_at").eq("user_id", user.id),
+      supabaseClient.from("user_preferences").select("default_sort,language,compact_view,updated_at").eq("user_id", user.id).maybeSingle()
+    ]);
+    if (trackingResult.error) throw trackingResult.error;
+    if (preferencesResult.error && preferencesResult.error.code !== "PGRST116") throw preferencesResult.error;
+
+    const local = userStorage.get();
+    (trackingResult.data || []).forEach(row => {
+      if (!knownRegulationId(row.regulation_id)) return;
+      const localEntry = local.tracking[row.regulation_id];
+      if (TRACKING_FILTERS.includes(row.status) && (!localEntry || dateValue(row.updated_at) >= dateValue(localEntry.updatedAt))) {
+        local.tracking[row.regulation_id] = { status: row.status, updatedAt: row.updated_at || new Date().toISOString() };
+      }
+      if (row.favorite === true) local.favorites[row.regulation_id] = true;
+    });
+    const remotePreferences = preferencesResult.data;
+    if (remotePreferences) {
+      if (["recent", "priority", "deadline"].includes(remotePreferences.default_sort)) local.preferences.defaultSort = remotePreferences.default_sort;
+      if (["fr", "es"].includes(remotePreferences.language)) local.preferences.language = remotePreferences.language;
+      local.preferences.displayMode = remotePreferences.compact_view ? "compact" : local.preferences.displayMode;
+    }
+    userStorage.save(local);
+
+    const ids = new Set([...Object.keys(local.tracking), ...Object.keys(local.favorites)]);
+    const rows = [...ids].filter(knownRegulationId).map(remoteRowForEntry).filter(Boolean);
+    if (rows.length) {
+      const { error } = await supabaseClient.from("user_regulation_tracking").upsert(rows, { onConflict: "user_id,regulation_id" });
+      if (error) throw error;
+    }
+    await syncRemotePreferences();
+    applyUserPreferences();
+    buildTrackingPanel();
+    updateAccountPanel();
+    render();
+    setAccountSyncStatus("Synchronisation multi-appareils active");
+  } catch (error) {
+    setAccountSyncStatus("Synchronisation indisponible : vos données locales sont conservées.");
+  } finally {
+    syncInProgress = false;
+  }
+}
+async function handleAuthUser(user) {
+  const nextUser = user || null;
+  userStorage.switchContext(nextUser ? nextUser.id : null);
+  updateAuthInterface(nextUser);
+  if (nextUser) await synchronizeUserData(nextUser);
+  else {
+    applyUserPreferences();
+    buildTrackingPanel();
+    updateAccountPanel();
+    render();
+  }
 }
 
 function actorImpactOf(item, key) {
@@ -1665,6 +2387,7 @@ function buildFilters() {
     chip.addEventListener("click", () => {
       state.cats.has(c) ? state.cats.delete(c) : state.cats.add(c);
       chip.classList.toggle("active");
+      renderActiveFilters();
       render();
     });
     catRow.appendChild(chip);
@@ -1676,6 +2399,7 @@ function buildFilters() {
     chip.addEventListener("click", () => {
       state.impacts.has(key) ? state.impacts.delete(key) : state.impacts.add(key);
       chip.classList.toggle("active");
+      renderActiveFilters();
       render();
     });
     impactRow.appendChild(chip);
@@ -1687,6 +2411,7 @@ function buildFilters() {
     chip.addEventListener("click", () => {
       state.actors.has(a.key) ? state.actors.delete(a.key) : state.actors.add(a.key);
       chip.classList.toggle("active");
+      renderActiveFilters();
       render();
     });
     actorRow.appendChild(chip);
@@ -1704,6 +2429,205 @@ function buildCounts() {
     `<div class="stat-tile low"><div class="stat-icon-wrap"><svg class="stat-icon"><use href="#icon-check"></use></svg></div><div class="n">${byImpact.low}</div><div class="l">Impact faible</div><svg class="stat-spark" viewBox="0 0 100 26" preserveAspectRatio="none"><polyline points="0,22 15,17 30,19 45,11 60,13 75,6 100,4"></polyline></svg></div>`
   ];
   wrap.innerHTML = tiles.join("");
+  const panel = document.getElementById("actionPanel");
+  panel.innerHTML = `
+    <div>
+      <p class="action-label">Impacts forts</p>
+      <h2>${byImpact.high} évolution${byImpact.high > 1 ? "s" : ""} présente${byImpact.high > 1 ? "nt" : ""} un impact fort</h2>
+    </div>
+    <button class="action-link" id="showHighImpact" type="button">Voir les évolutions <span aria-hidden="true">→</span></button>`;
+}
+
+function renderActiveFilters() {
+  const wrap = document.getElementById("activeFilters");
+  const active = [
+    ...[...state.cats].map(value => ({ group: "cat", value, label: value })),
+    ...[...state.impacts].map(value => ({ group: "impact", value, label: IMPACT_LABEL[value] })),
+    ...[...state.actors].map(value => ({ group: "actor", value, label: ACTORS.find(a => a.key === value).label })),
+    ...[...state.actions].map(value => ({ group: "action", value, label: ACTION_LABEL[value] })),
+    ...[...state.tracking].map(value => ({ group: "tracking", value, label: `Mon suivi : ${TRACKING_LABEL[value]}` }))
+  ];
+  wrap.classList.toggle("has-filters", active.length > 0);
+  wrap.innerHTML = active.length
+    ? `<span class="active-filters-label">Filtres actifs</span>${active.map(filter => `<span class="active-filter">${filter.label}<button type="button" data-remove-filter="${filter.group}:${filter.value}" aria-label="Retirer le filtre ${filter.label}">×</button></span>`).join("")}`
+    : "";
+  wrap.querySelectorAll("[data-remove-filter]").forEach(button => {
+    button.addEventListener("click", () => {
+      const [group, value] = button.dataset.removeFilter.split(":");
+      const set = group === "cat" ? state.cats : group === "impact" ? state.impacts : group === "actor" ? state.actors : group === "action" ? state.actions : state.tracking;
+      set.delete(value);
+      const chip = group === "action" ? document.querySelector(`[data-action-filter="${value}"]`) : group === "tracking" ? document.querySelector(`[data-tracking-filter="${value}"]`) : document.querySelector(`[data-${group}="${value}"]`);
+      chip.classList.remove(group === "action" || group === "tracking" ? "is-active" : "active");
+      if (group === "action" || group === "tracking") chip.setAttribute("aria-pressed", "false");
+      renderActiveFilters();
+      render();
+    });
+  });
+  updateKpiSelection();
+}
+
+function buildTrackingPanel() {
+  const counts = Object.fromEntries(TRACKING_FILTERS.map(status => [status, 0]));
+  ITEMS.forEach(item => { const status = trackingStatus(item.id); if (counts[status] !== undefined) counts[status]++; });
+  const panel = document.getElementById("trackingPanel");
+  panel.innerHTML = `<div class="tracking-head"><h2 class="tracking-title">Mon suivi</h2><div class="tracking-tools"><button class="tracking-tool" id="exportTracking" type="button">Exporter mon suivi</button><button class="tracking-tool" id="importTracking" type="button">Importer mon suivi</button><input id="importTrackingFile" type="file" accept="application/json,.json" hidden></div></div><div class="tracking-grid">${TRACKING_FILTERS.map(status => `<button class="tracking-filter ${status === "a-traiter" ? "todo" : status === "en-cours" ? "progress" : "done"} ${state.tracking.has(status) ? "is-active" : ""}" type="button" data-tracking-filter="${status}" aria-pressed="${state.tracking.has(status)}"><span class="tracking-filter-count">${counts[status]}</span><span class="tracking-filter-label">${TRACKING_LABEL[status]}</span></button>`).join("")}</div>`;
+  panel.querySelectorAll("[data-tracking-filter]").forEach(button => button.addEventListener("click", () => {
+    const status = button.dataset.trackingFilter;
+    state.tracking.has(status) ? state.tracking.delete(status) : state.tracking.add(status);
+    buildTrackingPanel();
+    setView("feed");
+    renderActiveFilters();
+    render();
+  }));
+  document.getElementById("exportTracking").addEventListener("click", exportTracking);
+  document.getElementById("importTracking").addEventListener("click", () => document.getElementById("importTrackingFile").click());
+  document.getElementById("importTrackingFile").addEventListener("change", importTracking);
+  updateAccountPanel();
+}
+
+function updateAccountPanel() {
+  const counts = Object.fromEntries(TRACKING_FILTERS.map(status => [status, 0]));
+  ITEMS.forEach(item => { const status = trackingStatus(item.id); if (counts[status] !== undefined) counts[status]++; });
+  const assign = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
+  assign("accountTodo", counts["a-traiter"]); assign("accountProgress", counts["en-cours"]); assign("accountDone", counts.traite); assign("accountFavorites", getUserFavorites().size);
+}
+
+function applyUserPreferences() {
+  const preferences = userStorage.getPreferences();
+  state.sort = ["recent", "priority", "deadline"].includes(preferences.defaultSort) ? preferences.defaultSort : "recent";
+  document.getElementById("sortOrder").value = state.sort;
+}
+
+function exportTracking() {
+  const data = userStorage.get();
+  const tracking = Object.fromEntries(Object.entries(data.tracking).filter(([id, entry]) => ITEMS.some(item => item.id === id) && entry && TRACKING_FILTERS.includes(entry.status)));
+  const favorites = Object.fromEntries(Object.entries(data.favorites).filter(([id, value]) => value && ITEMS.some(item => item.id === id)));
+  const blob = new Blob([JSON.stringify({ version: data.version, exportDate: new Date().toISOString(), tracking, favorites, preferences: data.preferences }, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob), link = document.createElement("a");
+  link.href = url; link.download = "cee-mon-suivi.json"; link.click();
+  URL.revokeObjectURL(url);
+}
+
+function importTracking(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const parsed = JSON.parse(reader.result);
+      if (!parsed || typeof parsed !== "object") throw new Error("Format invalide");
+      const known = new Set(ITEMS.map(item => item.id));
+      const legacyItems = Array.isArray(parsed.items) ? parsed.items : [];
+      const incomingTracking = parsed.tracking && typeof parsed.tracking === "object" && !Array.isArray(parsed.tracking) ? parsed.tracking : Object.fromEntries(legacyItems.filter(item => item && known.has(item.id) && TRACKING_FILTERS.includes(item.status)).map(item => [item.id, { status: item.status, updatedAt: item.updatedAt }]));
+      const validTracking = Object.fromEntries(Object.entries(incomingTracking).filter(([id, entry]) => known.has(id) && entry && TRACKING_FILTERS.includes(entry.status)).map(([id, entry]) => [id, { status: entry.status, updatedAt: typeof entry.updatedAt === "string" ? entry.updatedAt : new Date().toISOString() }]));
+      const incomingFavorites = parsed.favorites && typeof parsed.favorites === "object" && !Array.isArray(parsed.favorites) ? parsed.favorites : {};
+      const validFavorites = Object.fromEntries(Object.entries(incomingFavorites).filter(([id, value]) => known.has(id) && value === true));
+      if (!Object.keys(validTracking).length && !Object.keys(validFavorites).length) throw new Error("Aucune entrée reconnue");
+      if ((Object.keys(getUserTracking()).length || getUserFavorites().size) && !window.confirm("Importer ces données et écraser les statuts ou favoris correspondants existants ?")) return;
+      const next = userStorage.get();
+      Object.assign(next.tracking, validTracking); Object.assign(next.favorites, validFavorites);
+      if (parsed.preferences && typeof parsed.preferences === "object" && !Array.isArray(parsed.preferences)) next.preferences = { ...next.preferences, ...parsed.preferences };
+      userStorage.save(next);
+      applyUserPreferences(); buildTrackingPanel(); updateAccountPanel(); render();
+      [...new Set([...Object.keys(validTracking), ...Object.keys(validFavorites)])].forEach(queueRemoteEntrySync);
+      queueRemotePreferencesSync();
+    } catch (e) { window.alert("Fichier de suivi invalide ou sans entrée reconnue."); }
+    event.target.value = "";
+  };
+  reader.readAsText(file);
+}
+
+function buildActionPanel() {
+  const counts = Object.fromEntries(Object.keys(ACTION_LABEL).map(key => [key, 0]));
+  ITEMS.forEach(item => actionInfo(item).actions.forEach(action => counts[action]++));
+  const panel = document.getElementById("actionsPanel");
+  panel.innerHTML = `<h2 class="actions-title">Actions à mener</h2><div class="actions-grid">${Object.entries(ACTION_LABEL).map(([key, label]) => `<button class="action-filter ${key}" type="button" data-action-filter="${key}" aria-pressed="false"><span class="action-filter-count">${counts[key]}</span><span class="action-filter-label">${label}</span></button>`).join("")}</div>`;
+  panel.querySelectorAll("[data-action-filter]").forEach(button => {
+    button.addEventListener("click", () => {
+      const action = button.dataset.actionFilter;
+      state.actions.has(action) ? state.actions.delete(action) : state.actions.add(action);
+      button.classList.toggle("is-active", state.actions.has(action));
+      button.setAttribute("aria-pressed", String(state.actions.has(action)));
+      setView("feed");
+      renderActiveFilters();
+      render();
+    });
+  });
+}
+
+function buildCockpitControls() {
+  const tiles = [...document.querySelectorAll("#counts .stat-tile")];
+  const totalTile = tiles[0];
+  totalTile.classList.add("kpi-filter");
+  totalTile.setAttribute("role", "button");
+  totalTile.setAttribute("tabindex", "0");
+  totalTile.setAttribute("aria-label", "Afficher toutes les entrées suivies");
+  const resetView = () => resetRegistryView();
+  totalTile.addEventListener("click", resetView);
+  totalTile.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); resetView(); } });
+  ["high", "medium", "low"].forEach((impact, index) => {
+    const tile = tiles[index + 1];
+    tile.classList.add("kpi-filter");
+    tile.setAttribute("role", "button");
+    tile.setAttribute("tabindex", "0");
+    tile.setAttribute("aria-label", `Filtrer les ${IMPACT_LABEL[impact].toLowerCase()}s`);
+    const applyImpact = () => activateImpactFilter(impact);
+    tile.addEventListener("click", applyImpact);
+    tile.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); applyImpact(); } });
+  });
+  const panel = document.getElementById("actionPanel");
+  const priority = panel.firstElementChild;
+  priority.classList.add("priority-card");
+  priority.querySelector(".action-label").textContent = "Priorités réglementaires";
+  const priorityTitle = priority.querySelector("h2");
+  priorityTitle.innerHTML = priorityTitle.textContent.replace(/^(\d+)/, '<strong class="priority-count">$1</strong>');
+  priority.appendChild(document.getElementById("showHighImpact"));
+  const update = document.createElement("div");
+  update.className = "update-card";
+  update.innerHTML = `<p class="action-label">Dernière mise à jour</p><h2>${fmtDate(META.lastRun)}</h2><p><strong>${META.sources.length} sources surveillées</strong><br><span class="update-state">● Sources à jour</span></p>`;
+  panel.appendChild(update);
+  const action = document.getElementById("showHighImpact");
+  action.textContent = "Voir uniquement les impacts forts →";
+  updateKpiSelection();
+}
+
+function updateKpiSelection() {
+  const hasRestriction = state.cats.size || state.impacts.size || state.actors.size || state.actions.size || state.tracking.size || state.q.trim();
+  document.querySelectorAll("#counts .stat-tile").forEach((tile, index) => {
+    const impact = [null, "high", "medium", "low"][index];
+    tile.classList.toggle("kpi-active", impact ? state.impacts.size === 1 && state.impacts.has(impact) : !hasRestriction);
+  });
+}
+
+function resetRegistryView() {
+  setView("feed");
+  state.cats.clear();
+  state.impacts.clear();
+  state.actors.clear();
+  state.actions.clear();
+  state.tracking.clear();
+  state.q = "";
+  document.getElementById("search").value = "";
+  document.querySelectorAll("#filterBar .chip.active").forEach(chip => chip.classList.remove("active"));
+  document.querySelectorAll("[data-action-filter]").forEach(button => { button.classList.remove("is-active"); button.setAttribute("aria-pressed", "false"); });
+  document.querySelectorAll("[data-tracking-filter]").forEach(button => { button.classList.remove("is-active"); button.setAttribute("aria-pressed", "false"); });
+  state.sort = "recent";
+  document.getElementById("sortOrder").value = "recent";
+  renderActiveFilters();
+  render();
+  document.getElementById("filterBar").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function activateImpactFilter(impact) {
+  setView("feed");
+  state.impacts.clear();
+  state.impacts.add(impact);
+  document.querySelectorAll("#impactRow .chip").forEach(chip => {
+    chip.classList.toggle("active", chip.dataset.impact === impact);
+  });
+  renderActiveFilters();
+  render();
+  document.getElementById("filterBar").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function buildSources() {
@@ -1840,14 +2764,58 @@ function setView(view) {
   document.getElementById("catalogView").style.display = view === "catalog" ? "" : "none";
 }
 
+function buildOverviewCard(item) {
+  return `<div class="overview-card">
+    <div class="overview-meta">
+      <time class="overview-date">${fmtDate(item.date)}</time>
+      <span class="tag impact-${item.impactLevel}">${IMPACT_LABEL[item.impactLevel]}</span>
+      <span class="tag cat">${item.category}</span>
+    </div>
+    <p class="overview-title">${item.title}</p>
+    <p class="overview-summary">${item.summary}</p>
+    <button class="overview-see" type="button" data-overview-id="${item.id}">Voir →</button>
+  </div>`;
+}
+
+function buildRegisterOverview() {
+  const latest = ITEMS.slice().sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3);
+  const high = ITEMS.filter(i => i.impactLevel === "high").sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3);
+  const medium = ITEMS.filter(i => i.impactLevel === "medium").sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3);
+  const panel = (title, kind, items, allAction, allLabel) => `<section class="overview-panel ${kind}">
+    <h3 class="overview-panel-title">${title}</h3>
+    <div class="overview-list">${items.map(buildOverviewCard).join("")}</div>
+    <button class="overview-all" type="button" data-overview-action="${allAction}">${allLabel} →</button>
+  </section>`;
+  return `<section class="register-overview" aria-label="Vue d'ensemble du registre">
+    <h2 class="overview-heading">Vue d'ensemble</h2>
+    <div class="overview-grid">
+      ${panel("Dernières évolutions", "latest", latest, "all", "Voir toutes les évolutions")}
+      ${panel("Impacts forts", "high", high, "high", "Voir tous les impacts forts")}
+      ${panel("À surveiller", "medium", medium, "medium", "Voir tous les impacts modérés")}
+    </div>
+  </section>
+  <h2 class="registry-heading" id="registryComplete">Registre complet</h2>`;
+}
+
+function showRegisterItem(id) {
+  const item = [...document.querySelectorAll("#feed .item")].find(entry => entry.dataset.id === id);
+  if (!item) return;
+  item.scrollIntoView({ behavior: "smooth", block: "center" });
+  const head = item.querySelector(".item-head");
+  if (!item.classList.contains("open")) head.click();
+}
+
 function render() {
   const feed = document.getElementById("feed");
   const seen = seenIds();
+  const favorites = favoriteIds();
   const q = state.q.trim().toLowerCase();
 
   const filtered = ITEMS.filter(i => {
     if (state.cats.size && !state.cats.has(i.category)) return false;
     if (state.impacts.size && !state.impacts.has(i.impactLevel)) return false;
+    if (state.actions.size && ![...state.actions].some(action => actionInfo(i).actions.includes(action))) return false;
+    if (state.tracking.size && !state.tracking.has(trackingStatus(i.id))) return false;
     if (state.actors.size) {
       const relevant = [...state.actors].some(a => actorImpactOf(i, a).level !== "none");
       if (!relevant) return false;
@@ -1857,20 +2825,38 @@ function render() {
       if (!hay.includes(q)) return false;
     }
     return true;
-  }).sort((a, b) => b.date.localeCompare(a.date));
+  }).sort((a, b) => {
+    if (state.sort === "priority") {
+      const priorityOf = item => Math.min(...actionInfo(item).actions.map(action => ACTION_ORDER[action]), 5);
+      const difference = priorityOf(a) - priorityOf(b);
+      if (difference) return difference;
+    }
+    if (state.sort === "deadline") {
+      const deadlineOf = item => actionInfo(item).deadline;
+      const aDeadline = deadlineOf(a), bDeadline = deadlineOf(b);
+      if (aDeadline && bDeadline) return aDeadline.date - bDeadline.date;
+      if (aDeadline) return -1;
+      if (bDeadline) return 1;
+    }
+    return b.date.localeCompare(a.date);
+  });
 
   if (!filtered.length) {
     feed.innerHTML = `<div class="empty-state">Aucune entrée ne correspond à ces filtres.</div>`;
     return;
   }
 
-  feed.innerHTML = filtered.map(i => {
+  const showOverview = state.view === "feed" && !state.cats.size && !state.impacts.size && !state.actors.size && !state.actions.size && !state.tracking.size && !q;
+  feed.innerHTML = (showOverview ? buildRegisterOverview() : "") + filtered.map(i => {
     const isNew = !seen.has(i.id);
+    const isFavorite = favorites.has(i.id);
     const ref = refCodeOf(i.sourceUrl);
+    const action = actionInfo(i);
+    const tracking = trackingStatus(i.id);
     return `
     <article class="item" data-impact="${i.impactLevel}" data-id="${i.id}">
       <button class="item-head" aria-expanded="false">
-        <span class="item-actions"><svg class="bookmark-icon" aria-hidden="true"><use href="#icon-bookmark"></use></svg><span class="chev">▾</span></span>
+        <span class="item-actions"><span class="chev">▾</span></span>
         <div class="item-toprow">
           <time class="item-date">${fmtDate(i.date)}</time>
           ${ref ? `<span class="ref-code">réf. ${ref}</span>` : ""}
@@ -1881,31 +2867,51 @@ function render() {
         <h3 class="item-title">${i.title}</h3>
         <p class="item-summary">${i.summary}</p>
         ${i.ficheCodes.length ? `<div class="fiches">${i.ficheCodes.map(f => `<span class="fiche-code">${f}</span>`).join("")}</div>` : ""}
+        ${action.actions.length ? `<p class="item-actions-label">Action</p><div class="item-action-tags">${action.actions.map(key => `<span class="item-action-tag ${key}">${ACTION_LABEL[key]}${key === "deadline" ? ` · dans ${action.deadline.days} j` : ""}</span>`).join("")}</div>` : ""}
+        <div class="item-actors">${ACTORS.filter(a => actorImpactOf(i, a.key).level !== "none").length ? `<span class="item-actors-label">Acteurs concernés</span>${ACTORS.filter(a => actorImpactOf(i, a.key).level !== "none").map(a => `<span class="item-actor">${a.label}</span>`).join("")}` : ""}</div>
+        <span class="item-detail-link">Voir l'analyse complète</span>
       </button>
+      <div class="tracking-control"><label for="tracking-${i.id}">Mon suivi</label><select class="tracking-select status-${tracking === "a-traiter" ? "todo" : tracking === "en-cours" ? "progress" : tracking === "traite" ? "done" : "none"}" id="tracking-${i.id}" data-tracking-id="${i.id}" aria-label="Statut de suivi"><option value="non-suivi" ${tracking === "non-suivi" ? "selected" : ""}>Non suivi</option><option value="a-traiter" ${tracking === "a-traiter" ? "selected" : ""}>À traiter</option><option value="en-cours" ${tracking === "en-cours" ? "selected" : ""}>En cours</option><option value="traite" ${tracking === "traite" ? "selected" : ""}>Traité</option></select></div>
+      <button class="bookmark-button ${isFavorite ? "is-favorite" : ""}" type="button" data-favorite-id="${i.id}" aria-label="${isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}" title="${isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}"><svg class="bookmark-icon" aria-hidden="true"><use href="#icon-bookmark"></use></svg></button>
       <div class="item-body">
-        <span class="tag status">${i.statusLabel}</span>
-        <div class="impact-block">
-          <p class="h">Impact sur le déroulement d'une fiche CEE</p>
-          <p>${i.impactText}</p>
+        <div class="analysis-grid">
+          <section class="analysis-section full">
+            <h4>Synthèse</h4>
+            <div class="analysis-meta">
+              <span class="tag impact-${i.impactLevel}">${IMPACT_LABEL[i.impactLevel]}</span>
+              <span class="tag cat">${i.category}</span>
+              <span class="tag status">${i.statusLabel}</span>
+              <time class="analysis-date">${fmtDate(i.date)}</time>
+            </div>
+            <p>${i.summary}</p>
+          </section>
+          <section class="analysis-section full">
+            <h4>Ce qui change</h4>
+            <p>${i.impactText}</p>
+          </section>
+          ${(() => {
+            const actors = ACTORS.map(a => ({ ...a, impact: actorImpactOf(i, a.key) })).filter(a => a.impact.level !== "none");
+            return actors.length ? `<section class="analysis-section">
+              <h4>Impact opérationnel</h4>
+              <div class="analysis-actors">${actors.map(a => `<div class="analysis-actor">
+                <div class="analysis-actor-head"><span class="analysis-actor-name">${a.label}</span><span class="actor-level ${a.impact.level}">${ACTOR_LEVEL_LABEL[a.impact.level]}</span></div>
+                <p>${a.impact.text}</p>
+              </div>`).join("")}</div>
+            </section>` : "";
+          })()}
+          ${i.ficheCodes.length ? `<section class="analysis-section">
+            <h4>Fiches CEE concernées</h4>
+            <div class="analysis-fiches">${i.ficheCodes.map(f => `<span class="fiche-code">${f}</span>`).join("")}</div>
+          </section>` : ""}
+          <section class="analysis-section ${(!i.ficheCodes.length && !ACTORS.some(a => actorImpactOf(i, a.key).level !== "none")) ? "full" : ""}">
+            <h4>Source officielle</h4>
+            <div class="analysis-source">
+              <span class="analysis-source-meta">${i.official ? "Source officielle" : "Source professionnelle"} — ${i.sourceName}</span>
+              <a class="analysis-source-link" href="${i.sourceUrl}" target="_blank" rel="noopener">Consulter le texte officiel ↗</a>
+            </div>
+          </section>
         </div>
-        <p class="actor-block-h">Impact par acteur</p>
-        <div class="actor-grid">
-          ${ACTORS.map(a => {
-            const ai = actorImpactOf(i, a.key);
-            return `<div class="actor-card">
-              <div class="actor-name">
-                <span class="actor-name-label"><span class="actor-mono">${a.mono}</span>${a.label}</span>
-                <span class="actor-level ${ai.level}">${ACTOR_LEVEL_LABEL[ai.level]}</span>
-              </div>
-              <p>${ai.text}</p>
-            </div>`;
-          }).join("")}
-        </div>
-        ${renderAttachments(i)}
-        <div class="item-foot">
-          <span class="official-tag">${i.official ? "Source officielle" : "Source professionnelle"} — ${i.sourceName}</span>
-          <a class="source-link" href="${i.sourceUrl}" target="_blank" rel="noopener">Consulter le texte source ↗</a>
-        </div>
+        ${i.attachments && i.attachments.length ? `<div class="analysis-attachments">${renderAttachments(i)}</div>` : ""}
       </div>
     </article>`;
   }).join("");
@@ -1915,20 +2921,76 @@ function render() {
       const item = btn.closest(".item");
       const open = item.classList.toggle("open");
       btn.setAttribute("aria-expanded", String(open));
+      btn.querySelector(".item-detail-link").textContent = open ? "Réduire ↑" : "Voir l'analyse complète";
+    });
+  });
+  feed.querySelectorAll("[data-favorite-id]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      toggleFavorite(btn.dataset.favoriteId);
+      render();
+    });
+  });
+  feed.querySelectorAll("[data-tracking-id]").forEach(select => {
+    select.addEventListener("change", () => {
+      setTrackingStatus(select.dataset.trackingId, select.value);
+      buildTrackingPanel();
+      render();
+    });
+  });
+  feed.querySelectorAll("[data-overview-id]").forEach(btn => {
+    btn.addEventListener("click", () => showRegisterItem(btn.dataset.overviewId));
+  });
+  feed.querySelectorAll("[data-overview-action]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const action = btn.dataset.overviewAction;
+      if (action === "high" || action === "medium") return activateImpactFilter(action);
+      document.getElementById("registryComplete").scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
 }
 
-document.getElementById("search").addEventListener("input", e => { state.q = e.target.value; render(); });
+document.getElementById("search").addEventListener("input", e => { state.q = e.target.value; updateKpiSelection(); render(); });
 document.getElementById("markRead").addEventListener("click", () => { markAllSeen(); render(); });
+document.getElementById("sortOrder").addEventListener("change", e => { state.sort = e.target.value; userStorage.savePreferences({ defaultSort: state.sort }); queueRemotePreferencesSync(); render(); });
 document.getElementById("tabFeed").addEventListener("click", () => setView("feed"));
 document.getElementById("tabChrono").addEventListener("click", () => setView("chrono"));
 document.getElementById("tabCatalog").addEventListener("click", () => setView("catalog"));
 document.getElementById("catalogSearch").addEventListener("input", e => { catalogState.q = e.target.value; renderCatalog(); });
+document.getElementById("actionPanel").addEventListener("click", e => {
+  if (!e.target.closest("#showHighImpact")) return;
+  activateImpactFilter("high");
+});
+document.getElementById("filterToggle").addEventListener("click", () => {
+  const bar = document.getElementById("filterBar");
+  const open = bar.classList.toggle("filters-open");
+  document.getElementById("filterToggle").setAttribute("aria-expanded", String(open));
+});
+document.getElementById("accountButton").addEventListener("click", () => {
+  if (!getCurrentUser()) return openAuthModal("signin");
+  const panel = document.getElementById("accountPanel"), open = panel.hidden;
+  panel.hidden = !open;
+  document.getElementById("accountButton").setAttribute("aria-expanded", String(open));
+  if (open) updateAccountPanel();
+});
+document.getElementById("accountSignout").addEventListener("click", signOut);
+document.getElementById("authTabSignin").addEventListener("click", () => setAuthMode("signin"));
+document.getElementById("authTabSignup").addEventListener("click", () => setAuthMode("signup"));
+document.getElementById("authClose").addEventListener("click", closeAuthModal);
+document.getElementById("authBackdrop").addEventListener("click", event => { if (event.target === event.currentTarget) closeAuthModal(); });
+document.getElementById("authSigninForm").addEventListener("submit", submitSignIn);
+document.getElementById("authSignupForm").addEventListener("submit", submitSignUp);
+document.getElementById("authResendConfirmation").addEventListener("click", resendConfirmation);
+document.addEventListener("keydown", event => { if (event.key === "Escape" && !document.getElementById("authBackdrop").hidden) closeAuthModal(); });
 
+userStorage.migrate();
+applyUserPreferences();
+initializeAuth().catch(() => updateAuthInterface(null));
 buildFilters();
 buildCounts();
 buildSources();
+buildCockpitControls();
+buildActionPanel();
+buildTrackingPanel();
 buildChrono();
 buildCatalogStats();
 buildSectorFilter();
