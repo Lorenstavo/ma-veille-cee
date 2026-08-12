@@ -290,9 +290,68 @@
   #otherSiteFrameWrap.visible { display: block; }
   iframe.site-frame { width: 100%; height: calc(100vh - 45px); border: 0; display: block; background: var(--bg); }
   @media (max-width: 560px) { .site-tab { font-size: 11px; padding: 10px 6px; } }
+
+  /* --- Redesign additions --- */
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase;
+    color: var(--ink-muted); background: none; border-radius: 0; padding: 0;
+  }
+  .hero-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
+  .hero-text { flex: 1 1 auto; min-width: 0; }
+  .hero-illustration { flex: none; display: none; margin-top: -6px; }
+  @media (min-width: 720px) { .hero-illustration { display: block; } }
+  .meta-strip { row-gap: 8px; }
+  .meta-item { display: inline-flex; align-items: center; gap: 6px; }
+  .meta-icon { width: 13px; height: 13px; color: var(--ink-faint); flex: none; }
+  #glossary summary {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--primary-tint); color: var(--primary-strong);
+    border-radius: 999px; padding: 6px 12px 6px 10px;
+  }
+  #glossary summary::before { font-size: 13px; margin-right: 1px; }
+  .stat-tile { position: relative; overflow: hidden; padding-top: 42px; }
+  .stat-icon-wrap {
+    position: absolute; top: 12px; left: 13px; width: 28px; height: 28px;
+    border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  }
+  .stat-tile.total .stat-icon-wrap { background: var(--primary-tint); color: var(--primary-strong); }
+  .stat-tile.high .stat-icon-wrap { background: var(--impact-high-tint); color: var(--impact-high); }
+  .stat-tile.medium .stat-icon-wrap { background: var(--impact-medium-tint); color: var(--impact-medium); }
+  .stat-tile.low .stat-icon-wrap { background: var(--impact-low-tint); color: var(--impact-low); }
+  .stat-icon { width: 15px; height: 15px; }
+  .stat-spark { display: block; width: 100%; height: 20px; margin-top: 9px; }
+  .stat-spark polyline { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .stat-tile.total .stat-spark polyline { stroke: var(--primary); }
+  .stat-tile.high .stat-spark polyline { stroke: var(--impact-high); }
+  .stat-tile.medium .stat-spark polyline { stroke: var(--impact-medium); }
+  .stat-tile.low .stat-spark polyline { stroke: var(--impact-low); }
+  .view-tab { display: inline-flex; align-items: center; gap: 6px; }
+  .tab-icon { width: 14px; height: 14px; flex: none; }
+  .item-head { position: relative; }
+  .item-actions { float: right; display: inline-flex; align-items: center; gap: 10px; }
+  .item-actions .chev { float: none; }
+  .bookmark-icon { width: 14px; height: 14px; color: var(--ink-faint); }
+  .lang-toggle { border-radius: 999px; padding: 3px; background: var(--surface-2); border: 1px solid var(--line); }
+  .lang-btn { border-radius: 999px; padding: 6px 14px; }
 </style>
 </head>
 <body>
+<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false">
+<defs>
+<symbol id="icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></symbol>
+<symbol id="icon-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82A1.65 1.65 0 0 0 3 13.09H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></symbol>
+<symbol id="icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></symbol>
+<symbol id="icon-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></symbol>
+<symbol id="icon-timeline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.5"></circle><circle cx="6" cy="18" r="2.5"></circle><circle cx="18" cy="12" r="2.5"></circle><path d="M6 8.5V15.5"></path><path d="M8.3 7.2L15.7 10.8"></path></symbol>
+<symbol id="icon-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></symbol>
+<symbol id="icon-bookmark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></symbol>
+<symbol id="icon-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="8" y1="13" x2="16" y2="13"></line><line x1="8" y1="17" x2="16" y2="17"></line></symbol>
+<symbol id="icon-trend" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></symbol>
+<symbol id="icon-balance" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="3" x2="12" y2="21"></line><path d="M5 7l-3 6a3 3 0 0 0 6 0z"></path><path d="M19 7l-3 6a3 3 0 0 0 6 0z"></path><line x1="5" y1="7" x2="19" y2="7"></line></symbol>
+<symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></symbol>
+</defs>
+</svg>
 <div class="top-accent"></div>
 <div class="site-switch">
   <button class="site-tab" id="siteTabCee" type="button" data-frame-url="/">🇫🇷 CEE France</button>
@@ -309,18 +368,23 @@
         <button class="lang-btn" id="langEs" data-lang="es">ES</button>
       </div>
     </div>
-    <h1 id="h1"></h1>
-    <p class="subhead" id="subhead"></p>
+    <div class="hero-row">
+      <div class="hero-text">
+        <h1 id="h1"></h1>
+        <p class="subhead" id="subhead"></p>
+      </div>
+      <div class="hero-illustration" aria-hidden="true"><svg viewBox="0 0 160 140" width="150" height="132"><circle cx="80" cy="70" r="62" fill="var(--primary-tint)"></circle><rect x="24" y="30" width="92" height="64" rx="8" fill="var(--surface)" stroke="var(--line-strong)" stroke-width="1.5"></rect><rect x="24" y="30" width="92" height="16" rx="8" fill="var(--primary-tint)"></rect><circle cx="33" cy="38" r="2.5" fill="var(--impact-high)"></circle><circle cx="41" cy="38" r="2.5" fill="var(--impact-medium)"></circle><circle cx="49" cy="38" r="2.5" fill="var(--impact-low)"></circle><line x1="34" y1="58" x2="90" y2="58" stroke="var(--line)" stroke-width="3" stroke-linecap="round"></line><line x1="34" y1="68" x2="100" y2="68" stroke="var(--line)" stroke-width="3" stroke-linecap="round"></line><line x1="34" y1="78" x2="76" y2="78" stroke="var(--line)" stroke-width="3" stroke-linecap="round"></line><g transform="translate(84,72)"><circle r="20" fill="var(--surface)" stroke="var(--primary)" stroke-width="4"></circle><line x1="14" y1="14" x2="26" y2="26" stroke="var(--primary)" stroke-width="5" stroke-linecap="round"></line></g><path d="M120 40 Q132 30 126 16 Q112 22 114 36 Q116 40 120 40 Z" fill="var(--impact-low)"></path><circle cx="122" cy="104" r="15" fill="var(--surface)" stroke="var(--line-strong)" stroke-width="1.5"></circle><text x="122" y="110" text-anchor="middle" font-size="16">🇪🇸</text></svg></div>
+    </div>
     <div class="trust-row">
       <span class="trust-badge"><span class="check">✓</span> <span id="trust1"></span></span>
       <span class="trust-badge"><span class="check">✓</span> <span id="trust2"></span></span>
     </div>
     <div class="meta-strip">
-      <span id="metaLastRunLabel"></span> <time id="lastRun" datetime="">—</time>
+      <span class="meta-item"><svg class="meta-icon"><use href="#icon-calendar"></use></svg><span id="metaLastRunLabel"></span> <time id="lastRun" datetime="">—</time></span>
       <span>·</span>
-      <span><span class="num" id="sourceCount">0</span> <span id="metaSourcesLabel"></span></span>
+      <span class="meta-item"><svg class="meta-icon"><use href="#icon-gear"></use></svg><span class="num" id="sourceCount">0</span> <span id="metaSourcesLabel"></span></span>
       <span>·</span>
-      <span id="metaNextLabel"></span>
+      <span class="meta-item"><svg class="meta-icon"><use href="#icon-clock"></use></svg><span id="metaNextLabel"></span></span>
     </div>
     <details id="glossary">
       <summary id="glossarySummary"></summary>
@@ -341,9 +405,9 @@
     </details>
     <div class="stats-row" id="counts"></div>
     <div class="view-tabs">
-      <button class="view-tab active" id="tabFeed" data-view="feed"></button>
-      <button class="view-tab" id="tabChrono" data-view="chrono"></button>
-      <button class="view-tab" id="tabCatalog" data-view="catalog"></button>
+      <button class="view-tab active" id="tabFeed" data-view="feed"><svg class="tab-icon"><use href="#icon-list"></use></svg><span id="tabFeedLabel"></span></button>
+      <button class="view-tab" id="tabChrono" data-view="chrono"><svg class="tab-icon"><use href="#icon-timeline"></use></svg><span id="tabChronoLabel"></span></button>
+      <button class="view-tab" id="tabCatalog" data-view="catalog"><svg class="tab-icon"><use href="#icon-grid"></use></svg><span id="tabCatalogLabel"></span></button>
     </div>
   </header>
 
@@ -1983,7 +2047,7 @@ const ITEMS = DATA.items;
    ============================================================ */
 const UI = {
   fr: {
-    eyebrow: "Registre réglementaire · Dispositif CAE (Espagne)",
+    eyebrow: "Registre réglementaire › Dispositif CAE (Espagne)",
     h1: "Veille des évolutions CAE — Espagne",
     subhead: "Suivi centralisé des textes officiels (Real Decreto, Órdenes TED, Resoluciones), du catalogue de fiches de mesures standardisées et des acteurs du dispositif espagnol des Certificats d'Ahorro Energético (CAE) — avec, pour chaque entrée, l'impact concret sur chacun des acteurs de la chaîne.",
     trust1: "Sources officielles (BOE, MITECO, IDAE, ENAC)",
@@ -2027,7 +2091,7 @@ const UI = {
     attachSeeSource: "Voir le texte source ↗"
   },
   es: {
-    eyebrow: "Registro normativo · Sistema CAE (España)",
+    eyebrow: "Registro normativo › Sistema CAE (España)",
     h1: "Vigilancia de las evoluciones del Sistema CAE",
     subhead: "Seguimiento centralizado de los textos oficiales (Real Decreto, Órdenes TED, Resoluciones), del catálogo de fichas de medidas estandarizadas y de los actores del sistema de Certificados de Ahorro Energético (CAE) — con, para cada entrada, el impacto concreto sobre cada uno de los actores de la cadena.",
     trust1: "Fuentes oficiales (BOE, MITECO, IDAE, ENAC)",
@@ -2190,10 +2254,10 @@ function buildCounts() {
   const byImpact = { high: 0, medium: 0, low: 0, info: 0 };
   ITEMS.forEach(i => byImpact[i.impactLevel]++);
   wrap.innerHTML = [
-    `<div class="stat-tile total"><div class="n">${ITEMS.length}</div><div class="l">${t("statTotal")}</div></div>`,
-    `<div class="stat-tile high"><div class="n">${byImpact.high}</div><div class="l">${t("statHigh")}</div></div>`,
-    `<div class="stat-tile medium"><div class="n">${byImpact.medium}</div><div class="l">${t("statMedium")}</div></div>`,
-    `<div class="stat-tile low"><div class="n">${byImpact.low}</div><div class="l">${t("statLow")}</div></div>`
+    `<div class="stat-tile total"><div class="stat-icon-wrap"><svg class="stat-icon"><use href="#icon-list"></use></svg></div><div class="n">${ITEMS.length}</div><div class="l">${t("statTotal")}</div><svg class="stat-spark" viewBox="0 0 100 26" preserveAspectRatio="none"><polyline points="0,18 15,20 30,14 45,16 60,9 75,11 100,3"></polyline></svg></div>`,
+    `<div class="stat-tile high"><div class="stat-icon-wrap"><svg class="stat-icon"><use href="#icon-trend"></use></svg></div><div class="n">${byImpact.high}</div><div class="l">${t("statHigh")}</div><svg class="stat-spark" viewBox="0 0 100 26" preserveAspectRatio="none"><polyline points="0,6 15,10 30,7 45,15 60,12 75,19 100,22"></polyline></svg></div>`,
+    `<div class="stat-tile medium"><div class="stat-icon-wrap"><svg class="stat-icon"><use href="#icon-balance"></use></svg></div><div class="n">${byImpact.medium}</div><div class="l">${t("statMedium")}</div><svg class="stat-spark" viewBox="0 0 100 26" preserveAspectRatio="none"><polyline points="0,13 15,10 30,15 45,11 60,16 75,10 100,13"></polyline></svg></div>`,
+    `<div class="stat-tile low"><div class="stat-icon-wrap"><svg class="stat-icon"><use href="#icon-check"></use></svg></div><div class="n">${byImpact.low}</div><div class="l">${t("statLow")}</div><svg class="stat-spark" viewBox="0 0 100 26" preserveAspectRatio="none"><polyline points="0,22 15,17 30,19 45,11 60,13 75,6 100,4"></polyline></svg></div>`
   ].join("");
 }
 
@@ -2231,9 +2295,9 @@ function buildCatalogStats() {
   const active = cat.filter(f => !f.a).length;
   const abrogadas = cat.filter(f => f.a).length;
   wrap.innerHTML = [
-    `<div class="stat-tile total"><div class="n">${cat.length}</div><div class="l">${t("catalogFiches")}</div></div>`,
-    `<div class="stat-tile low"><div class="n">${active}</div><div class="l">${t("catalogActive")}</div></div>`,
-    `<div class="stat-tile medium"><div class="n">${abrogadas}</div><div class="l">${t("catalogAbrogees")}</div></div>`
+    `<div class="stat-tile total"><div class="stat-icon-wrap"><svg class="stat-icon"><use href="#icon-doc"></use></svg></div><div class="n">${cat.length}</div><div class="l">${t("catalogFiches")}</div><svg class="stat-spark" viewBox="0 0 100 26" preserveAspectRatio="none"><polyline points="0,18 15,20 30,14 45,16 60,9 75,11 100,3"></polyline></svg></div>`,
+    `<div class="stat-tile low"><div class="stat-icon-wrap"><svg class="stat-icon"><use href="#icon-check"></use></svg></div><div class="n">${active}</div><div class="l">${t("catalogActive")}</div><svg class="stat-spark" viewBox="0 0 100 26" preserveAspectRatio="none"><polyline points="0,22 15,17 30,19 45,11 60,13 75,6 100,4"></polyline></svg></div>`,
+    `<div class="stat-tile medium"><div class="stat-icon-wrap"><svg class="stat-icon"><use href="#icon-clock"></use></svg></div><div class="n">${abrogadas}</div><div class="l">${t("catalogAbrogees")}</div><svg class="stat-spark" viewBox="0 0 100 26" preserveAspectRatio="none"><polyline points="0,13 15,10 30,15 45,11 60,16 75,10 100,13"></polyline></svg></div>`
   ].join("");
 }
 
@@ -2336,7 +2400,7 @@ function render() {
     return `
     <article class="item" data-impact="${i.impactLevel}" data-id="${i.id}">
       <button class="item-head" aria-expanded="false">
-        <span class="chev">▾</span>
+        <span class="item-actions"><svg class="bookmark-icon" aria-hidden="true"><use href="#icon-bookmark"></use></svg><span class="chev">▾</span></span>
         <div class="item-toprow">
           <time class="item-date">${fmtDate(i.date)}</time>
           <span class="tag cat">${CAT_LABEL[lang][i.category] || i.category}</span>
@@ -2401,9 +2465,9 @@ function applyStaticText() {
   document.getElementById("gcEVText").textContent = t("gcEVText");
   document.getElementById("gcINTitle").textContent = t("gcINTitle");
   document.getElementById("gcINText").textContent = t("gcINText");
-  document.getElementById("tabFeed").textContent = t("tabFeed");
-  document.getElementById("tabChrono").textContent = t("tabChrono");
-  document.getElementById("tabCatalog").textContent = t("tabCatalog");
+  document.getElementById("tabFeedLabel").textContent = t("tabFeed");
+  document.getElementById("tabChronoLabel").textContent = t("tabChrono");
+  document.getElementById("tabCatalogLabel").textContent = t("tabCatalog");
   document.getElementById("catLabel").textContent = t("filterType");
   document.getElementById("impactLabel").textContent = t("filterImpact");
   document.getElementById("actorLabel").textContent = t("filterActor");
