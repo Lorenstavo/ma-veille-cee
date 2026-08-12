@@ -957,6 +957,24 @@
   .auth-message { min-height: 18px; margin: 2px 0 0; color: var(--text-secondary); font-size: 11.5px; line-height: 1.45; }
   .auth-message.error { color: var(--red-600); }
   .auth-message.success { color: var(--green-600); }
+  .alerts-summary { margin-top: 10px !important; padding-top: 10px; border-top: 1px solid var(--border); }
+  .alerts-summary strong { display: block; margin-bottom: 4px; color: var(--navy-900); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; }
+  .alerts-manage { width: 100%; margin-top: 7px; padding: 7px 9px; border: 1px solid var(--blue-600); border-radius: 7px; background: var(--blue-50); color: var(--blue-600); font: 800 11px var(--font-ui); cursor: pointer; }
+  .alerts-modal { width: min(680px, 100%); max-height: min(720px, calc(100vh - 36px)); overflow: auto; }
+  .alert-group { margin-top: 13px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .alert-group h3 { margin: 0 0 8px; color: var(--navy-900); font-size: 12px; }
+  .alert-options { display: flex; flex-wrap: wrap; gap: 7px; }
+  .alert-option { display: inline-flex; align-items: center; gap: 5px; padding: 6px 8px; border: 1px solid var(--border); border-radius: 7px; color: var(--text-secondary); font-size: 10.5px; font-weight: 700; cursor: pointer; }
+  .alert-option input { accent-color: var(--blue-600); }
+  .alert-fos { display: flex; gap: 7px; }
+  .alert-fos input { flex: 1; min-width: 0; padding: 8px; border: 1px solid var(--border-strong); border-radius: 7px; font: 12px var(--font-ui); }
+  .alert-fos button, .alert-footer button { padding: 8px 10px; border: 1px solid var(--blue-600); border-radius: 7px; background: #fff; color: var(--blue-600); font: 800 11px var(--font-ui); cursor: pointer; }
+  .alert-fos-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
+  .alert-fos-tag { padding: 4px 7px; border: 1px solid var(--blue-100); border-radius: 999px; background: var(--blue-50); color: var(--blue-600); font: 800 10px var(--font-mono); }
+  .alert-fos-tag button { margin-left: 4px; padding: 0; border: 0; background: transparent; color: inherit; cursor: pointer; }
+  .alert-preview { margin: 13px 0 0; padding: 10px; border-radius: 8px; background: var(--surface-soft); color: var(--text-secondary); font-size: 11.5px; }
+  .alert-footer { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 7px; margin-top: 14px; }
+  .alert-footer .alert-save { background: var(--blue-600); color: #fff; }
   @media (max-width: 560px) { .account-zone { margin-left: 4px; } .account-button { padding: 7px; font-size: 10px; } }
 </style>
 </head>
@@ -980,7 +998,7 @@
 <div class="site-switch">
   <button class="site-tab active" id="siteTabCee" type="button" data-frame-url="">🇫🇷 CEE France</button>
   <button class="site-tab" id="siteTabCae" type="button" data-frame-url="/cae-espagne/">🇪🇸 CAE Espagne</button>
-  <div class="account-zone"><button class="account-button" id="accountButton" type="button" aria-expanded="false" aria-controls="accountPanel">Mon espace</button><section class="account-popover" id="accountPanel" hidden><p class="account-email" id="accountEmail" hidden></p><p id="accountStorageMessage">Votre suivi est actuellement enregistré uniquement sur cet appareil.</p><div class="account-counts"><span><b id="accountTodo">0</b> À traiter</span><span><b id="accountProgress">0</b> En cours</span><span><b id="accountDone">0</b> Traité</span><span><b id="accountFavorites">0</b> favoris</span></div><small id="accountSyncStatus">Synchronisation multi-appareils bientôt disponible</small><button class="account-signout" id="accountSignout" type="button" hidden>Se déconnecter</button></section></div>
+  <div class="account-zone"><button class="account-button" id="accountButton" type="button" aria-expanded="false" aria-controls="accountPanel">Mon espace</button><section class="account-popover" id="accountPanel" hidden><p class="account-email" id="accountEmail" hidden></p><p id="accountStorageMessage">Votre suivi est actuellement enregistré uniquement sur cet appareil.</p><div class="account-counts"><span><b id="accountTodo">0</b> À traiter</span><span><b id="accountProgress">0</b> En cours</span><span><b id="accountDone">0</b> Traité</span><span><b id="accountFavorites">0</b> favoris</span></div><small id="accountSyncStatus">Synchronisation multi-appareils bientôt disponible</small><div class="alerts-summary"><strong>Mes alertes</strong><p id="alertsSummary">Connectez-vous pour créer des alertes personnalisées.</p><button class="alerts-manage" id="alertsManage" type="button">Gérer mes alertes</button></div><button class="account-signout" id="accountSignout" type="button" hidden>Se déconnecter</button></section></div>
 </div>
 <div id="otherSiteFrameWrap"><iframe id="otherSiteFrame" class="site-frame" title="Autre site" loading="lazy"></iframe></div>
 <div class="auth-backdrop" id="authBackdrop" hidden>
@@ -991,6 +1009,12 @@
     <form class="auth-form" id="authSignupForm" novalidate hidden><label class="auth-field">Adresse e-mail<input id="signupEmail" type="email" autocomplete="email" required></label><label class="auth-field">Mot de passe<input id="signupPassword" type="password" autocomplete="new-password" required></label><label class="auth-field">Confirmer le mot de passe<input id="signupPasswordConfirm" type="password" autocomplete="new-password" required></label><button class="auth-submit" type="submit">Créer mon compte</button></form>
     <p class="auth-message" id="authMessage" aria-live="polite"></p>
     <button class="auth-resend" id="authResendConfirmation" type="button" hidden>Renvoyer l’e-mail de confirmation</button>
+  </section>
+</div>
+<div class="auth-backdrop" id="alertsBackdrop" hidden>
+  <section class="auth-modal alerts-modal" role="dialog" aria-modal="true" aria-labelledby="alertsTitle">
+    <div class="auth-modal-head"><h2 id="alertsTitle">Mes alertes</h2><button class="auth-close" id="alertsClose" type="button" aria-label="Fermer">×</button></div>
+    <div id="alertsForm"></div>
   </section>
 </div>
 <div class="wrap" id="mainContent">
@@ -2069,6 +2093,7 @@ function updateAuthInterface(user) {
   if (currentUser) email.textContent = currentUser.email || "Compte connecté";
   storageMessage.textContent = currentUser ? "Votre suivi est synchronisé avec ce compte et conservé sur cet appareil." : "Votre suivi est actuellement enregistré uniquement sur cet appareil.";
   syncStatus.textContent = currentUser ? "Synchronisation multi-appareils active" : "Synchronisation multi-appareils bientôt disponible";
+  updateAlertsSummary();
 }
 async function initializeAuth() {
   if (!supabaseClient) return updateAuthInterface(null);
@@ -2149,7 +2174,7 @@ const ACTORS = [
 ];
 const ACTOR_LEVEL_LABEL = { high: "Fort", medium: "Modéré", low: "Faible", info: "À suivre", none: "Aucun" };
 const CATS = [...new Set(ITEMS.map(i => i.category))];
-const state = { cats: new Set(), impacts: new Set(), actors: new Set(), actions: new Set(), tracking: new Set(), personalOnly: false, unreadOnly: false, q: "", view: "feed", sort: "recent" };
+const state = { cats: new Set(), impacts: new Set(), actors: new Set(), actions: new Set(), tracking: new Set(), alertFos: new Set(), personalOnly: false, unreadOnly: false, q: "", view: "feed", sort: "recent" };
 const ACTION_LABEL = { analyze: "À analyser", apply: "À appliquer", monitor: "À surveiller", deadline: "Échéance proche", info: "Information" };
 const ACTION_ORDER = { apply: 0, deadline: 1, analyze: 2, monitor: 3, info: 4 };
 const TRACKING_STORAGE_KEY = "cee-user-tracking";
@@ -2205,6 +2230,65 @@ function actionInfo(item) {
   return { actions: [...actions], deadline, reasons };
 }
 function deadlineLevel(deadline) { return !deadline ? "" : deadline.days <= 7 ? "urgent" : deadline.days <= 30 ? "anticipate" : "normal"; }
+
+const ALERT_TYPES = ["Consultation publique", "Arrêté", "Décret", "Questions-réponses", "Catalogue des fiches", "Jurisprudence", "Événement"];
+const ALERT_ACTIONS = ["analyze", "apply", "monitor", "deadline"];
+let alertPreferences = null;
+function emptyAlertPreferences() { return { impact_levels: [], actors: [], types: [], actions: [], fos_refs: [], frequency: "daily", email_enabled: false }; }
+function normalizeAlertPreferences(data) {
+  const base = emptyAlertPreferences(), source = data && typeof data === "object" ? data : {};
+  const list = (value, allowed) => Array.isArray(value) ? [...new Set(value.filter(item => allowed.includes(item)))] : [];
+  return { impact_levels: list(source.impact_levels, ["high", "medium", "low", "info"]), actors: list(source.actors, ACTORS.map(actor => actor.key)), types: list(source.types, ALERT_TYPES), actions: list(source.actions, ALERT_ACTIONS), fos_refs: Array.isArray(source.fos_refs) ? [...new Set(source.fos_refs.filter(ref => META.ficheCatalog.some(fiche => fiche.c === ref)))] : [], frequency: ["immediate", "daily", "weekly"].includes(source.frequency) ? source.frequency : base.frequency, email_enabled: false };
+}
+function alertMatches(item, preferences = alertPreferences) {
+  const prefs = normalizeAlertPreferences(preferences);
+  const configured = prefs.impact_levels.length || prefs.actors.length || prefs.types.length || prefs.actions.length || prefs.fos_refs.length;
+  if (!configured) return false;
+  if (prefs.impact_levels.length && !prefs.impact_levels.includes(item.impactLevel)) return false;
+  if (prefs.actors.length && !prefs.actors.some(actor => actorImpactOf(item, actor).level !== "none")) return false;
+  if (prefs.types.length && !prefs.types.includes(item.category)) return false;
+  if (prefs.actions.length && !prefs.actions.some(action => actionInfo(item).actions.includes(action))) return false;
+  if (prefs.fos_refs.length && !item.ficheCodes.some(ref => prefs.fos_refs.includes(ref))) return false;
+  return true;
+}
+function alertSummary(preferences = alertPreferences) {
+  const prefs = normalizeAlertPreferences(preferences);
+  const labels = [
+    ...prefs.impact_levels.map(level => IMPACT_LABEL[level]),
+    ...prefs.actors.map(key => ACTORS.find(actor => actor.key === key).label),
+    prefs.fos_refs.length ? `${prefs.fos_refs.length} fiche${prefs.fos_refs.length > 1 ? "s" : ""} surveillée${prefs.fos_refs.length > 1 ? "s" : ""}` : "",
+    ({ immediate: "Immédiatement", daily: "Résumé quotidien", weekly: "Résumé hebdomadaire" })[prefs.frequency]
+  ].filter(Boolean);
+  return (prefs.impact_levels.length || prefs.actors.length || prefs.types.length || prefs.actions.length || prefs.fos_refs.length) ? labels.join(" · ") : "Aucune alerte configurée";
+}
+function updateAlertsSummary() {
+  const summary = document.getElementById("alertsSummary"), button = document.getElementById("alertsManage");
+  if (!summary || !button) return;
+  summary.textContent = currentUser ? alertSummary() : "Connectez-vous pour créer des alertes personnalisées.";
+  button.textContent = currentUser ? (alertPreferences ? "Modifier" : "Gérer mes alertes") : "Se connecter";
+}
+async function loadAlertPreferences() {
+  if (!currentUser || !supabaseClient) { alertPreferences = null; updateAlertsSummary(); return; }
+  const { data, error } = await supabaseClient.from("user_alert_preferences").select("impact_levels,actors,types,actions,fos_refs,frequency,email_enabled").eq("user_id", currentUser.id).maybeSingle();
+  if (error) { alertPreferences = null; updateAlertsSummary(); return; }
+  alertPreferences = data ? normalizeAlertPreferences(data) : null;
+  updateAlertsSummary();
+}
+async function saveAlertPreferences(preferences) {
+  if (!currentUser || !supabaseClient) throw new Error("AUTH_REQUIRED");
+  const normalized = normalizeAlertPreferences(preferences);
+  const { error } = await supabaseClient.from("user_alert_preferences").upsert({ user_id: currentUser.id, ...normalized, email_enabled: false }, { onConflict: "user_id" });
+  if (error) throw error;
+  alertPreferences = normalized;
+  updateAlertsSummary();
+}
+async function deleteAlertPreferences() {
+  if (!currentUser || !supabaseClient) return;
+  const { error } = await supabaseClient.from("user_alert_preferences").delete().eq("user_id", currentUser.id);
+  if (error) throw error;
+  alertPreferences = null;
+  updateAlertsSummary();
+}
 const userStorage = {
   empty() { return { version: 1, tracking: {}, favorites: {}, notes: {}, preferences: { defaultSort: "recent", favoriteFilters: [], language: "fr", displayMode: "detailed" }, sync: { legacyMigrated: false, activeUserId: null, guestClaimedBy: null, guest: null, accounts: {}, lastSyncedAt: null } }; },
   read() {
@@ -2356,10 +2440,58 @@ async function synchronizeUserData(user) {
     syncInProgress = false;
   }
 }
+function alertOption(group, value, label, selected) { return `<label class="alert-option"><input type="checkbox" data-alert-group="${group}" value="${value}" ${selected ? "checked" : ""}>${label}</label>`; }
+function readAlertForm() {
+  const form = document.getElementById("alertsForm");
+  const checked = group => [...form.querySelectorAll(`[data-alert-group="${group}"]:checked`)].map(input => input.value);
+  return normalizeAlertPreferences({ impact_levels: checked("impact_levels"), actors: checked("actors"), types: checked("types"), actions: checked("actions"), fos_refs: [...form.querySelectorAll("[data-alert-fos]")].map(tag => tag.dataset.alertFos), frequency: form.querySelector("input[name=alert-frequency]:checked")?.value });
+}
+function updateAlertPreview() {
+  const preferences = readAlertForm();
+  const count = ITEMS.filter(item => alertMatches(item, preferences)).length;
+  document.getElementById("alertsPreview").textContent = count ? `${count} évolution${count > 1 ? "s" : ""} actuelle${count > 1 ? "s" : ""} correspondent à vos critères.` : "Aucune évolution actuelle ne correspond à ces critères.";
+}
+function renderAlertsForm(draft = alertPreferences) {
+  const preferences = normalizeAlertPreferences(draft);
+  const selected = (group, value) => preferences[group].includes(value);
+  const options = (group, entries) => entries.map(([value, label]) => alertOption(group, value, label, selected(group, value))).join("");
+  const frequency = value => `<label class="alert-option"><input type="radio" name="alert-frequency" value="${value}" ${preferences.frequency === value ? "checked" : ""}>${({ immediate: "Immédiatement", daily: "Résumé quotidien", weekly: "Résumé hebdomadaire" })[value]}</label>`;
+  document.getElementById("alertsForm").innerHTML = `
+    <div class="alert-group"><h3>Niveau d’impact</h3><div class="alert-options">${options("impact_levels", [["high", "Impact fort"], ["medium", "Impact modéré"], ["low", "Impact faible"], ["info", "Informatif"]])}</div></div>
+    <div class="alert-group"><h3>Acteur concerné</h3><div class="alert-options">${options("actors", ACTORS.map(actor => [actor.key, actor.label]))}</div></div>
+    <div class="alert-group"><h3>Type d’évolution</h3><div class="alert-options">${options("types", ALERT_TYPES.map(type => [type, type]))}</div></div>
+    <div class="alert-group"><h3>Actions à mener</h3><div class="alert-options">${options("actions", ALERT_ACTIONS.map(action => [action, ACTION_LABEL[action]]))}</div></div>
+    <div class="alert-group"><h3>Fiches à surveiller</h3><div class="alert-fos"><input id="alertFosInput" type="text" placeholder="Ex. BAR-TH-171" autocomplete="off"><button id="alertFosAdd" type="button">Ajouter</button></div><p class="note-status" id="alertFosMessage"></p><div class="alert-fos-tags" id="alertFosTags">${preferences.fos_refs.map(ref => `<span class="alert-fos-tag" data-alert-fos="${ref}">${ref}<button type="button" data-remove-alert-fos="${ref}" aria-label="Retirer ${ref}">×</button></span>`).join("")}</div></div>
+    <div class="alert-group"><h3>Fréquence souhaitée</h3><div class="alert-options">${frequency("immediate")}${frequency("daily")}${frequency("weekly")}</div></div>
+    <p class="alert-preview" id="alertsPreview"></p>
+    <div class="alert-footer"><button id="alertsDelete" type="button" ${alertPreferences ? "" : "hidden"}>Supprimer</button><button id="alertsResults" type="button">Voir les résultats</button><button class="alert-save" id="alertsSave" type="button">Enregistrer</button></div>`;
+  const form = document.getElementById("alertsForm");
+  form.querySelectorAll("input").forEach(input => input.addEventListener("change", updateAlertPreview));
+  form.querySelectorAll("[data-remove-alert-fos]").forEach(button => button.addEventListener("click", () => { button.closest("[data-alert-fos]").remove(); updateAlertPreview(); }));
+  document.getElementById("alertFosAdd").addEventListener("click", () => {
+    const input = document.getElementById("alertFosInput"), ref = input.value.trim().toUpperCase(), message = document.getElementById("alertFosMessage");
+    if (!META.ficheCatalog.some(fiche => fiche.c === ref)) { message.textContent = "Référence absente du catalogue du projet."; return; }
+    if (form.querySelector(`[data-alert-fos="${ref}"]`)) { message.textContent = "Cette référence est déjà ajoutée."; return; }
+    document.getElementById("alertFosTags").insertAdjacentHTML("beforeend", `<span class="alert-fos-tag" data-alert-fos="${ref}">${ref}<button type="button" data-remove-alert-fos="${ref}" aria-label="Retirer ${ref}">×</button></span>`);
+    draft = readAlertForm(); draft.fos_refs.push(ref); input.value = ""; message.textContent = ""; renderAlertsForm(draft);
+  });
+  document.getElementById("alertsSave").addEventListener("click", async () => { const button = document.getElementById("alertsSave"); button.disabled = true; try { await saveAlertPreferences(readAlertForm()); closeAlertsModal(); } catch (e) { document.getElementById("alertsPreview").textContent = "Impossible d’enregistrer les alertes pour le moment."; } finally { button.disabled = false; } });
+  document.getElementById("alertsDelete").addEventListener("click", async () => { if (!window.confirm("Supprimer vos préférences d’alertes ?")) return; try { await deleteAlertPreferences(); closeAlertsModal(); } catch (e) { document.getElementById("alertsPreview").textContent = "Impossible de supprimer les alertes pour le moment."; } });
+  document.getElementById("alertsResults").addEventListener("click", () => { applyAlertFilters(readAlertForm()); closeAlertsModal(); });
+  updateAlertPreview();
+}
+function openAlertsModal() { if (!currentUser) return openAuthModal("signin"); document.getElementById("alertsBackdrop").hidden = false; renderAlertsForm(); }
+function closeAlertsModal() { document.getElementById("alertsBackdrop").hidden = true; }
+function applyAlertFilters(preferences) {
+  const prefs = normalizeAlertPreferences(preferences);
+  state.impacts = new Set(prefs.impact_levels); state.actors = new Set(prefs.actors); state.cats = new Set(prefs.types); state.actions = new Set(prefs.actions); state.alertFos = new Set(prefs.fos_refs); state.q = "";
+  document.getElementById("search").value = ""; setView("feed"); buildFilters(); buildActionPanel(); buildPrioritiesPanel(); renderActiveFilters(); render();
+}
 async function handleAuthUser(user) {
   const nextUser = user || null;
   userStorage.switchContext(nextUser ? nextUser.id : null);
   updateAuthInterface(nextUser);
+  await loadAlertPreferences();
   if (nextUser) await synchronizeUserData(nextUser);
   else {
     applyUserPreferences();
@@ -2480,6 +2612,7 @@ function renderActiveFilters() {
     ...[...state.actors].map(value => ({ group: "actor", value, label: ACTORS.find(a => a.key === value).label })),
     ...[...state.actions].map(value => ({ group: "action", value, label: ACTION_LABEL[value] })),
     ...[...state.tracking].map(value => ({ group: "tracking", value, label: `Mon suivi : ${TRACKING_LABEL[value]}` })),
+    ...(state.alertFos.size ? [{ group: "alertfos", value: "fos", label: `${state.alertFos.size} fiche${state.alertFos.size > 1 ? "s" : ""} en alerte` }] : []),
     ...(state.personalOnly ? [{ group: "personal", value: "priorities", label: "Mes priorités" }] : []),
     ...(state.unreadOnly ? [{ group: "unread", value: "new", label: "Nouvelles évolutions" }] : [])
   ];
@@ -2492,6 +2625,7 @@ function renderActiveFilters() {
       const [group, value] = button.dataset.removeFilter.split(":");
       if (group === "personal") { state.personalOnly = false; buildTrackingPanel(); buildPrioritiesPanel(); renderActiveFilters(); render(); return; }
       if (group === "unread") { state.unreadOnly = false; buildPrioritiesPanel(); renderActiveFilters(); render(); return; }
+      if (group === "alertfos") { state.alertFos.clear(); renderActiveFilters(); render(); return; }
       const set = group === "cat" ? state.cats : group === "impact" ? state.impacts : group === "actor" ? state.actors : group === "action" ? state.actions : state.tracking;
       set.delete(value);
       const chip = group === "action" ? document.querySelector(`[data-action-filter="${value}"]`) : group === "tracking" ? document.querySelector(`[data-tracking-filter="${value}"]`) : document.querySelector(`[data-${group}="${value}"]`);
@@ -2659,7 +2793,7 @@ function buildCockpitControls() {
 }
 
 function updateKpiSelection() {
-  const hasRestriction = state.cats.size || state.impacts.size || state.actors.size || state.actions.size || state.tracking.size || state.personalOnly || state.unreadOnly || state.q.trim();
+  const hasRestriction = state.cats.size || state.impacts.size || state.actors.size || state.actions.size || state.tracking.size || state.alertFos.size || state.personalOnly || state.unreadOnly || state.q.trim();
   document.querySelectorAll("#counts .stat-tile").forEach((tile, index) => {
     const impact = [null, "high", "medium", "low"][index];
     tile.classList.toggle("kpi-active", impact ? state.impacts.size === 1 && state.impacts.has(impact) : !hasRestriction);
@@ -2673,6 +2807,7 @@ function resetRegistryView() {
   state.actors.clear();
   state.actions.clear();
   state.tracking.clear();
+  state.alertFos.clear();
   state.personalOnly = false;
   state.unreadOnly = false;
   state.q = "";
@@ -2899,6 +3034,7 @@ function render() {
     if (state.tracking.size && !state.tracking.has(trackingStatus(i.id))) return false;
     if (state.personalOnly && !getUserFavorites().has(i.id) && !TRACKING_FILTERS.includes(trackingStatus(i.id))) return false;
     if (state.unreadOnly && seen.has(i.id)) return false;
+    if (state.alertFos.size && !i.ficheCodes.some(ref => state.alertFos.has(ref))) return false;
     if (state.actors.size) {
       const relevant = [...state.actors].some(a => actorImpactOf(i, a).level !== "none");
       if (!relevant) return false;
@@ -2929,7 +3065,7 @@ function render() {
     return;
   }
 
-  const showOverview = state.view === "feed" && !state.cats.size && !state.impacts.size && !state.actors.size && !state.actions.size && !state.tracking.size && !state.personalOnly && !state.unreadOnly && !q;
+  const showOverview = state.view === "feed" && !state.cats.size && !state.impacts.size && !state.actors.size && !state.actions.size && !state.tracking.size && !state.alertFos.size && !state.personalOnly && !state.unreadOnly && !q;
   feed.innerHTML = (showOverview ? buildRegisterOverview() : "") + filtered.map(i => {
     const isNew = !seen.has(i.id);
     const isFavorite = favorites.has(i.id);
@@ -3072,6 +3208,9 @@ document.getElementById("accountButton").addEventListener("click", () => {
   if (open) updateAccountPanel();
 });
 document.getElementById("accountSignout").addEventListener("click", signOut);
+document.getElementById("alertsManage").addEventListener("click", openAlertsModal);
+document.getElementById("alertsClose").addEventListener("click", closeAlertsModal);
+document.getElementById("alertsBackdrop").addEventListener("click", event => { if (event.target === event.currentTarget) closeAlertsModal(); });
 document.getElementById("authTabSignin").addEventListener("click", () => setAuthMode("signin"));
 document.getElementById("authTabSignup").addEventListener("click", () => setAuthMode("signup"));
 document.getElementById("authClose").addEventListener("click", closeAuthModal);
@@ -3079,7 +3218,7 @@ document.getElementById("authBackdrop").addEventListener("click", event => { if 
 document.getElementById("authSigninForm").addEventListener("submit", submitSignIn);
 document.getElementById("authSignupForm").addEventListener("submit", submitSignUp);
 document.getElementById("authResendConfirmation").addEventListener("click", resendConfirmation);
-document.addEventListener("keydown", event => { if (event.key === "Escape" && !document.getElementById("authBackdrop").hidden) closeAuthModal(); });
+document.addEventListener("keydown", event => { if (event.key === "Escape" && !document.getElementById("authBackdrop").hidden) closeAuthModal(); if (event.key === "Escape" && !document.getElementById("alertsBackdrop").hidden) closeAlertsModal(); });
 
 userStorage.migrate();
 applyUserPreferences();
