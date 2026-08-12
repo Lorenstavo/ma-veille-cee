@@ -842,7 +842,11 @@
 
   /* ---------- Operational actions ---------- */
   .actions-panel { margin: 0 0 18px; }
-  .actions-title { margin: 0 0 9px; color: var(--text-muted); font: 800 10px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
+  .actions-head { display: flex; align-items: center; gap: 8px; margin: 0 0 7px; }
+  .actions-title { margin: 0; color: var(--text-muted); font: 800 10px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
+  .actions-note { margin: 0 0 8px; color: var(--text-muted); font-size: 10.5px; }
+  .actions-help { margin-left: auto; border: 0; background: transparent; color: var(--blue-600); font: 800 10.5px var(--font-ui); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+  .actions-explanation { margin: 0 0 9px; padding: 9px 11px; border: 1px solid var(--blue-100); border-radius: 8px; background: var(--blue-50); color: var(--text-secondary); font-size: 10.5px; line-height: 1.45; }
   .actions-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 9px; }
   .action-filter { min-height: 63px; padding: 10px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; border: 1px solid var(--border); border-radius: var(--radius-sm); background: #fff; color: var(--navy-900); font: inherit; text-align: left; cursor: pointer; transition: border-color .16s ease, background .16s ease, box-shadow .16s ease, transform .16s ease; }
   .action-filter:hover { transform: translateY(-1px); box-shadow: 0 8px 18px rgba(15, 35, 65, .07); }
@@ -872,17 +876,24 @@
   @media (max-width: 560px) { .actions-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .sort-control { justify-content: space-between; } }
 
   /* ---------- Personal tracking ---------- */
-  .tracking-panel { margin: 0 0 18px; padding: 13px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: #fff; box-shadow: var(--shadow); }
+  .priorities-panel { margin: 0 0 13px; padding: 12px 13px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: #fff; box-shadow: var(--shadow); }
+  .priorities-title { margin: 0 0 9px; color: var(--text-muted); font: 800 10px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
+  .priorities-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+  .priority-filter { min-height: 49px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-soft); color: var(--navy-900); text-align: left; cursor: pointer; }
+  .priority-filter:hover, .priority-filter.is-active { border-color: var(--blue-100); background: var(--blue-50); }
+  .priority-filter-count { display: block; color: var(--blue-600); font: 900 18px/1 var(--font-mono); }
+  .priority-filter-label { display: block; margin-top: 4px; font-size: 10.5px; font-weight: 800; }
+  .tracking-panel { margin: 0 0 14px; padding: 9px 11px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: #fff; box-shadow: var(--shadow); }
   .tracking-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
   .tracking-title { margin: 0; color: var(--text-muted); font: 800 10px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
   .tracking-tools { display: flex; gap: 6px; }
   .tracking-tool { padding: 5px 8px; border: 1px solid var(--border-strong); border-radius: 7px; background: #fff; color: var(--blue-600); font: 800 10.5px var(--font-ui); cursor: pointer; }
   .tracking-tool:hover { border-color: var(--blue-600); background: var(--blue-50); }
-  .tracking-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-  .tracking-filter { padding: 9px 10px; display: flex; align-items: baseline; gap: 7px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-soft); color: var(--navy-900); font: inherit; text-align: left; cursor: pointer; }
+  .tracking-grid { display: flex; gap: 7px; }
+  .tracking-filter { padding: 5px 8px; display: inline-flex; align-items: baseline; gap: 5px; border: 1px solid var(--border); border-radius: 7px; background: var(--surface-soft); color: var(--navy-900); font: inherit; text-align: left; cursor: pointer; }
   .tracking-filter:focus-visible, .tracking-select:focus-visible, .tracking-tool:focus-visible { outline: 3px solid rgba(37, 99, 235, .24); outline-offset: 2px; }
-  .tracking-filter-count { font: 900 20px/1 var(--font-mono); }
-  .tracking-filter-label { font-size: 11px; font-weight: 800; }
+  .tracking-filter-count { font: 900 15px/1 var(--font-mono); }
+  .tracking-filter-label { font-size: 10px; font-weight: 800; }
   .tracking-filter.todo .tracking-filter-count { color: var(--red-600); }
   .tracking-filter.progress .tracking-filter-count { color: var(--blue-600); }
   .tracking-filter.done .tracking-filter-count { color: var(--green-600); }
@@ -932,6 +943,14 @@
   .analysis-note textarea:focus { border-color: var(--blue-600); box-shadow: 0 0 0 3px rgba(37, 99, 235, .12); outline: none; }
   .note-save { justify-self: start; padding: 6px 9px; border: 1px solid var(--blue-600); border-radius: 7px; background: var(--blue-600); color: #fff; font: 800 11px var(--font-ui); cursor: pointer; }
   .note-status { color: var(--text-muted); font-size: 10px; }
+  .why-priority { margin-top: 8px; padding: 0; border: 0; background: transparent; color: var(--blue-600); font: 800 10.5px var(--font-ui); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+  .priority-reasons { display: none; margin-top: 8px; padding: 9px 11px; border: 1px solid var(--blue-100); border-radius: 8px; background: var(--blue-50); color: var(--text-secondary); font-size: 10.5px; line-height: 1.45; }
+  .priority-reasons.is-open { display: block; }
+  .priority-reasons strong { display: block; margin-bottom: 4px; color: var(--navy-900); }
+  .priority-reasons ul { margin: 0; padding-left: 16px; }
+  .deadline-urgent { color: var(--red-600) !important; border-color: var(--red-100) !important; background: var(--red-50) !important; }
+  .deadline-anticipate { color: var(--amber-600) !important; border-color: var(--amber-100) !important; background: var(--amber-50) !important; }
+  @media (max-width: 760px) { .priorities-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   .auth-submit { margin-top: 4px; padding: 10px 13px; border: 1px solid var(--blue-600); border-radius: 8px; background: var(--blue-600); color: #fff; font: 800 13px var(--font-ui); cursor: pointer; }
   .auth-submit:hover:not(:disabled) { background: #1D4ED8; border-color: #1D4ED8; }
   .auth-submit:disabled { opacity: .65; cursor: wait; }
@@ -1015,6 +1034,7 @@
     </details>
     <div class="stats-row" id="counts"></div>
     <section class="action-panel" id="actionPanel" aria-label="Évolutions prioritaires"></section>
+    <section class="priorities-panel" id="prioritiesPanel" aria-label="Mes priorités"></section>
     <section class="actions-panel" id="actionsPanel" aria-label="Actions à mener"></section>
     <section class="tracking-panel" id="trackingPanel" aria-label="Mon suivi"></section>
     <div class="view-tabs">
@@ -2129,7 +2149,7 @@ const ACTORS = [
 ];
 const ACTOR_LEVEL_LABEL = { high: "Fort", medium: "Modéré", low: "Faible", info: "À suivre", none: "Aucun" };
 const CATS = [...new Set(ITEMS.map(i => i.category))];
-const state = { cats: new Set(), impacts: new Set(), actors: new Set(), actions: new Set(), tracking: new Set(), personalOnly: false, q: "", view: "feed", sort: "recent" };
+const state = { cats: new Set(), impacts: new Set(), actors: new Set(), actions: new Set(), tracking: new Set(), personalOnly: false, unreadOnly: false, q: "", view: "feed", sort: "recent" };
 const ACTION_LABEL = { analyze: "À analyser", apply: "À appliquer", monitor: "À surveiller", deadline: "Échéance proche", info: "Information" };
 const ACTION_ORDER = { apply: 0, deadline: 1, analyze: 2, monitor: 3, info: 4 };
 const TRACKING_STORAGE_KEY = "cee-user-tracking";
@@ -2173,16 +2193,18 @@ function explicitFutureDeadline(item) {
 function actionInfo(item) {
   const text = [item.title, item.statusLabel, item.summary].join(" ").toLowerCase();
   const actions = new Set();
+  const reasons = {};
   const applies = /\ben vigueur\b|\bobligatoire\b|\bdoit\b|\bdoivent\b|\bapplicable\b|\bimpose\b|\bsupprime\b|\bretire\b|\bcesser\b/.test(text);
   const monitors = item.category === "Consultation publique" || item.category === "Événement" || /\bconsultation\b|\bprojet\b|\bnon encore\b|\b\u00e0 suivre\b|\btexte d\u00e9finitif\b/.test(text);
   const deadline = explicitFutureDeadline(item);
-  if (item.impactLevel === "high") actions.add("analyze");
-  if (applies) actions.add("apply");
-  if (monitors) actions.add("monitor");
-  if (deadline) actions.add("deadline");
-  if (item.impactLevel === "info" && !actions.size) actions.add("info");
-  return { actions: [...actions], deadline };
+  if (item.impactLevel === "high") { actions.add("analyze"); reasons.analyze = "Impact fort identifié dans les données de l’entrée."; }
+  if (applies) { actions.add("apply"); reasons.apply = "Entrée en vigueur ou modification applicable identifiée dans les données."; }
+  if (monitors) { actions.add("monitor"); reasons.monitor = "Consultation, projet ou évolution non définitive identifié(e) dans les données."; }
+  if (deadline) { actions.add("deadline"); reasons.deadline = "Date future identifiée dans les données de l’entrée."; }
+  if (item.impactLevel === "info" && !actions.size) { actions.add("info"); reasons.info = "Entrée informative sans autre critère d’action déterministe."; }
+  return { actions: [...actions], deadline, reasons };
 }
+function deadlineLevel(deadline) { return !deadline ? "" : deadline.days <= 7 ? "urgent" : deadline.days <= 30 ? "anticipate" : "normal"; }
 const userStorage = {
   empty() { return { version: 1, tracking: {}, favorites: {}, notes: {}, preferences: { defaultSort: "recent", favoriteFilters: [], language: "fr", displayMode: "detailed" }, sync: { legacyMigrated: false, activeUserId: null, guestClaimedBy: null, guest: null, accounts: {}, lastSyncedAt: null } }; },
   read() {
@@ -2458,7 +2480,8 @@ function renderActiveFilters() {
     ...[...state.actors].map(value => ({ group: "actor", value, label: ACTORS.find(a => a.key === value).label })),
     ...[...state.actions].map(value => ({ group: "action", value, label: ACTION_LABEL[value] })),
     ...[...state.tracking].map(value => ({ group: "tracking", value, label: `Mon suivi : ${TRACKING_LABEL[value]}` })),
-    ...(state.personalOnly ? [{ group: "personal", value: "priorities", label: "Mes priorités" }] : [])
+    ...(state.personalOnly ? [{ group: "personal", value: "priorities", label: "Mes priorités" }] : []),
+    ...(state.unreadOnly ? [{ group: "unread", value: "new", label: "Nouvelles évolutions" }] : [])
   ];
   wrap.classList.toggle("has-filters", active.length > 0);
   wrap.innerHTML = active.length
@@ -2468,6 +2491,7 @@ function renderActiveFilters() {
     button.addEventListener("click", () => {
       const [group, value] = button.dataset.removeFilter.split(":");
       if (group === "personal") { state.personalOnly = false; document.getElementById("personalView").classList.remove("is-active"); renderActiveFilters(); render(); return; }
+      if (group === "unread") { state.unreadOnly = false; buildPrioritiesPanel(); renderActiveFilters(); render(); return; }
       const set = group === "cat" ? state.cats : group === "impact" ? state.impacts : group === "actor" ? state.actors : group === "action" ? state.actions : state.tracking;
       set.delete(value);
       const chip = group === "action" ? document.querySelector(`[data-action-filter="${value}"]`) : group === "tracking" ? document.querySelector(`[data-tracking-filter="${value}"]`) : document.querySelector(`[data-${group}="${value}"]`);
@@ -2556,7 +2580,8 @@ function buildActionPanel() {
   const counts = Object.fromEntries(Object.keys(ACTION_LABEL).map(key => [key, 0]));
   ITEMS.forEach(item => actionInfo(item).actions.forEach(action => counts[action]++));
   const panel = document.getElementById("actionsPanel");
-  panel.innerHTML = `<h2 class="actions-title">Actions à mener</h2><div class="actions-grid">${Object.entries(ACTION_LABEL).map(([key, label]) => `<button class="action-filter ${key}" type="button" data-action-filter="${key}" aria-pressed="false"><span class="action-filter-count">${counts[key]}</span><span class="action-filter-label">${label}</span></button>`).join("")}</div>`;
+  panel.innerHTML = `<div class="actions-head"><h2 class="actions-title">Actions à mener</h2><button class="actions-help" id="actionsHelp" type="button" aria-expanded="false">Comment sont calculées ces catégories ?</button></div><p class="actions-note">Une évolution peut appartenir à plusieurs catégories.</p><div class="actions-explanation" id="actionsExplanation" hidden>Les catégories sont calculées dans le navigateur à partir des données de chaque entrée : impact fort → à analyser ; texte applicable → à appliquer ; consultation ou projet → à surveiller ; date future détectée → échéance proche. Elles peuvent donc se chevaucher.</div><div class="actions-grid">${Object.entries(ACTION_LABEL).map(([key, label]) => `<button class="action-filter ${key}" type="button" data-action-filter="${key}" aria-pressed="false"><span class="action-filter-count">${counts[key]}</span><span class="action-filter-label">${label}</span></button>`).join("")}</div>`;
+  document.getElementById("actionsHelp").addEventListener("click", () => { const help = document.getElementById("actionsExplanation"), open = help.hidden; help.hidden = !open; document.getElementById("actionsHelp").setAttribute("aria-expanded", String(open)); });
   panel.querySelectorAll("[data-action-filter]").forEach(button => {
     button.addEventListener("click", () => {
       const action = button.dataset.actionFilter;
@@ -2564,10 +2589,34 @@ function buildActionPanel() {
       button.classList.toggle("is-active", state.actions.has(action));
       button.setAttribute("aria-pressed", String(state.actions.has(action)));
       setView("feed");
+      buildPrioritiesPanel();
       renderActiveFilters();
       render();
     });
   });
+}
+
+function buildPrioritiesPanel() {
+  const seen = seenIds();
+  const counts = {
+    todo: ITEMS.filter(item => trackingStatus(item.id) === "a-traiter").length,
+    deadline: ITEMS.filter(item => { const d = actionInfo(item).deadline; return d && d.days <= 30; }).length,
+    unread: ITEMS.filter(item => !seen.has(item.id)).length,
+    progress: ITEMS.filter(item => trackingStatus(item.id) === "en-cours").length
+  };
+  const panel = document.getElementById("prioritiesPanel");
+  const cards = [
+    ["todo", counts.todo, "À traiter"], ["deadline", counts.deadline, "Échéances proches"], ["unread", counts.unread, "Nouvelles évolutions"], ["progress", counts.progress, "En cours"]
+  ];
+  panel.innerHTML = `<h2 class="priorities-title">Mes priorités</h2><div class="priorities-grid">${cards.map(([key, count, label]) => { const active = (key === "todo" && state.tracking.has("a-traiter")) || (key === "progress" && state.tracking.has("en-cours")) || (key === "deadline" && state.actions.has("deadline")) || (key === "unread" && state.unreadOnly); return `<button class="priority-filter ${key} ${active ? "is-active" : ""}" type="button" data-priority-filter="${key}" aria-pressed="${active}"><span class="priority-filter-count">${count}</span><span class="priority-filter-label">${label}</span></button>`; }).join("")}</div>`;
+  panel.querySelectorAll("[data-priority-filter]").forEach(button => button.addEventListener("click", () => {
+    const key = button.dataset.priorityFilter;
+    setView("feed");
+    if (key === "todo" || key === "progress") { const status = key === "todo" ? "a-traiter" : "en-cours"; state.tracking.clear(); state.tracking.add(status); }
+    if (key === "deadline") { state.actions.clear(); state.actions.add("deadline"); }
+    if (key === "unread") state.unreadOnly = !state.unreadOnly;
+    buildTrackingPanel(); buildActionPanel(); buildPrioritiesPanel(); renderActiveFilters(); render();
+  }));
 }
 
 function buildCockpitControls() {
@@ -2607,7 +2656,7 @@ function buildCockpitControls() {
 }
 
 function updateKpiSelection() {
-  const hasRestriction = state.cats.size || state.impacts.size || state.actors.size || state.actions.size || state.tracking.size || state.q.trim();
+  const hasRestriction = state.cats.size || state.impacts.size || state.actors.size || state.actions.size || state.tracking.size || state.personalOnly || state.unreadOnly || state.q.trim();
   document.querySelectorAll("#counts .stat-tile").forEach((tile, index) => {
     const impact = [null, "high", "medium", "low"][index];
     tile.classList.toggle("kpi-active", impact ? state.impacts.size === 1 && state.impacts.has(impact) : !hasRestriction);
@@ -2622,6 +2671,7 @@ function resetRegistryView() {
   state.actions.clear();
   state.tracking.clear();
   state.personalOnly = false;
+  state.unreadOnly = false;
   state.q = "";
   document.getElementById("search").value = "";
   document.querySelectorAll("#filterBar .chip.active").forEach(chip => chip.classList.remove("active"));
@@ -2630,6 +2680,8 @@ function resetRegistryView() {
   state.sort = "recent";
   document.getElementById("sortOrder").value = "recent";
   renderActiveFilters();
+  buildPrioritiesPanel();
+  buildTrackingPanel();
   render();
   document.getElementById("filterBar").scrollIntoView({ behavior: "smooth", block: "start" });
 }
@@ -2820,6 +2872,16 @@ function showRegisterItem(id) {
   const head = item.querySelector(".item-head");
   if (!item.classList.contains("open")) head.click();
 }
+function priorityExplanation(item, action) {
+  const reasons = [
+    item.impactLevel === "high" ? "Impact fort" : "",
+    item.ficheCodes.length ? `${item.ficheCodes.length} fiche${item.ficheCodes.length > 1 ? "s" : ""} FOS concernée${item.ficheCodes.length > 1 ? "s" : ""}` : "",
+    ...ACTORS.filter(a => actorImpactOf(item, a.key).level !== "none").map(a => `Acteur concerné : ${a.label}`),
+    action.deadline ? `Échéance ${deadlineLevel(action.deadline) === "urgent" ? "urgente" : deadlineLevel(action.deadline) === "anticipate" ? "à anticiper" : "identifiée"} : dans ${action.deadline.days} jours` : "",
+    ...action.actions.map(key => action.reasons[key]).filter(Boolean)
+  ].filter(Boolean);
+  return `<button class="why-priority" type="button" data-why-id="${item.id}" aria-expanded="false">Pourquoi prioritaire ?</button><div class="priority-reasons" data-why-panel="${item.id}"><strong>${action.actions.length ? "Pourquoi cette évolution apparaît ici ?" : "Critères présents dans les données"}</strong><ul>${(reasons.length ? reasons : ["Aucun critère de priorisation additionnel n’est déduit."]).map(reason => `<li>${reason}</li>`).join("")}</ul></div>`;
+}
 
 function render() {
   const feed = document.getElementById("feed");
@@ -2833,6 +2895,7 @@ function render() {
     if (state.actions.size && ![...state.actions].some(action => actionInfo(i).actions.includes(action))) return false;
     if (state.tracking.size && !state.tracking.has(trackingStatus(i.id))) return false;
     if (state.personalOnly && !getUserFavorites().has(i.id) && !TRACKING_FILTERS.includes(trackingStatus(i.id))) return false;
+    if (state.unreadOnly && seen.has(i.id)) return false;
     if (state.actors.size) {
       const relevant = [...state.actors].some(a => actorImpactOf(i, a).level !== "none");
       if (!relevant) return false;
@@ -2863,7 +2926,7 @@ function render() {
     return;
   }
 
-  const showOverview = state.view === "feed" && !state.cats.size && !state.impacts.size && !state.actors.size && !state.actions.size && !state.tracking.size && !q;
+  const showOverview = state.view === "feed" && !state.cats.size && !state.impacts.size && !state.actors.size && !state.actions.size && !state.tracking.size && !state.personalOnly && !state.unreadOnly && !q;
   feed.innerHTML = (showOverview ? buildRegisterOverview() : "") + filtered.map(i => {
     const isNew = !seen.has(i.id);
     const isFavorite = favorites.has(i.id);
@@ -2884,10 +2947,11 @@ function render() {
         <h3 class="item-title">${i.title}</h3>
         <p class="item-summary">${i.summary}</p>
         ${i.ficheCodes.length ? `<div class="fiches">${i.ficheCodes.map(f => `<span class="fiche-code">${f}</span>`).join("")}</div>` : ""}
-        ${action.actions.length ? `<p class="item-actions-label">Action</p><div class="item-action-tags">${action.actions.map(key => `<span class="item-action-tag ${key}">${ACTION_LABEL[key]}${key === "deadline" ? ` · dans ${action.deadline.days} j` : ""}</span>`).join("")}</div>` : ""}
-        <div class="item-actors">${ACTORS.filter(a => actorImpactOf(i, a.key).level !== "none").length ? `<span class="item-actors-label">Acteurs concernés</span>${ACTORS.filter(a => actorImpactOf(i, a.key).level !== "none").map(a => `<span class="item-actor">${a.label}</span>`).join("")}` : ""}</div>
-        <span class="item-detail-link">Voir l'analyse complète</span>
-      </button>
+         ${action.actions.length ? `<p class="item-actions-label">Action</p><div class="item-action-tags">${action.actions.map(key => `<span class="item-action-tag ${key} ${key === "deadline" ? `deadline-${deadlineLevel(action.deadline)}` : ""}">${ACTION_LABEL[key]}${key === "deadline" ? ` · dans ${action.deadline.days} j` : ""}</span>`).join("")}</div>` : ""}
+         <div class="item-actors">${ACTORS.filter(a => actorImpactOf(i, a.key).level !== "none").length ? `<span class="item-actors-label">Acteurs concernés</span>${ACTORS.filter(a => actorImpactOf(i, a.key).level !== "none").map(a => `<span class="item-actor">${a.label}</span>`).join("")}` : ""}</div>
+         <span class="item-detail-link">Voir l'analyse complète</span>
+       </button>
+       ${priorityExplanation(i, action)}
       <div class="tracking-control"><label for="tracking-${i.id}">Mon suivi</label><select class="tracking-select status-${tracking === "a-traiter" ? "todo" : tracking === "en-cours" ? "progress" : tracking === "traite" ? "done" : "none"}" id="tracking-${i.id}" data-tracking-id="${i.id}" aria-label="Statut de suivi"><option value="non-suivi" ${tracking === "non-suivi" ? "selected" : ""}>Non suivi</option><option value="a-traiter" ${tracking === "a-traiter" ? "selected" : ""}>À traiter</option><option value="en-cours" ${tracking === "en-cours" ? "selected" : ""}>En cours</option><option value="traite" ${tracking === "traite" ? "selected" : ""}>Traité</option></select></div>
       <button class="bookmark-button ${isFavorite ? "is-favorite" : ""}" type="button" data-favorite-id="${i.id}" aria-label="${isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}" title="${isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}"><svg class="bookmark-icon" aria-hidden="true"><use href="#icon-bookmark"></use></svg></button>
       <div class="item-body">
@@ -2952,10 +3016,12 @@ function render() {
       render();
     });
   });
+  feed.querySelectorAll("[data-why-id]").forEach(button => button.addEventListener("click", () => { const panel = feed.querySelector(`[data-why-panel="${button.dataset.whyId}"]`); const open = !panel.classList.contains("is-open"); panel.classList.toggle("is-open", open); button.setAttribute("aria-expanded", String(open)); }));
   feed.querySelectorAll("[data-tracking-id]").forEach(select => {
     select.addEventListener("change", () => {
       setTrackingStatus(select.dataset.trackingId, select.value);
       buildTrackingPanel();
+      buildPrioritiesPanel();
       render();
     });
   });
@@ -2980,7 +3046,7 @@ function render() {
 }
 
 document.getElementById("search").addEventListener("input", e => { state.q = e.target.value; updateKpiSelection(); render(); });
-document.getElementById("markRead").addEventListener("click", () => { markAllSeen(); render(); });
+document.getElementById("markRead").addEventListener("click", () => { markAllSeen(); buildPrioritiesPanel(); render(); });
 document.getElementById("sortOrder").addEventListener("change", e => { state.sort = e.target.value; userStorage.savePreferences({ defaultSort: state.sort }); queueRemotePreferencesSync(); render(); });
 document.getElementById("tabFeed").addEventListener("click", () => setView("feed"));
 document.getElementById("tabChrono").addEventListener("click", () => setView("chrono"));
@@ -3019,6 +3085,7 @@ buildFilters();
 buildCounts();
 buildSources();
 buildCockpitControls();
+buildPrioritiesPanel();
 buildActionPanel();
 buildTrackingPanel();
 buildChrono();
