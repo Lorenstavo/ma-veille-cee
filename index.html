@@ -910,6 +910,33 @@
 
   /* ---------- Future account surface ---------- */
   .account-zone { position: relative; margin-left: auto; align-self: center; }
+  .notification-zone { position: relative; align-self: center; margin-left: auto; }
+  .notification-button { position: relative; display: grid; width: 34px; height: 34px; place-items: center; border: 1px solid var(--border-strong); border-radius: 8px; background: #fff; color: var(--navy-900); font-size: 16px; cursor: pointer; }
+  .notification-button:hover, .notification-button[aria-expanded="true"] { border-color: var(--blue-600); color: var(--blue-600); background: var(--blue-50); }
+  .notification-count { position: absolute; top: -6px; right: -7px; min-width: 17px; height: 17px; padding: 0 4px; border: 2px solid #fff; border-radius: 999px; background: var(--red-600); color: #fff; font: 800 9px/13px var(--font-mono); text-align: center; }
+  .notification-count[hidden] { display: none; }
+  .notification-panel { position: absolute; z-index: 22; top: calc(100% + 8px); right: 0; width: min(410px, calc(100vw - 24px)); max-height: min(620px, calc(100vh - 84px)); overflow: auto; padding: 14px; border: 1px solid var(--border); border-radius: 12px; background: #fff; box-shadow: 0 18px 42px rgba(15, 35, 65, .16); }
+  .notification-panel[hidden] { display: none; }
+  .notification-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .notification-head h2 { margin: 0; color: var(--navy-950); font-size: 16px; }
+  .notification-read-all { padding: 5px 7px; border: 0; background: transparent; color: var(--blue-600); font: 800 10px var(--font-ui); cursor: pointer; }
+  .notification-filter-row { display: flex; gap: 5px; margin: 12px 0 9px; overflow-x: auto; }
+  .notification-filter { flex: 0 0 auto; padding: 5px 8px; border: 1px solid var(--border); border-radius: 999px; background: #fff; color: var(--text-secondary); font: 800 10px var(--font-ui); cursor: pointer; }
+  .notification-filter.is-active { border-color: var(--blue-600); background: var(--blue-50); color: var(--blue-600); }
+  .notification-list { display: grid; gap: 7px; }
+  .notification-item { width: 100%; padding: 10px; border: 1px solid var(--border); border-left: 3px solid var(--blue-300); border-radius: 8px; background: #fff; text-align: left; cursor: pointer; }
+  .notification-item.is-unread { border-color: var(--blue-100); background: #F8FBFF; }
+  .notification-item.high { border-left-color: var(--red-500); }
+  .notification-item.deadline { border-left-color: var(--amber-500); }
+  .notification-item-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: var(--text-muted); font: 800 9px var(--font-mono); text-transform: uppercase; letter-spacing: .04em; }
+  .notification-item h3 { margin: 5px 0 3px; color: var(--navy-900); font-size: 11.5px; line-height: 1.35; }
+  .notification-item p { margin: 0; color: var(--text-secondary); font-size: 10.5px; line-height: 1.4; }
+  .notification-state { color: var(--blue-600); font-size: 9px; }
+  .notification-empty { padding: 18px 8px; color: var(--text-muted); font-size: 11px; text-align: center; }
+  .visit-summary { display: flex; align-items: center; gap: 11px; margin: 0 0 12px; padding: 9px 11px; border: 1px solid var(--blue-100); border-radius: 9px; background: #F8FBFF; }
+  .visit-summary h3 { flex: 0 0 auto; margin: 0; color: var(--navy-900); font: 800 10px var(--font-mono); letter-spacing: .05em; text-transform: uppercase; }
+  .visit-summary-list { display: flex; flex-wrap: wrap; gap: 9px; color: var(--text-secondary); font-size: 10.5px; }
+  .visit-summary-list b { color: var(--blue-600); }
   .account-button { padding: 7px 10px; border: 1px solid var(--border-strong); border-radius: 8px; background: #fff; color: var(--navy-900); font: 800 11px var(--font-ui); cursor: pointer; }
   .account-button:hover, .account-button[aria-expanded="true"] { border-color: var(--blue-600); color: var(--blue-600); background: var(--blue-50); }
   .account-button:focus-visible { outline: 3px solid rgba(37, 99, 235, .24); outline-offset: 2px; }
@@ -975,7 +1002,7 @@
   .alert-preview { margin: 13px 0 0; padding: 10px; border-radius: 8px; background: var(--surface-soft); color: var(--text-secondary); font-size: 11.5px; }
   .alert-footer { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 7px; margin-top: 14px; }
   .alert-footer .alert-save { background: var(--blue-600); color: #fff; }
-  @media (max-width: 560px) { .account-zone { margin-left: 4px; } .account-button { padding: 7px; font-size: 10px; } }
+  @media (max-width: 560px) { .notification-zone { margin-left: auto; } .account-zone { margin-left: 5px; } .account-button { padding: 7px; font-size: 10px; } .notification-panel { position: fixed; inset: auto 0 0; width: 100%; max-height: 78vh; border-radius: 16px 16px 0 0; } .visit-summary { align-items: flex-start; flex-direction: column; gap: 6px; } }
 </style>
 </head>
 <body>
@@ -998,7 +1025,7 @@
 <div class="site-switch">
   <button class="site-tab active" id="siteTabCee" type="button" data-frame-url="">🇫🇷 CEE France</button>
   <button class="site-tab" id="siteTabCae" type="button" data-frame-url="/cae-espagne/">🇪🇸 CAE Espagne</button>
-  <div class="account-zone"><button class="account-button" id="accountButton" type="button" aria-expanded="false" aria-controls="accountPanel">Mon espace</button><section class="account-popover" id="accountPanel" hidden><p class="account-email" id="accountEmail" hidden></p><p id="accountStorageMessage">Votre suivi est actuellement enregistré uniquement sur cet appareil.</p><div class="account-counts"><span><b id="accountTodo">0</b> À traiter</span><span><b id="accountProgress">0</b> En cours</span><span><b id="accountDone">0</b> Traité</span><span><b id="accountFavorites">0</b> favoris</span></div><small id="accountSyncStatus">Synchronisation multi-appareils bientôt disponible</small><div class="alerts-summary"><strong>Mes alertes</strong><p id="alertsSummary">Connectez-vous pour créer des alertes personnalisées.</p><button class="alerts-manage" id="alertsManage" type="button">Gérer mes alertes</button></div><button class="account-signout" id="accountSignout" type="button" hidden>Se déconnecter</button></section></div>
+  <div class="notification-zone"><button class="notification-button" id="notificationButton" type="button" aria-expanded="false" aria-controls="notificationPanel" aria-label="Ouvrir les notifications">🔔<span class="notification-count" id="notificationCount" hidden>0</span></button><section class="notification-panel" id="notificationPanel" aria-label="Notifications" hidden><div class="notification-head"><h2>Notifications</h2><button class="notification-read-all" id="notificationsReadAll" type="button">Tout marquer comme lu</button></div><div class="notification-filter-row" role="tablist" aria-label="Filtrer les notifications"><button class="notification-filter is-active" data-notification-filter="all" type="button">Toutes</button><button class="notification-filter" data-notification-filter="unread" type="button">Non lues</button><button class="notification-filter" data-notification-filter="high" type="button">Impacts forts</button><button class="notification-filter" data-notification-filter="deadline" type="button">Échéances</button></div><div class="notification-list" id="notificationList"></div></section></div><div class="account-zone"><button class="account-button" id="accountButton" type="button" aria-expanded="false" aria-controls="accountPanel">Mon espace</button><section class="account-popover" id="accountPanel" hidden><p class="account-email" id="accountEmail" hidden></p><p id="accountStorageMessage">Votre suivi est actuellement enregistré uniquement sur cet appareil.</p><div class="account-counts"><span><b id="accountTodo">0</b> À traiter</span><span><b id="accountProgress">0</b> En cours</span><span><b id="accountDone">0</b> Traité</span><span><b id="accountFavorites">0</b> favoris</span></div><small id="accountSyncStatus">Synchronisation multi-appareils bientôt disponible</small><div class="alerts-summary"><strong>Mes alertes</strong><p id="alertsSummary">Connectez-vous pour créer des alertes personnalisées.</p><button class="alerts-manage" id="alertsManage" type="button">Gérer mes alertes</button></div><button class="account-signout" id="accountSignout" type="button" hidden>Se déconnecter</button></section></div>
 </div>
 <div id="otherSiteFrameWrap"><iframe id="otherSiteFrame" class="site-frame" title="Autre site" loading="lazy"></iframe></div>
 <div class="auth-backdrop" id="authBackdrop" hidden>
@@ -2234,11 +2261,11 @@ function deadlineLevel(deadline) { return !deadline ? "" : deadline.days <= 7 ? 
 const ALERT_TYPES = ["Consultation publique", "Arrêté", "Décret", "Questions-réponses", "Catalogue des fiches", "Jurisprudence", "Événement"];
 const ALERT_ACTIONS = ["analyze", "apply", "monitor", "deadline"];
 let alertPreferences = null;
-function emptyAlertPreferences() { return { impact_levels: [], actors: [], types: [], actions: [], fos_refs: [], frequency: "daily", email_enabled: false }; }
+function emptyAlertPreferences() { return { impact_levels: [], actors: [], types: [], actions: [], fos_refs: [], frequency: "daily" }; }
 function normalizeAlertPreferences(data) {
   const base = emptyAlertPreferences(), source = data && typeof data === "object" ? data : {};
   const list = (value, allowed) => Array.isArray(value) ? [...new Set(value.filter(item => allowed.includes(item)))] : [];
-  return { impact_levels: list(source.impact_levels, ["high", "medium", "low", "info"]), actors: list(source.actors, ACTORS.map(actor => actor.key)), types: list(source.types, ALERT_TYPES), actions: list(source.actions, ALERT_ACTIONS), fos_refs: Array.isArray(source.fos_refs) ? [...new Set(source.fos_refs.filter(ref => META.ficheCatalog.some(fiche => fiche.c === ref)))] : [], frequency: ["immediate", "daily", "weekly"].includes(source.frequency) ? source.frequency : base.frequency, email_enabled: false };
+  return { impact_levels: list(source.impact_levels, ["high", "medium", "low", "info"]), actors: list(source.actors, ACTORS.map(actor => actor.key)), types: list(source.types, ALERT_TYPES), actions: list(source.actions, ALERT_ACTIONS), fos_refs: Array.isArray(source.fos_refs) ? [...new Set(source.fos_refs.filter(ref => META.ficheCatalog.some(fiche => fiche.c === ref)))] : [], frequency: ["immediate", "daily", "weekly"].includes(source.frequency) ? source.frequency : base.frequency };
 }
 function alertMatches(item, preferences = alertPreferences) {
   const prefs = normalizeAlertPreferences(preferences);
@@ -2269,7 +2296,7 @@ function updateAlertsSummary() {
 }
 async function loadAlertPreferences() {
   if (!currentUser || !supabaseClient) { alertPreferences = null; updateAlertsSummary(); return; }
-  const { data, error } = await supabaseClient.from("user_alert_preferences").select("impact_levels,actors,types,actions,fos_refs,frequency,email_enabled").eq("user_id", currentUser.id).maybeSingle();
+  const { data, error } = await supabaseClient.from("user_alert_preferences").select("impact_levels,actors,types,actions,fos_refs,frequency").eq("user_id", currentUser.id).maybeSingle();
   if (error) { alertPreferences = null; updateAlertsSummary(); return; }
   alertPreferences = data ? normalizeAlertPreferences(data) : null;
   updateAlertsSummary();
@@ -2277,7 +2304,7 @@ async function loadAlertPreferences() {
 async function saveAlertPreferences(preferences) {
   if (!currentUser || !supabaseClient) throw new Error("AUTH_REQUIRED");
   const normalized = normalizeAlertPreferences(preferences);
-  const { error } = await supabaseClient.from("user_alert_preferences").upsert({ user_id: currentUser.id, ...normalized, email_enabled: false }, { onConflict: "user_id" });
+  const { error } = await supabaseClient.from("user_alert_preferences").upsert({ user_id: currentUser.id, ...normalized }, { onConflict: "user_id" });
   if (error) throw error;
   alertPreferences = normalized;
   updateAlertsSummary();
@@ -2290,7 +2317,7 @@ async function deleteAlertPreferences() {
   updateAlertsSummary();
 }
 const userStorage = {
-  empty() { return { version: 1, tracking: {}, favorites: {}, notes: {}, preferences: { defaultSort: "recent", favoriteFilters: [], language: "fr", displayMode: "detailed" }, sync: { legacyMigrated: false, activeUserId: null, guestClaimedBy: null, guest: null, accounts: {}, lastSyncedAt: null } }; },
+  empty() { return { version: 1, tracking: {}, favorites: {}, notes: {}, notifications: {}, preferences: { defaultSort: "recent", favoriteFilters: [], language: "fr", displayMode: "detailed", lastVisitAt: null }, sync: { legacyMigrated: false, activeUserId: null, guestClaimedBy: null, guest: null, accounts: {}, lastSyncedAt: null } }; },
   read() {
     try {
       const stored = JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || "null");
@@ -2300,7 +2327,7 @@ const userStorage = {
   normalize(data) {
     const base = this.empty(), source = data && typeof data === "object" ? data : {};
     const sourceSync = source.sync && typeof source.sync === "object" && !Array.isArray(source.sync) ? source.sync : {};
-    return { version: 1, tracking: source.tracking && typeof source.tracking === "object" && !Array.isArray(source.tracking) ? source.tracking : {}, favorites: source.favorites && typeof source.favorites === "object" && !Array.isArray(source.favorites) ? source.favorites : {}, notes: source.notes && typeof source.notes === "object" && !Array.isArray(source.notes) ? source.notes : {}, preferences: { ...base.preferences, ...(source.preferences && typeof source.preferences === "object" ? source.preferences : {}) }, sync: { ...base.sync, legacyMigrated: sourceSync.legacyMigrated === true, activeUserId: typeof sourceSync.activeUserId === "string" ? sourceSync.activeUserId : null, guestClaimedBy: typeof sourceSync.guestClaimedBy === "string" ? sourceSync.guestClaimedBy : null, guest: sourceSync.guest && typeof sourceSync.guest === "object" ? sourceSync.guest : null, accounts: sourceSync.accounts && typeof sourceSync.accounts === "object" && !Array.isArray(sourceSync.accounts) ? sourceSync.accounts : {}, lastSyncedAt: typeof sourceSync.lastSyncedAt === "string" ? sourceSync.lastSyncedAt : null } };
+    return { version: 1, tracking: source.tracking && typeof source.tracking === "object" && !Array.isArray(source.tracking) ? source.tracking : {}, favorites: source.favorites && typeof source.favorites === "object" && !Array.isArray(source.favorites) ? source.favorites : {}, notes: source.notes && typeof source.notes === "object" && !Array.isArray(source.notes) ? source.notes : {}, notifications: source.notifications && typeof source.notifications === "object" && !Array.isArray(source.notifications) ? source.notifications : {}, preferences: { ...base.preferences, ...(source.preferences && typeof source.preferences === "object" ? source.preferences : {}) }, sync: { ...base.sync, legacyMigrated: sourceSync.legacyMigrated === true, activeUserId: typeof sourceSync.activeUserId === "string" ? sourceSync.activeUserId : null, guestClaimedBy: typeof sourceSync.guestClaimedBy === "string" ? sourceSync.guestClaimedBy : null, guest: sourceSync.guest && typeof sourceSync.guest === "object" ? sourceSync.guest : null, accounts: sourceSync.accounts && typeof sourceSync.accounts === "object" && !Array.isArray(sourceSync.accounts) ? sourceSync.accounts : {}, lastSyncedAt: typeof sourceSync.lastSyncedAt === "string" ? sourceSync.lastSyncedAt : null } };
   },
   migrate() {
     const current = this.normalize(this.read());
@@ -2322,8 +2349,10 @@ const userStorage = {
   saveFavorites(favorites) { const data = this.get(); data.favorites = favorites; this.save(data); },
   getPreferences() { return this.get().preferences; },
   savePreferences(preferences) { const data = this.get(); data.preferences = { ...data.preferences, ...preferences }; this.save(data); },
-  snapshot(data) { return { tracking: data.tracking, favorites: data.favorites, notes: data.notes, preferences: data.preferences }; },
-  restore(data, snapshot) { const clean = this.normalize(snapshot || this.empty()); data.tracking = clean.tracking; data.favorites = clean.favorites; data.notes = clean.notes; data.preferences = clean.preferences; },
+  getNotifications() { return this.get().notifications; },
+  saveNotifications(notifications) { const data = this.get(); data.notifications = notifications; this.save(data); },
+  snapshot(data) { return { tracking: data.tracking, favorites: data.favorites, notes: data.notes, notifications: data.notifications, preferences: data.preferences }; },
+  restore(data, snapshot) { const clean = this.normalize(snapshot || this.empty()); data.tracking = clean.tracking; data.favorites = clean.favorites; data.notes = clean.notes; data.notifications = clean.notifications; data.preferences = clean.preferences; },
   switchContext(userId) {
     const data = this.get();
     if (data.sync.activeUserId === userId) return data;
@@ -2349,10 +2378,87 @@ function setFavorite(entryId, value) { const favorites = userStorage.getFavorite
 function favoriteIds() { return getUserFavorites(); }
 function trackingData() { return getUserTracking(); }
 function trackingStatus(id) { const entry = getTrackingForEntry(id); return entry ? entry.status : "non-suivi"; }
-function setTrackingStatus(id, status, updatedAt = new Date().toISOString()) { status === "non-suivi" ? removeTrackingForEntry(id) : setTrackingForEntry(id, status, updatedAt); updateAccountPanel(); }
+function setTrackingStatus(id, status, updatedAt = new Date().toISOString()) { const previous = trackingStatus(id); status === "non-suivi" ? removeTrackingForEntry(id) : setTrackingForEntry(id, status, updatedAt); updateAccountPanel(); if (status === "a-traiter" && previous !== "a-traiter") createTrackingNotification(id); }
 function toggleFavorite(id) { setFavorite(id, !getUserFavorites().has(id)); }
 function getUserNote(id) { return userStorage.get().notes[id] || ""; }
 function setUserNote(id, note) { const data = userStorage.get(); const value = String(note || "").trim(); value ? data.notes[id] = value : delete data.notes[id]; userStorage.save(data); queueRemoteEntrySync(id); }
+
+const NOTIFICATION_TYPES = {
+  new: "Nouvelle évolution",
+  high: "Impact fort",
+  deadline: "Échéance proche",
+  alert: "Correspond à vos alertes",
+  followed: "Fiche suivie concernée",
+  tracking: "Ajouté à traiter"
+};
+let notificationFilter = "all";
+let visitSince = null;
+function notificationKey(notification) { return `${notification.regulation_id}:${notification.notification_type}`; }
+function notificationDate(value) { const time = Date.parse(value || ""); return Number.isFinite(time) ? time : 0; }
+function notificationItem(id) { return ITEMS.find(item => item.id === id); }
+function storedNotifications() { return Object.values(userStorage.getNotifications()).filter(notification => notification && knownRegulationId(notification.regulation_id)); }
+function saveNotifications(notifications) { userStorage.saveNotifications(Object.fromEntries(notifications.map(notification => [notificationKey(notification), notification]))); }
+function notificationFor(item, type, message) { return { regulation_id: item.id, notification_type: type, title: item.title, message, impact_level: item.impactLevel, is_read: false, created_at: new Date().toISOString() }; }
+function notificationMatchesFilter(notification) { return notificationFilter === "all" || (notificationFilter === "unread" && !notification.is_read) || (notificationFilter === "high" && notification.impact_level === "high") || (notificationFilter === "deadline" && notification.notification_type === "deadline"); }
+function renderNotifications() {
+  const list = document.getElementById("notificationList"), count = document.getElementById("notificationCount");
+  if (!list || !count) return;
+  const notifications = storedNotifications().sort((a, b) => notificationDate(b.created_at) - notificationDate(a.created_at));
+  const unread = notifications.filter(notification => !notification.is_read).length;
+  count.hidden = unread === 0; count.textContent = unread > 99 ? "99+" : String(unread);
+  list.innerHTML = notifications.filter(notificationMatchesFilter).map(notification => `<button class="notification-item ${notification.is_read ? "" : "is-unread"} ${notification.notification_type === "high" ? "high" : ""} ${notification.notification_type === "deadline" ? "deadline" : ""}" type="button" data-notification-key="${notificationKey(notification)}"><span class="notification-item-top"><span>${NOTIFICATION_TYPES[notification.notification_type] || "Notification"}</span><time>${fmtDate((notification.created_at || "").slice(0, 10))}</time></span><h3>${escAttr(notification.title)}</h3><p>${escAttr(notification.message || "")}</p><span class="notification-state">${notification.is_read ? "Lu" : "Non lu"}</span></button>`).join("") || `<p class="notification-empty">Aucune notification dans cette vue.</p>`;
+  list.querySelectorAll("[data-notification-key]").forEach(button => button.addEventListener("click", () => openNotification(button.dataset.notificationKey)));
+}
+function notificationReadState(key, isRead) {
+  const notifications = userStorage.getNotifications(), notification = notifications[key];
+  if (!notification) return;
+  notification.is_read = isRead; notifications[key] = notification; userStorage.saveNotifications(notifications); renderNotifications();
+  if (currentUser && supabaseClient) supabaseClient.from("user_notifications").update({ is_read: isRead }).eq("user_id", currentUser.id).eq("regulation_id", notification.regulation_id).eq("notification_type", notification.notification_type).then(({ error }) => { if (error) setAccountSyncStatus("Notifications conservées localement : synchronisation en attente."); });
+}
+function markAllNotificationsRead() { storedNotifications().filter(notification => !notification.is_read).forEach(notification => notificationReadState(notificationKey(notification), true)); }
+function closeNotificationPanel() { const panel = document.getElementById("notificationPanel"); panel.hidden = true; document.getElementById("notificationButton").setAttribute("aria-expanded", "false"); }
+function openNotification(key) { const notification = userStorage.getNotifications()[key]; if (!notification) return; notificationReadState(key, true); closeNotificationPanel(); resetRegistryView(); requestAnimationFrame(() => showRegisterItem(notification.regulation_id)); }
+async function persistNotification(notification) {
+  const key = notificationKey(notification), current = userStorage.getNotifications();
+  if (!current[key]) { current[key] = notification; userStorage.saveNotifications(current); }
+  if (!currentUser || !supabaseClient) { renderNotifications(); return; }
+  const { error } = await supabaseClient.from("user_notifications").upsert({ user_id: currentUser.id, regulation_id: notification.regulation_id, notification_type: notification.notification_type, title: notification.title, message: notification.message, impact_level: notification.impact_level, is_read: current[key].is_read === true }, { onConflict: "user_id,regulation_id,notification_type", ignoreDuplicates: true });
+  if (error) setAccountSyncStatus("Notifications conservées localement : synchronisation en attente.");
+  renderNotifications();
+}
+function createTrackingNotification(id) { const item = notificationItem(id); if (item) persistNotification(notificationFor(item, "tracking", "Cette évolution est maintenant dans votre suivi À traiter.")); }
+function matchesFollowedFiche(item) { return alertPreferences && alertPreferences.fos_refs.length && item.ficheCodes.some(code => alertPreferences.fos_refs.includes(code)); }
+async function loadRemoteNotifications() {
+  if (!currentUser || !supabaseClient) return;
+  const { data, error } = await supabaseClient.from("user_notifications").select("regulation_id,notification_type,title,message,impact_level,is_read,created_at").eq("user_id", currentUser.id).order("created_at", { ascending: false });
+  if (error) return;
+  const local = userStorage.getNotifications();
+  (data || []).forEach(notification => { if (knownRegulationId(notification.regulation_id)) local[notificationKey(notification)] = { ...notification, is_read: notification.is_read === true }; });
+  userStorage.saveNotifications(local);
+}
+async function generateNotifications() {
+  const baseline = visitSince ? notificationDate(visitSince) : 0;
+  const candidates = ITEMS.filter(item => notificationDate(item.date) > baseline);
+  const tasks = [];
+  candidates.forEach(item => {
+    tasks.push(persistNotification(notificationFor(item, "new", "Nouvelle évolution ajoutée au registre.")));
+    if (item.impactLevel === "high") tasks.push(persistNotification(notificationFor(item, "high", "Cette évolution présente un impact fort.")));
+    const deadline = actionInfo(item).deadline;
+    if (deadline && deadline.days <= 30) tasks.push(persistNotification(notificationFor(item, "deadline", `Échéance identifiée dans ${deadline.days} jours.`)));
+    if (alertPreferences && alertMatches(item, alertPreferences)) tasks.push(persistNotification(notificationFor(item, "alert", "Cette évolution correspond à vos critères d’alerte.")));
+    if (matchesFollowedFiche(item)) tasks.push(persistNotification(notificationFor(item, "followed", "Une fiche que vous surveillez est concernée.")));
+  });
+  await Promise.all(tasks);
+}
+function updateLastVisit() { userStorage.savePreferences({ lastVisitAt: new Date().toISOString() }); if (currentUser) queueRemotePreferencesSync(); }
+async function initializeNotifications() {
+  visitSince = userStorage.getPreferences().lastVisitAt || null;
+  await loadRemoteNotifications();
+  await generateNotifications();
+  renderNotifications();
+  updateLastVisit();
+  render();
+}
 
 function setAccountSyncStatus(message) {
   const status = document.getElementById("accountSyncStatus");
@@ -2374,12 +2480,18 @@ async function syncRemoteEntry(id) {
 async function syncRemotePreferences() {
   if (!currentUser || !supabaseClient) return;
   const preferences = userStorage.getPreferences();
-  const { error } = await supabaseClient.from("user_preferences").upsert({
+  const row = {
     user_id: currentUser.id,
     default_sort: ["recent", "priority", "deadline"].includes(preferences.defaultSort) ? preferences.defaultSort : "recent",
     language: preferences.language === "es" ? "es" : "fr",
-    compact_view: preferences.displayMode === "compact"
-  }, { onConflict: "user_id" });
+    compact_view: preferences.displayMode === "compact",
+    last_visit_at: preferences.lastVisitAt || null
+  };
+  let { error } = await supabaseClient.from("user_preferences").upsert(row, { onConflict: "user_id" });
+  if (error && /last_visit_at|schema cache|column/i.test(String(error.message || ""))) {
+    delete row.last_visit_at;
+    ({ error } = await supabaseClient.from("user_preferences").upsert(row, { onConflict: "user_id" }));
+  }
   if (error) throw error;
 }
 function queueRemoteEntrySync(id) {
@@ -2395,10 +2507,13 @@ async function synchronizeUserData(user) {
   syncInProgress = true;
   setAccountSyncStatus("Synchronisation de votre suivi…");
   try {
-    const [trackingResult, preferencesResult] = await Promise.all([
+    let [trackingResult, preferencesResult] = await Promise.all([
       supabaseClient.from("user_regulation_tracking").select("regulation_id,status,favorite,note,updated_at").eq("user_id", user.id),
-      supabaseClient.from("user_preferences").select("default_sort,language,compact_view,updated_at").eq("user_id", user.id).maybeSingle()
+      supabaseClient.from("user_preferences").select("default_sort,language,compact_view,last_visit_at,updated_at").eq("user_id", user.id).maybeSingle()
     ]);
+    if (preferencesResult.error && /last_visit_at|schema cache|column/i.test(String(preferencesResult.error.message || ""))) {
+      preferencesResult = await supabaseClient.from("user_preferences").select("default_sort,language,compact_view,updated_at").eq("user_id", user.id).maybeSingle();
+    }
     if (trackingResult.error) throw trackingResult.error;
     if (preferencesResult.error && preferencesResult.error.code !== "PGRST116") throw preferencesResult.error;
 
@@ -2417,6 +2532,7 @@ async function synchronizeUserData(user) {
       if (["recent", "priority", "deadline"].includes(remotePreferences.default_sort)) local.preferences.defaultSort = remotePreferences.default_sort;
       if (["fr", "es"].includes(remotePreferences.language)) local.preferences.language = remotePreferences.language;
       local.preferences.displayMode = remotePreferences.compact_view ? "compact" : local.preferences.displayMode;
+      if (typeof remotePreferences.last_visit_at === "string") local.preferences.lastVisitAt = remotePreferences.last_visit_at;
     }
     userStorage.save(local);
 
@@ -2499,6 +2615,7 @@ async function handleAuthUser(user) {
     updateAccountPanel();
     render();
   }
+  await initializeNotifications();
 }
 
 function actorImpactOf(item, key) {
@@ -2992,8 +3109,13 @@ function buildRegisterOverview() {
     <div class="overview-list">${items.map(buildOverviewCard).join("")}</div>
     <button class="overview-all" type="button" data-overview-action="${allAction}">${allLabel} →</button>
   </section>`;
+  const baseline = visitSince ? notificationDate(visitSince) : 0;
+  const sinceItems = ITEMS.filter(item => notificationDate(item.date) > baseline);
+  const sinceHigh = sinceItems.filter(item => item.impactLevel === "high").length;
+  const sinceDeadline = sinceItems.filter(item => { const deadline = actionInfo(item).deadline; return deadline && deadline.days <= 30; }).length;
   return `<section class="register-overview" aria-label="Vue d'ensemble du registre">
     <h2 class="overview-heading">Vue d'ensemble</h2>
+    <section class="visit-summary" aria-label="Depuis votre dernière visite"><h3>Depuis votre dernière visite</h3><div class="visit-summary-list"><span><b>${sinceItems.length}</b> nouvelle${sinceItems.length > 1 ? "s" : ""} évolution${sinceItems.length > 1 ? "s" : ""}</span><span><b>${sinceHigh}</b> impact${sinceHigh > 1 ? "s" : ""} fort${sinceHigh > 1 ? "s" : ""}</span><span><b>${sinceDeadline}</b> échéance${sinceDeadline > 1 ? "s" : ""} proche${sinceDeadline > 1 ? "s" : ""}</span></div></section>
     <div class="overview-grid">
       ${panel("Dernières évolutions", "latest", latest, "all", "Voir toutes les évolutions")}
       ${panel("Impacts forts", "high", high, "high", "Voir tous les impacts forts")}
@@ -3207,6 +3329,18 @@ document.getElementById("accountButton").addEventListener("click", () => {
   document.getElementById("accountButton").setAttribute("aria-expanded", String(open));
   if (open) updateAccountPanel();
 });
+document.getElementById("notificationButton").addEventListener("click", () => {
+  const panel = document.getElementById("notificationPanel"), open = panel.hidden;
+  panel.hidden = !open;
+  document.getElementById("notificationButton").setAttribute("aria-expanded", String(open));
+  if (open) renderNotifications();
+});
+document.getElementById("notificationsReadAll").addEventListener("click", markAllNotificationsRead);
+document.querySelectorAll("[data-notification-filter]").forEach(button => button.addEventListener("click", () => {
+  notificationFilter = button.dataset.notificationFilter;
+  document.querySelectorAll("[data-notification-filter]").forEach(filter => filter.classList.toggle("is-active", filter === button));
+  renderNotifications();
+}));
 document.getElementById("accountSignout").addEventListener("click", signOut);
 document.getElementById("alertsManage").addEventListener("click", openAlertsModal);
 document.getElementById("alertsClose").addEventListener("click", closeAlertsModal);
@@ -3218,7 +3352,7 @@ document.getElementById("authBackdrop").addEventListener("click", event => { if 
 document.getElementById("authSigninForm").addEventListener("submit", submitSignIn);
 document.getElementById("authSignupForm").addEventListener("submit", submitSignUp);
 document.getElementById("authResendConfirmation").addEventListener("click", resendConfirmation);
-document.addEventListener("keydown", event => { if (event.key === "Escape" && !document.getElementById("authBackdrop").hidden) closeAuthModal(); if (event.key === "Escape" && !document.getElementById("alertsBackdrop").hidden) closeAlertsModal(); });
+document.addEventListener("keydown", event => { if (event.key === "Escape" && !document.getElementById("authBackdrop").hidden) closeAuthModal(); if (event.key === "Escape" && !document.getElementById("alertsBackdrop").hidden) closeAlertsModal(); if (event.key === "Escape" && !document.getElementById("notificationPanel").hidden) closeNotificationPanel(); });
 
 userStorage.migrate();
 applyUserPreferences();
@@ -3235,6 +3369,7 @@ buildCatalogStats();
 buildSectorFilter();
 renderCatalog();
 render();
+renderNotifications();
 </script>
 
 
