@@ -925,6 +925,13 @@
   .auth-field input { width: 100%; padding: 10px; border: 1px solid var(--border-strong); border-radius: 8px; color: var(--navy-950); font: 14px var(--font-ui); }
   .auth-field input:focus { border-color: var(--blue-600); box-shadow: 0 0 0 3px rgba(37, 99, 235, .12); outline: none; }
   .auth-resend { width: 100%; margin-top: 4px; padding: 8px; border: 0; background: transparent; color: var(--blue-600); font: 800 12px var(--font-ui); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+  .personal-view { margin-left: auto; padding: 5px 8px; border: 1px solid var(--border-strong); border-radius: 7px; background: #fff; color: var(--blue-600); font: 800 10.5px var(--font-ui); cursor: pointer; }
+  .personal-view.is-active { border-color: var(--blue-600); background: var(--blue-50); }
+  .analysis-note { display: grid; gap: 7px; }
+  .analysis-note textarea { width: 100%; min-height: 76px; resize: vertical; padding: 9px; border: 1px solid var(--border-strong); border-radius: 8px; color: var(--navy-950); font: 12px var(--font-ui); }
+  .analysis-note textarea:focus { border-color: var(--blue-600); box-shadow: 0 0 0 3px rgba(37, 99, 235, .12); outline: none; }
+  .note-save { justify-self: start; padding: 6px 9px; border: 1px solid var(--blue-600); border-radius: 7px; background: var(--blue-600); color: #fff; font: 800 11px var(--font-ui); cursor: pointer; }
+  .note-status { color: var(--text-muted); font-size: 10px; }
   .auth-submit { margin-top: 4px; padding: 10px 13px; border: 1px solid var(--blue-600); border-radius: 8px; background: var(--blue-600); color: #fff; font: 800 13px var(--font-ui); cursor: pointer; }
   .auth-submit:hover:not(:disabled) { background: #1D4ED8; border-color: #1D4ED8; }
   .auth-submit:disabled { opacity: .65; cursor: wait; }
@@ -2122,7 +2129,7 @@ const ACTORS = [
 ];
 const ACTOR_LEVEL_LABEL = { high: "Fort", medium: "Modéré", low: "Faible", info: "À suivre", none: "Aucun" };
 const CATS = [...new Set(ITEMS.map(i => i.category))];
-const state = { cats: new Set(), impacts: new Set(), actors: new Set(), actions: new Set(), tracking: new Set(), q: "", view: "feed", sort: "recent" };
+const state = { cats: new Set(), impacts: new Set(), actors: new Set(), actions: new Set(), tracking: new Set(), personalOnly: false, q: "", view: "feed", sort: "recent" };
 const ACTION_LABEL = { analyze: "À analyser", apply: "À appliquer", monitor: "À surveiller", deadline: "Échéance proche", info: "Information" };
 const ACTION_ORDER = { apply: 0, deadline: 1, analyze: 2, monitor: 3, info: 4 };
 const TRACKING_STORAGE_KEY = "cee-user-tracking";
@@ -2177,7 +2184,7 @@ function actionInfo(item) {
   return { actions: [...actions], deadline };
 }
 const userStorage = {
-  empty() { return { version: 1, tracking: {}, favorites: {}, preferences: { defaultSort: "recent", favoriteFilters: [], language: "fr", displayMode: "detailed" }, sync: { legacyMigrated: false, activeUserId: null, guestClaimedBy: null, guest: null, accounts: {} } }; },
+  empty() { return { version: 1, tracking: {}, favorites: {}, notes: {}, preferences: { defaultSort: "recent", favoriteFilters: [], language: "fr", displayMode: "detailed" }, sync: { legacyMigrated: false, activeUserId: null, guestClaimedBy: null, guest: null, accounts: {}, lastSyncedAt: null } }; },
   read() {
     try {
       const stored = JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || "null");
@@ -2187,7 +2194,7 @@ const userStorage = {
   normalize(data) {
     const base = this.empty(), source = data && typeof data === "object" ? data : {};
     const sourceSync = source.sync && typeof source.sync === "object" && !Array.isArray(source.sync) ? source.sync : {};
-    return { version: 1, tracking: source.tracking && typeof source.tracking === "object" && !Array.isArray(source.tracking) ? source.tracking : {}, favorites: source.favorites && typeof source.favorites === "object" && !Array.isArray(source.favorites) ? source.favorites : {}, preferences: { ...base.preferences, ...(source.preferences && typeof source.preferences === "object" ? source.preferences : {}) }, sync: { ...base.sync, legacyMigrated: sourceSync.legacyMigrated === true, activeUserId: typeof sourceSync.activeUserId === "string" ? sourceSync.activeUserId : null, guestClaimedBy: typeof sourceSync.guestClaimedBy === "string" ? sourceSync.guestClaimedBy : null, guest: sourceSync.guest && typeof sourceSync.guest === "object" ? sourceSync.guest : null, accounts: sourceSync.accounts && typeof sourceSync.accounts === "object" && !Array.isArray(sourceSync.accounts) ? sourceSync.accounts : {} } };
+    return { version: 1, tracking: source.tracking && typeof source.tracking === "object" && !Array.isArray(source.tracking) ? source.tracking : {}, favorites: source.favorites && typeof source.favorites === "object" && !Array.isArray(source.favorites) ? source.favorites : {}, notes: source.notes && typeof source.notes === "object" && !Array.isArray(source.notes) ? source.notes : {}, preferences: { ...base.preferences, ...(source.preferences && typeof source.preferences === "object" ? source.preferences : {}) }, sync: { ...base.sync, legacyMigrated: sourceSync.legacyMigrated === true, activeUserId: typeof sourceSync.activeUserId === "string" ? sourceSync.activeUserId : null, guestClaimedBy: typeof sourceSync.guestClaimedBy === "string" ? sourceSync.guestClaimedBy : null, guest: sourceSync.guest && typeof sourceSync.guest === "object" ? sourceSync.guest : null, accounts: sourceSync.accounts && typeof sourceSync.accounts === "object" && !Array.isArray(sourceSync.accounts) ? sourceSync.accounts : {}, lastSyncedAt: typeof sourceSync.lastSyncedAt === "string" ? sourceSync.lastSyncedAt : null } };
   },
   migrate() {
     const current = this.normalize(this.read());
@@ -2209,8 +2216,8 @@ const userStorage = {
   saveFavorites(favorites) { const data = this.get(); data.favorites = favorites; this.save(data); },
   getPreferences() { return this.get().preferences; },
   savePreferences(preferences) { const data = this.get(); data.preferences = { ...data.preferences, ...preferences }; this.save(data); },
-  snapshot(data) { return { tracking: data.tracking, favorites: data.favorites, preferences: data.preferences }; },
-  restore(data, snapshot) { const clean = this.normalize(snapshot || this.empty()); data.tracking = clean.tracking; data.favorites = clean.favorites; data.preferences = clean.preferences; },
+  snapshot(data) { return { tracking: data.tracking, favorites: data.favorites, notes: data.notes, preferences: data.preferences }; },
+  restore(data, snapshot) { const clean = this.normalize(snapshot || this.empty()); data.tracking = clean.tracking; data.favorites = clean.favorites; data.notes = clean.notes; data.preferences = clean.preferences; },
   switchContext(userId) {
     const data = this.get();
     if (data.sync.activeUserId === userId) return data;
@@ -2238,6 +2245,8 @@ function trackingData() { return getUserTracking(); }
 function trackingStatus(id) { const entry = getTrackingForEntry(id); return entry ? entry.status : "non-suivi"; }
 function setTrackingStatus(id, status, updatedAt = new Date().toISOString()) { status === "non-suivi" ? removeTrackingForEntry(id) : setTrackingForEntry(id, status, updatedAt); updateAccountPanel(); }
 function toggleFavorite(id) { setFavorite(id, !getUserFavorites().has(id)); }
+function getUserNote(id) { return userStorage.get().notes[id] || ""; }
+function setUserNote(id, note) { const data = userStorage.get(); const value = String(note || "").trim(); value ? data.notes[id] = value : delete data.notes[id]; userStorage.save(data); queueRemoteEntrySync(id); }
 
 function setAccountSyncStatus(message) {
   const status = document.getElementById("accountSyncStatus");
@@ -2248,7 +2257,7 @@ function dateValue(value) { const timestamp = Date.parse(value || ""); return Nu
 function remoteRowForEntry(id) {
   if (!currentUser || !knownRegulationId(id)) return null;
   const status = trackingStatus(id);
-  return { user_id: currentUser.id, regulation_id: id, status: TRACKING_FILTERS.includes(status) ? status : null, favorite: getUserFavorites().has(id) };
+  return { user_id: currentUser.id, regulation_id: id, status: TRACKING_FILTERS.includes(status) ? status : null, favorite: getUserFavorites().has(id), note: getUserNote(id) || null };
 }
 async function syncRemoteEntry(id) {
   const row = remoteRowForEntry(id);
@@ -2281,7 +2290,7 @@ async function synchronizeUserData(user) {
   setAccountSyncStatus("Synchronisation de votre suivi…");
   try {
     const [trackingResult, preferencesResult] = await Promise.all([
-      supabaseClient.from("user_regulation_tracking").select("regulation_id,status,favorite,updated_at").eq("user_id", user.id),
+      supabaseClient.from("user_regulation_tracking").select("regulation_id,status,favorite,note,updated_at").eq("user_id", user.id),
       supabaseClient.from("user_preferences").select("default_sort,language,compact_view,updated_at").eq("user_id", user.id).maybeSingle()
     ]);
     if (trackingResult.error) throw trackingResult.error;
@@ -2295,6 +2304,7 @@ async function synchronizeUserData(user) {
         local.tracking[row.regulation_id] = { status: row.status, updatedAt: row.updated_at || new Date().toISOString() };
       }
       if (row.favorite === true) local.favorites[row.regulation_id] = true;
+      if (typeof row.note === "string" && row.note) local.notes[row.regulation_id] = row.note;
     });
     const remotePreferences = preferencesResult.data;
     if (remotePreferences) {
@@ -2311,11 +2321,13 @@ async function synchronizeUserData(user) {
       if (error) throw error;
     }
     await syncRemotePreferences();
+    local.sync.lastSyncedAt = new Date().toISOString();
+    userStorage.save(local);
     applyUserPreferences();
     buildTrackingPanel();
     updateAccountPanel();
     render();
-    setAccountSyncStatus("Synchronisation multi-appareils active");
+    setAccountSyncStatus(`Synchronisé à ${new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}`);
   } catch (error) {
     setAccountSyncStatus("Synchronisation indisponible : vos données locales sont conservées.");
   } finally {
@@ -2445,7 +2457,8 @@ function renderActiveFilters() {
     ...[...state.impacts].map(value => ({ group: "impact", value, label: IMPACT_LABEL[value] })),
     ...[...state.actors].map(value => ({ group: "actor", value, label: ACTORS.find(a => a.key === value).label })),
     ...[...state.actions].map(value => ({ group: "action", value, label: ACTION_LABEL[value] })),
-    ...[...state.tracking].map(value => ({ group: "tracking", value, label: `Mon suivi : ${TRACKING_LABEL[value]}` }))
+    ...[...state.tracking].map(value => ({ group: "tracking", value, label: `Mon suivi : ${TRACKING_LABEL[value]}` })),
+    ...(state.personalOnly ? [{ group: "personal", value: "priorities", label: "Mes priorités" }] : [])
   ];
   wrap.classList.toggle("has-filters", active.length > 0);
   wrap.innerHTML = active.length
@@ -2454,6 +2467,7 @@ function renderActiveFilters() {
   wrap.querySelectorAll("[data-remove-filter]").forEach(button => {
     button.addEventListener("click", () => {
       const [group, value] = button.dataset.removeFilter.split(":");
+      if (group === "personal") { state.personalOnly = false; document.getElementById("personalView").classList.remove("is-active"); renderActiveFilters(); render(); return; }
       const set = group === "cat" ? state.cats : group === "impact" ? state.impacts : group === "actor" ? state.actors : group === "action" ? state.actions : state.tracking;
       set.delete(value);
       const chip = group === "action" ? document.querySelector(`[data-action-filter="${value}"]`) : group === "tracking" ? document.querySelector(`[data-tracking-filter="${value}"]`) : document.querySelector(`[data-${group}="${value}"]`);
@@ -2470,7 +2484,8 @@ function buildTrackingPanel() {
   const counts = Object.fromEntries(TRACKING_FILTERS.map(status => [status, 0]));
   ITEMS.forEach(item => { const status = trackingStatus(item.id); if (counts[status] !== undefined) counts[status]++; });
   const panel = document.getElementById("trackingPanel");
-  panel.innerHTML = `<div class="tracking-head"><h2 class="tracking-title">Mon suivi</h2><div class="tracking-tools"><button class="tracking-tool" id="exportTracking" type="button">Exporter mon suivi</button><button class="tracking-tool" id="importTracking" type="button">Importer mon suivi</button><input id="importTrackingFile" type="file" accept="application/json,.json" hidden></div></div><div class="tracking-grid">${TRACKING_FILTERS.map(status => `<button class="tracking-filter ${status === "a-traiter" ? "todo" : status === "en-cours" ? "progress" : "done"} ${state.tracking.has(status) ? "is-active" : ""}" type="button" data-tracking-filter="${status}" aria-pressed="${state.tracking.has(status)}"><span class="tracking-filter-count">${counts[status]}</span><span class="tracking-filter-label">${TRACKING_LABEL[status]}</span></button>`).join("")}</div>`;
+  panel.innerHTML = `<div class="tracking-head"><h2 class="tracking-title">Mon suivi</h2><button class="personal-view ${state.personalOnly ? "is-active" : ""}" id="personalView" type="button" aria-pressed="${state.personalOnly}">Mes priorités</button><div class="tracking-tools"><button class="tracking-tool" id="exportTracking" type="button">Exporter mon suivi</button><button class="tracking-tool" id="importTracking" type="button">Importer mon suivi</button><input id="importTrackingFile" type="file" accept="application/json,.json" hidden></div></div><div class="tracking-grid">${TRACKING_FILTERS.map(status => `<button class="tracking-filter ${status === "a-traiter" ? "todo" : status === "en-cours" ? "progress" : "done"} ${state.tracking.has(status) ? "is-active" : ""}" type="button" data-tracking-filter="${status}" aria-pressed="${state.tracking.has(status)}"><span class="tracking-filter-count">${counts[status]}</span><span class="tracking-filter-label">${TRACKING_LABEL[status]}</span></button>`).join("")}</div>`;
+  document.getElementById("personalView").addEventListener("click", () => { state.personalOnly = !state.personalOnly; setView("feed"); buildTrackingPanel(); renderActiveFilters(); render(); });
   panel.querySelectorAll("[data-tracking-filter]").forEach(button => button.addEventListener("click", () => {
     const status = button.dataset.trackingFilter;
     state.tracking.has(status) ? state.tracking.delete(status) : state.tracking.add(status);
@@ -2606,6 +2621,7 @@ function resetRegistryView() {
   state.actors.clear();
   state.actions.clear();
   state.tracking.clear();
+  state.personalOnly = false;
   state.q = "";
   document.getElementById("search").value = "";
   document.querySelectorAll("#filterBar .chip.active").forEach(chip => chip.classList.remove("active"));
@@ -2816,6 +2832,7 @@ function render() {
     if (state.impacts.size && !state.impacts.has(i.impactLevel)) return false;
     if (state.actions.size && ![...state.actions].some(action => actionInfo(i).actions.includes(action))) return false;
     if (state.tracking.size && !state.tracking.has(trackingStatus(i.id))) return false;
+    if (state.personalOnly && !getUserFavorites().has(i.id) && !TRACKING_FILTERS.includes(trackingStatus(i.id))) return false;
     if (state.actors.size) {
       const relevant = [...state.actors].some(a => actorImpactOf(i, a).level !== "none");
       if (!relevant) return false;
@@ -2903,14 +2920,19 @@ function render() {
             <h4>Fiches CEE concernées</h4>
             <div class="analysis-fiches">${i.ficheCodes.map(f => `<span class="fiche-code">${f}</span>`).join("")}</div>
           </section>` : ""}
-          <section class="analysis-section ${(!i.ficheCodes.length && !ACTORS.some(a => actorImpactOf(i, a.key).level !== "none")) ? "full" : ""}">
+           <section class="analysis-section ${(!i.ficheCodes.length && !ACTORS.some(a => actorImpactOf(i, a.key).level !== "none")) ? "full" : ""}">
             <h4>Source officielle</h4>
             <div class="analysis-source">
               <span class="analysis-source-meta">${i.official ? "Source officielle" : "Source professionnelle"} — ${i.sourceName}</span>
               <a class="analysis-source-link" href="${i.sourceUrl}" target="_blank" rel="noopener">Consulter le texte officiel ↗</a>
             </div>
-          </section>
-        </div>
+           </section>
+           <section class="analysis-section full analysis-note">
+             <h4>Note personnelle</h4>
+             <textarea data-note-id="${i.id}" aria-label="Note personnelle pour cette évolution" placeholder="Ajouter une note privée…">${escAttr(getUserNote(i.id))}</textarea>
+             <div><button class="note-save" type="button" data-save-note-id="${i.id}">Enregistrer la note</button> <span class="note-status" data-note-status="${i.id}"></span></div>
+           </section>
+         </div>
         ${i.attachments && i.attachments.length ? `<div class="analysis-attachments">${renderAttachments(i)}</div>` : ""}
       </div>
     </article>`;
@@ -2935,6 +2957,14 @@ function render() {
       setTrackingStatus(select.dataset.trackingId, select.value);
       buildTrackingPanel();
       render();
+    });
+  });
+  feed.querySelectorAll("[data-save-note-id]").forEach(button => {
+    button.addEventListener("click", () => {
+      const id = button.dataset.saveNoteId, field = feed.querySelector(`[data-note-id="${id}"]`);
+      setUserNote(id, field.value);
+      const status = feed.querySelector(`[data-note-status="${id}"]`);
+      if (status) status.textContent = currentUser ? "Note enregistrée et synchronisée." : "Note enregistrée sur cet appareil.";
     });
   });
   feed.querySelectorAll("[data-overview-id]").forEach(btn => {

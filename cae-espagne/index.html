@@ -332,6 +332,16 @@
   .item-actions { float: right; display: inline-flex; align-items: center; gap: 10px; }
   .item-actions .chev { float: none; }
   .bookmark-icon { width: 14px; height: 14px; color: var(--ink-faint); }
+  .cae-account { margin-left: auto; position: relative; }
+  .cae-account button { padding: 7px 10px; border: 1px solid var(--line-strong); border-radius: 8px; background: #fff; color: var(--primary-strong); font: 800 11px var(--font-ui); cursor: pointer; }
+  .cae-account small { display: block; margin-top: 4px; color: var(--ink-muted); font-size: 9px; }
+  .cae-track { position: absolute; top: 15px; right: 56px; z-index: 2; padding: 5px; border: 1px solid var(--line); border-radius: 7px; background: #fff; color: var(--ink-muted); font: 700 10px var(--font-ui); }
+  .cae-bookmark { position: absolute; top: 15px; right: 16px; z-index: 2; width: 31px; height: 31px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink-faint); cursor: pointer; }
+  .cae-bookmark.is-favorite { color: var(--primary); background: var(--primary-tint); border-color: var(--primary); }
+  .cae-note { display: grid; gap: 6px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+  .cae-note textarea { min-height: 58px; padding: 8px; border: 1px solid var(--line-strong); border-radius: 7px; font: 12px var(--font-ui); resize: vertical; }
+  .cae-note button { justify-self: start; padding: 6px 8px; border: 0; border-radius: 6px; background: var(--primary); color: #fff; font: 800 10px var(--font-ui); cursor: pointer; }
+  @media (max-width: 560px) { .cae-track { right: 52px; max-width: 100px; } .cae-account button { padding: 6px; font-size: 10px; } }
   .lang-toggle { border-radius: 999px; padding: 3px; background: var(--surface-2); border: 1px solid var(--line); }
   .lang-btn { border-radius: 999px; padding: 6px 14px; }
 </style>
@@ -356,6 +366,7 @@
 <div class="site-switch">
   <button class="site-tab" id="siteTabCee" type="button" data-frame-url="/">🇫🇷 CEE France</button>
   <button class="site-tab active" id="siteTabCae" type="button" data-frame-url="">🇪🇸 CAE Espagne</button>
+  <div class="cae-account"><button id="caeAccountButton" type="button">Mon espace</button><small id="caeSyncStatus"></small></div>
 </div>
 <div id="otherSiteFrameWrap"><iframe id="otherSiteFrame" class="site-frame" title="Autre site" loading="lazy"></iframe></div>
 <div class="wrap" id="mainContent">
@@ -2002,6 +2013,7 @@
   </footer>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function() {
   var tabs = [document.getElementById('siteTabCee'), document.getElementById('siteTabCae')];
@@ -2038,6 +2050,32 @@
 const DATA = JSON.parse(document.getElementById("data-json").textContent);
 const META = DATA.meta;
 const ITEMS = DATA.items;
+const SUPABASE_URL = "https://jmlkjzinaqtzxoyemolr.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_aS52Gg2uF24juAyfWKcKfw_05XTQnDH";
+const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } }) : null;
+const CAE_USER_STORAGE_KEY = "cae-user-data";
+const CAE_TRACKING = ["a-traiter", "en-cours", "traite"];
+let currentUser = null;
+let caeSyncInProgress = false;
+function caeEmpty() { return { tracking: {}, favorites: {}, notes: {}, sync: { activeUserId: null, guest: null, accounts: {}, guestClaimedBy: null, lastSyncedAt: null } }; }
+function caeRead() { try { const raw = JSON.parse(localStorage.getItem(CAE_USER_STORAGE_KEY) || "null"); return raw && typeof raw === "object" ? raw : caeEmpty(); } catch (e) { return caeEmpty(); } }
+function caeSave(data) { localStorage.setItem(CAE_USER_STORAGE_KEY, JSON.stringify(data)); }
+function caeRegulationId(id) { return `cae:${id}`; }
+function caeLocalId(remoteId) { return String(remoteId || "").replace(/^cae:/, ""); }
+function caeKnown(id) { return ITEMS.some(item => item.id === id); }
+function caeTracking(id) { const entry = caeRead().tracking[id]; return entry && CAE_TRACKING.includes(entry.status) ? entry.status : "non-suivi"; }
+function caeFavorite(id) { return caeRead().favorites[id] === true; }
+function caeNote(id) { return caeRead().notes[id] || ""; }
+function caeSetTracking(id, status) { const data = caeRead(); status === "non-suivi" ? delete data.tracking[id] : data.tracking[id] = { status, updatedAt: new Date().toISOString() }; caeSave(data); caeQueueSync(id); }
+function caeSetFavorite(id, value) { const data = caeRead(); value ? data.favorites[id] = true : delete data.favorites[id]; caeSave(data); caeQueueSync(id); }
+function caeSetNote(id, note) { const data = caeRead(), value = String(note || "").trim(); value ? data.notes[id] = value : delete data.notes[id]; caeSave(data); caeQueueSync(id); }
+function caeRemoteRow(id) { return currentUser && caeKnown(id) ? { user_id: currentUser.id, regulation_id: caeRegulationId(id), status: CAE_TRACKING.includes(caeTracking(id)) ? caeTracking(id) : null, favorite: caeFavorite(id), note: caeNote(id) || null } : null; }
+function caeSetStatus(message) { const el = document.getElementById("caeSyncStatus"); if (el) el.textContent = message; }
+async function caePush(id) { const row = caeRemoteRow(id); if (!row || !supabaseClient) return; const { error } = await supabaseClient.from("user_regulation_tracking").upsert(row, { onConflict: "user_id,regulation_id" }); if (error) throw error; }
+function caeQueueSync(id) { if (!currentUser || caeSyncInProgress) return; caePush(id).then(() => caeSetStatus("Synchronisé")).catch(() => caeSetStatus("Local — synchronisation en attente")); }
+function caeSwitchContext(userId) { const data = caeRead(); if (data.sync.activeUserId === userId) return; const snapshot = { tracking: data.tracking, favorites: data.favorites, notes: data.notes }; if (data.sync.activeUserId) data.sync.accounts[data.sync.activeUserId] = snapshot; else data.sync.guest = snapshot; const next = userId ? (data.sync.accounts[userId] || (!data.sync.guestClaimedBy ? data.sync.guest : null)) : data.sync.guest; data.tracking = next && next.tracking || {}; data.favorites = next && next.favorites || {}; data.notes = next && next.notes || {}; if (userId && !data.sync.accounts[userId] && !data.sync.guestClaimedBy) data.sync.guestClaimedBy = userId; data.sync.activeUserId = userId || null; caeSave(data); }
+async function caeSynchronize(user) { if (!user || !supabaseClient || caeSyncInProgress) return; caeSyncInProgress = true; caeSetStatus("Synchronisation…"); try { const { data: rows, error } = await supabaseClient.from("user_regulation_tracking").select("regulation_id,status,favorite,note,updated_at").eq("user_id", user.id).like("regulation_id", "cae:%"); if (error) throw error; const local = caeRead(); (rows || []).forEach(row => { const id = caeLocalId(row.regulation_id); if (!caeKnown(id)) return; if (CAE_TRACKING.includes(row.status)) local.tracking[id] = { status: row.status, updatedAt: row.updated_at || new Date().toISOString() }; if (row.favorite) local.favorites[id] = true; if (row.note) local.notes[id] = row.note; }); caeSave(local); const ids = new Set([...Object.keys(local.tracking), ...Object.keys(local.favorites), ...Object.keys(local.notes)]); const outgoing = [...ids].filter(caeKnown).map(caeRemoteRow).filter(Boolean); if (outgoing.length) { const { error: saveError } = await supabaseClient.from("user_regulation_tracking").upsert(outgoing, { onConflict: "user_id,regulation_id" }); if (saveError) throw saveError; } local.sync.lastSyncedAt = new Date().toISOString(); caeSave(local); caeSetStatus("Synchronisé"); refreshAll(); } catch (e) { caeSetStatus("Local — synchronisation en attente"); } finally { caeSyncInProgress = false; } }
+async function initializeCaeAuth() { if (!supabaseClient) return; const { data } = await supabaseClient.auth.getSession(); currentUser = data.session && data.session.user || null; caeSwitchContext(currentUser && currentUser.id); document.getElementById("caeAccountButton").textContent = currentUser ? "Mon espace · Connecté" : "Se connecter"; if (currentUser) await caeSynchronize(currentUser); supabaseClient.auth.onAuthStateChange(async (_event, session) => { currentUser = session && session.user || null; caeSwitchContext(currentUser && currentUser.id); document.getElementById("caeAccountButton").textContent = currentUser ? "Mon espace · Connecté" : "Se connecter"; if (currentUser) await caeSynchronize(currentUser); else { caeSetStatus("Mode invité local"); refreshAll(); } }); }
 
 /* ============================================================
    I18N — UI chrome strings. Item content (title/summary/impactText/
@@ -2397,6 +2435,7 @@ function render() {
 
   feed.innerHTML = filtered.map(i => {
     const isNew = !seen.has(i.id);
+    const tracking = caeTracking(i.id), favorite = caeFavorite(i.id);
     return `
     <article class="item" data-impact="${i.impactLevel}" data-id="${i.id}">
       <button class="item-head" aria-expanded="false">
@@ -2409,8 +2448,10 @@ function render() {
         </div>
         <h3 class="item-title">${i["title_" + lang]}</h3>
         <p class="item-summary">${i["summary_" + lang]}</p>
-        ${(i.ficheCodes || []).length ? `<div class="fiches">${i.ficheCodes.map(f => `<span class="fiche-code">${f}</span>`).join("")}</div>` : ""}
+       ${(i.ficheCodes || []).length ? `<div class="fiches">${i.ficheCodes.map(f => `<span class="fiche-code">${f}</span>`).join("")}</div>` : ""}
       </button>
+      <select class="cae-track" data-cae-tracking-id="${i.id}" aria-label="Statut de suivi"><option value="non-suivi" ${tracking === "non-suivi" ? "selected" : ""}>Non suivi</option><option value="a-traiter" ${tracking === "a-traiter" ? "selected" : ""}>À traiter</option><option value="en-cours" ${tracking === "en-cours" ? "selected" : ""}>En cours</option><option value="traite" ${tracking === "traite" ? "selected" : ""}>Traité</option></select>
+      <button class="cae-bookmark ${favorite ? "is-favorite" : ""}" type="button" data-cae-favorite-id="${i.id}" aria-label="${favorite ? "Retirer des favoris" : "Ajouter aux favoris"}"><svg class="bookmark-icon" aria-hidden="true"><use href="#icon-bookmark"></use></svg></button>
       <div class="item-body">
         <span class="tag status">${i["statusLabel_" + lang]}</span>
         <div class="impact-block">
@@ -2435,6 +2476,7 @@ function render() {
           <span class="official-tag">${i.official ? t("statusPrefix") : t("statusPrefixUnofficial")} — ${i.sourceName}</span>
           <a class="source-link" href="${i.sourceUrl}" target="_blank" rel="noopener">${t("sourceLinkLabel")}</a>
         </div>
+        <div class="cae-note"><label for="cae-note-${i.id}">Note personnelle</label><textarea id="cae-note-${i.id}" data-cae-note-id="${i.id}" placeholder="Ajouter une note privée…">${escAttr(caeNote(i.id))}</textarea><button type="button" data-cae-save-note-id="${i.id}">Enregistrer la note</button></div>
       </div>
     </article>`;
   }).join("");
@@ -2446,6 +2488,9 @@ function render() {
       btn.setAttribute("aria-expanded", String(open));
     });
   });
+  feed.querySelectorAll("[data-cae-tracking-id]").forEach(select => select.addEventListener("change", () => { caeSetTracking(select.dataset.caeTrackingId, select.value); render(); }));
+  feed.querySelectorAll("[data-cae-favorite-id]").forEach(button => button.addEventListener("click", () => { const id = button.dataset.caeFavoriteId; caeSetFavorite(id, !caeFavorite(id)); render(); }));
+  feed.querySelectorAll("[data-cae-save-note-id]").forEach(button => button.addEventListener("click", () => { const id = button.dataset.caeSaveNoteId; caeSetNote(id, feed.querySelector(`[data-cae-note-id="${id}"]`).value); }));
 }
 
 function applyStaticText() {
@@ -2510,6 +2555,7 @@ document.getElementById("tabCatalog").addEventListener("click", () => setView("c
 document.getElementById("catalogSearch").addEventListener("input", e => { catalogState.q = e.target.value; renderCatalog(); });
 document.getElementById("langFr").addEventListener("click", () => setLang("fr"));
 document.getElementById("langEs").addEventListener("click", () => setLang("es"));
+document.getElementById("caeAccountButton").addEventListener("click", () => { if (!currentUser) window.top.location.href = "/"; else caeSetStatus("Compte connecté · suivi CAE synchronisé"); });
 
 try {
   const savedLang = localStorage.getItem("cae-es-veille-lang");
@@ -2517,6 +2563,7 @@ try {
 } catch (e) {}
 
 refreshAll();
+initializeCaeAuth();
 </script>
 </body>
 </html>
