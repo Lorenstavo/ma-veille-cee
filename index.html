@@ -1469,21 +1469,29 @@
   var frameWrap = document.getElementById('otherSiteFrameWrap');
   var frame = document.getElementById('otherSiteFrame');
   var mainContent = document.getElementById('mainContent');
-  tabs.forEach(function(btn) {
-    if (!btn) return;
-    btn.addEventListener('click', function() {
-      var url = btn.getAttribute('data-frame-url');
-      tabs.forEach(function(b) { if (b) b.classList.toggle('active', b === btn); });
-      if (!url) {
-        if (mainContent) mainContent.style.display = '';
-        if (frameWrap) frameWrap.classList.remove('visible');
-      } else {
-        if (mainContent) mainContent.style.display = 'none';
-        if (frameWrap) frameWrap.classList.add('visible');
-        if (frame && !frame.src) frame.src = url;
-      }
+  var isFramed = false;
+  try { isFramed = (window.self !== window.top); } catch (e) { isFramed = true; }
+  if (isFramed) {
+    var switchBar = document.querySelector('.site-switch');
+    if (switchBar) switchBar.style.display = 'none';
+    if (frameWrap) frameWrap.style.display = 'none';
+  } else {
+    tabs.forEach(function(btn) {
+      if (!btn) return;
+      btn.addEventListener('click', function() {
+        var url = btn.getAttribute('data-frame-url');
+        tabs.forEach(function(b) { if (b) b.classList.toggle('active', b === btn); });
+        if (!url) {
+          if (mainContent) mainContent.style.display = '';
+          if (frameWrap) frameWrap.classList.remove('visible');
+        } else {
+          if (mainContent) mainContent.style.display = 'none';
+          if (frameWrap) frameWrap.classList.add('visible');
+          if (frame && !frame.src) frame.src = url;
+        }
+      });
     });
-  });
+  }
 })();
 /* ============================================================
    DATA — read from the <pre id="data-json"> block above, which is
