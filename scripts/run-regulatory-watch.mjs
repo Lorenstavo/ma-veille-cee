@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { createHash } from "node:crypto";
+import { setDefaultResultOrder } from "node:dns";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -15,6 +16,11 @@ const VALID_IMPACTS = new Set(["high", "medium", "low", "info"]);
 const DRY_RUN = process.env.DRY_RUN === "true";
 const FORCE_RUN = process.env.FORCE_RUN === "true";
 const SCHEDULED_RUN_ENABLED = process.env.SCHEDULED_RUN_ENABLED === "true";
+
+// Some public administrations expose IPv6 records that are not consistently
+// reachable from hosted CI runners. This changes address preference only; it
+// does not bypass an access control or retry around a refusal.
+setDefaultResultOrder("ipv4first");
 
 function parisParts(date = new Date()) {
   const values = new Intl.DateTimeFormat("en-CA", {
@@ -98,7 +104,12 @@ async function checkUrl(url) {
     const response = await fetch(url, {
       redirect: "follow",
       signal: controller.signal,
-      headers: { "user-agent": USER_AGENT, accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.5" }
+      headers: {
+        "user-agent": USER_AGENT,
+        accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.5",
+        "accept-language": "fr-FR,fr;q=0.9,en;q=0.7",
+        "cache-control": "no-cache"
+      }
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const contentLength = Number(response.headers.get("content-length") || 0);
@@ -111,9 +122,40 @@ async function checkUrl(url) {
       lastModified: response.headers.get("last-modified") || null,
       fingerprint: createHash("sha256").update(body).digest("hex")
     };
+  } catch (error) {
+    if (controller.signal.aborted) {
+      const timeout = new Error(`Request timeout after ${REQUEST_TIMEOUT_MS}ms`);
+      timeout.code = "ETIMEDOUT";
+      timeout.cause = error;
+      throw timeout;
+    }
+    throw error;
   } finally {
     clearTimeout(timer);
   }
+}
+
+function describeRequestError(error) {
+  if (!(error instanceof Error)) return "Unknown request failure";
+  const chain = [];
+  let current = error;
+  const seen = new Set();
+  while (current && typeof current === "object" && !seen.has(current)) {
+    seen.add(current);
+    const details = [
+      current.name,
+      current.message,
+      current.code && `code=${current.code}`,
+      current.errno && `errno=${current.errno}`,
+      current.syscall && `syscall=${current.syscall}`,
+      current.hostname && `hostname=${current.hostname}`,
+      current.address && `address=${current.address}`,
+      current.port && `port=${current.port}`
+    ].filter(Boolean).join("; ");
+    chain.push(details);
+    current = current.cause;
+  }
+  return chain.join(" | caused by: ");
 }
 
 function sourceKey(url) {
@@ -130,7 +172,7 @@ async function checkSources(sources, previousState) {
       try {
         responses.set(source.url, { ok: true, value: await checkUrl(source.url) });
       } catch (error) {
-        responses.set(source.url, { ok: false, error: error instanceof Error ? error.message : "Unknown request failure" });
+        responses.set(source.url, { ok: false, error: describeRequestError(error) });
       }
     }
     const response = responses.get(source.url);
