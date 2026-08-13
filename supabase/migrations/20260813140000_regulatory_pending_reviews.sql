@@ -5,6 +5,8 @@ create table if not exists public.admin_users (
 
 alter table public.admin_users enable row level security;
 
+grant select on public.admin_users to authenticated;
+
 drop policy if exists admin_users_select_self on public.admin_users;
 create policy admin_users_select_self
 on public.admin_users
@@ -42,6 +44,8 @@ create index if not exists regulatory_pending_reviews_status_updated_idx
   on public.regulatory_pending_reviews (status, updated_at desc);
 
 alter table public.regulatory_pending_reviews enable row level security;
+
+grant select, insert, update on public.regulatory_pending_reviews to authenticated;
 
 drop policy if exists regulatory_pending_reviews_select_admin on public.regulatory_pending_reviews;
 create policy regulatory_pending_reviews_select_admin
