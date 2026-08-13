@@ -835,8 +835,12 @@
   .analysis-fiches .fiche-code { background: #fff; color: var(--blue-600); border-color: var(--blue-100); padding: 4px 8px; }
   .analysis-source { display: flex; flex-direction: column; align-items: flex-start; gap: 9px; }
   .analysis-source-meta { color: var(--text-secondary); font-size: 11.5px; }
+  .source-trust { display: inline-flex; align-items: center; padding: 4px 7px; border: 1px solid var(--border); border-radius: 999px; font: 800 10px var(--font-ui); }
+  .source-trust.verified { border-color: var(--green-100); background: var(--green-50); color: var(--green-600); }
+  .source-trust.confirm { border-color: var(--amber-100); background: var(--amber-50); color: var(--amber-600); }
   .analysis-source-link { display: inline-flex; align-items: center; padding: 7px 10px; border: 1px solid var(--border-strong); border-radius: 8px; background: #fff; color: var(--blue-600); font-size: 11.5px; font-weight: 800; text-decoration: none; transition: border-color .16s ease, background .16s ease; }
   .analysis-source-link:hover { border-color: var(--blue-600); background: var(--blue-50); }
+  .analysis-disclaimer { margin-top: 9px !important; padding-top: 9px; border-top: 1px solid var(--border); color: var(--text-muted) !important; font-size: 10.5px !important; line-height: 1.5 !important; }
   .analysis-attachments { margin-top: 11px; }
   .analysis-attachments .attach-block { margin-top: 0; background: #fff; }
   @media (max-width: 560px) { .analysis-grid { grid-template-columns: 1fr; } .analysis-section.full { grid-column: auto; } .item.open .item-body { padding-inline: 15px; } }
@@ -1066,7 +1070,7 @@
       <span>·</span>
       <span class="meta-item"><svg class="meta-icon"><use href="#icon-gear"></use></svg><span class="num" id="sourceCount">0</span> sources surveillées</span>
       <span>·</span>
-      <span class="meta-item"><svg class="meta-icon"><use href="#icon-clock"></use></svg>Prochain contrôle : jour ouvré suivant, 8h00 (Paris)</span>
+      <span class="meta-item"><svg class="meta-icon"><use href="#icon-clock"></use></svg>Prochain contrôle : <span id="nextRun">Donnée indisponible</span></span>
     </div>
     <details id="glossary">
       <summary>Comprendre le dispositif CEE</summary>
@@ -1146,7 +1150,7 @@
   <footer class="page-foot">
     <div id="sourcesList"></div>
     <div>Les résumés et analyses d'impact sont une aide à la lecture, pas un avis juridique — vérifiez toujours le texte officiel avant toute décision engageante sur un dossier.</div>
-    <details id="raw-data">
+    <details id="raw-data" hidden>
       <summary>Journal de données (JSON) — support de la mise à jour automatique</summary>
       <pre id="data-json">
 {
@@ -2215,7 +2219,7 @@ const MONTHS_FR = { "janvier": 0, "février": 1, "fevrier": 1, "mars": 2, "avril
 
 function fmtDate(iso) {
   const d = new Date(iso + "T00:00:00");
-  return d.toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" });
+  return Number.isFinite(d.getTime()) ? d.toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" }) : "Donnée indisponible";
 }
 
 function refCodeOf(url) {
@@ -2231,18 +2235,40 @@ function markAllSeen() {
   localStorage.setItem("cee-veille-seen", JSON.stringify(ITEMS.map(i => i.id)));
 }
 
-function explicitFutureDeadline(item) {
-  const text = [item.title, item.statusLabel, item.summary, item.impactText].join(" ").toLowerCase();
+/* Référence unique : la date du navigateur. META.lastRun indique la fraîcheur de la veille, pas le temps restant. */
+function temporalReferenceDate() { const now = new Date(); return new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())); }
+function datesInText(text) {
   const dates = [];
   const numeric = /(\d{1,2})[\/.\-](\d{1,2})[\/.\-](20\d{2})/g;
   const named = /(1er|\d{1,2})\s+(janvier|f\u00e9vrier|fevrier|mars|avril|mai|juin|juillet|ao\u00fbt|aout|septembre|octobre|novembre|d\u00e9cembre|decembre)\s+(20\d{2})/g;
   let match;
   while ((match = numeric.exec(text))) dates.push(new Date(Date.UTC(+match[3], +match[2] - 1, +match[1])));
   while ((match = named.exec(text))) dates.push(new Date(Date.UTC(+match[3], MONTHS_FR[match[2]], match[1] === "1er" ? 1 : +match[1])));
-  const reference = new Date(META.lastRun + "T00:00:00Z");
+  return dates.filter(date => Number.isFinite(date.getTime()));
+}
+function explicitFutureDeadline(item) {
+  const dates = datesInText([item.title, item.statusLabel, item.summary, item.impactText].join(" ").toLowerCase());
+  const reference = temporalReferenceDate();
   const future = dates.filter(date => date > reference).sort((a, b) => a - b)[0];
   return future ? { date: future, days: Math.round((future - reference) / 86400000) } : null;
 }
+function consultationClosingDate(item) {
+  const text = [item.statusLabel, item.summary, item.impactText].join(" ").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[’]/g, "'").toLowerCase();
+  const pattern = /(?:cloture|cloturee|jusqu['\s]*a)\s*(?:le\s*)?(1er|\d{1,2})\s+(janvier|fevrier|mars|avril|mai|juin|juillet|aout|septembre|octobre|novembre|decembre)\s+(20\d{2})/i;
+  const match = text.match(pattern);
+  const monthIndex = { janvier: 0, fevrier: 1, mars: 2, avril: 3, mai: 4, juin: 5, juillet: 6, aout: 7, septembre: 8, octobre: 9, novembre: 10, decembre: 11 };
+  return match ? new Date(Date.UTC(+match[3], monthIndex[match[2]], match[1] === "1er" ? 1 : +match[1])) : null;
+}
+function temporalStatus(item) {
+  if (item.category !== "Consultation publique") return item.statusLabel || "Non renseigné";
+  const closing = consultationClosingDate(item);
+  if (!closing) return "Statut temporel non renseigné — vérifier la source";
+  const date = fmtDate(closing.toISOString().slice(0, 10));
+  if (closing >= temporalReferenceDate()) return `Consultation ouverte — clôture le ${date}`;
+  const definitive = /texte définitif non encore identifié|texte définitif/i.test(item.statusLabel + " " + item.summary) ? " — texte définitif non identifié" : "";
+  return `Consultation clôturée — clôture le ${date}${definitive}`;
+}
+function sourceTrust(item) { return item.official === true ? { heading: "Source officielle", label: "Vérifiée", className: "verified", link: "Consulter la source officielle ↗" } : { heading: "Source secondaire", label: "À confirmer", className: "confirm", link: "Consulter la source ↗" }; }
 
 function actionInfo(item) {
   const text = [item.title, item.statusLabel, item.summary].join(" ").toLowerCase();
@@ -2904,7 +2930,9 @@ function buildCockpitControls() {
   priority.appendChild(document.getElementById("showHighImpact"));
   const update = document.createElement("div");
   update.className = "update-card";
-  update.innerHTML = `<p class="action-label">Dernière mise à jour</p><h2>${fmtDate(META.lastRun)}</h2><p><strong>${META.sources.length} sources surveillées</strong><br><span class="update-state">● Sources à jour</span></p>`;
+  const sourceCount = Array.isArray(META.sources) ? META.sources.filter(source => source && /^https?:\/\//i.test(source.url || "")).length : 0;
+  const hasLastRun = /^\d{4}-\d{2}-\d{2}$/.test(META.lastRun || "") && Number.isFinite(new Date(META.lastRun + "T00:00:00").getTime());
+  update.innerHTML = `<p class="action-label">Dernière mise à jour</p><h2>${hasLastRun ? fmtDate(META.lastRun) : "Donnée indisponible"}</h2><p><strong>${sourceCount ? `${sourceCount} sources déclarées` : "Sources indisponibles"}</strong><br><span class="update-state">Prochain contrôle : non renseigné</span></p>`;
   panel.appendChild(update);
   const action = document.getElementById("showHighImpact");
   action.textContent = "Voir uniquement les impacts forts →";
@@ -2956,11 +2984,14 @@ function activateImpactFilter(impact) {
 }
 
 function buildSources() {
-  document.getElementById("sourceCount").textContent = META.sources.length;
-  document.getElementById("lastRun").textContent = fmtDate(META.lastRun);
-  document.getElementById("lastRun").setAttribute("datetime", META.lastRun);
-  const list = META.sources.map(s => `<a href="${s.url}" target="_blank" rel="noopener">${s.name}</a>`).join(" · ");
-  document.getElementById("sourcesList").innerHTML = "<strong>Sources surveillées :</strong> " + list;
+  const sources = Array.isArray(META.sources) ? META.sources.filter(source => source && /^https?:\/\//i.test(source.url || "")) : [];
+  const hasLastRun = /^\d{4}-\d{2}-\d{2}$/.test(META.lastRun || "") && Number.isFinite(new Date(META.lastRun + "T00:00:00").getTime());
+  document.getElementById("sourceCount").textContent = sources.length ? sources.length : "Donnée indisponible";
+  document.getElementById("lastRun").textContent = hasLastRun ? fmtDate(META.lastRun) : "Donnée indisponible";
+  document.getElementById("lastRun").setAttribute("datetime", hasLastRun ? META.lastRun : "");
+  document.getElementById("nextRun").textContent = "Non renseigné";
+  const list = sources.map(s => `<a href="${s.url}" target="_blank" rel="noopener">${s.name}</a>`).join(" · ");
+  document.getElementById("sourcesList").innerHTML = sources.length ? "<strong>Sources surveillées :</strong> " + list : "<strong>Sources surveillées :</strong> Donnée indisponible";
 }
 
 function buildChrono() {
@@ -3196,6 +3227,8 @@ function render() {
     const ref = refCodeOf(i.sourceUrl);
     const action = actionInfo(i);
     const tracking = trackingStatus(i.id);
+    const trust = sourceTrust(i);
+    const currentStatus = temporalStatus(i);
     return `
     <article class="item" data-impact="${i.impactLevel}" data-id="${i.id}">
       <button class="item-head" aria-expanded="false">
@@ -3224,7 +3257,7 @@ function render() {
             <div class="analysis-meta">
               <span class="tag impact-${i.impactLevel}">${IMPACT_LABEL[i.impactLevel]}</span>
               <span class="tag cat">${i.category}</span>
-              <span class="tag status">${i.statusLabel}</span>
+              <span class="tag status">${currentStatus}</span>
               <time class="analysis-date">${fmtDate(i.date)}</time>
             </div>
             <p>${i.summary}</p>
@@ -3264,6 +3297,33 @@ function render() {
       </div>
     </article>`;
   }).join("");
+
+  feed.querySelectorAll(".item").forEach(card => {
+    const item = ITEMS.find(entry => entry.id === card.dataset.id);
+    if (!item) return;
+    const sections = card.querySelectorAll(".analysis-section");
+    if (sections[0]) sections[0].querySelector("h4").textContent = "Ce que dit la source";
+    if (sections[1]) {
+      sections[1].querySelector("h4").textContent = "Analyse métier";
+      const disclaimer = document.createElement("p");
+      disclaimer.className = "analysis-disclaimer";
+      disclaimer.textContent = "Cette analyse est une aide à la lecture et ne constitue pas un avis juridique. Vérifiez la source avant toute décision engageante.";
+      sections[1].appendChild(disclaimer);
+    }
+    const source = card.querySelector(".analysis-source");
+    if (source) {
+      const trust = sourceTrust(item);
+      const sourceSection = source.closest(".analysis-section");
+      sourceSection.querySelector("h4").textContent = trust.heading;
+      const meta = source.querySelector(".analysis-source-meta");
+      meta.textContent = item.sourceName || "Non renseigné";
+      const badge = document.createElement("span");
+      badge.className = `source-trust ${trust.className}`;
+      badge.textContent = trust.label;
+      source.insertBefore(badge, meta);
+      source.querySelector(".analysis-source-link").textContent = trust.link;
+    }
+  });
 
   feed.querySelectorAll(".item-head").forEach(btn => {
     btn.addEventListener("click", () => {
