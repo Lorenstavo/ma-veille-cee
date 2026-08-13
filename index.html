@@ -667,6 +667,28 @@
   .watch-detail summary { cursor: pointer; color: var(--blue-600); font-weight: 800; }
   .watch-detail ul { margin: 6px 0 0; padding-left: 16px; }
   .watch-detail li { margin: 2px 0; }
+  .watch-health { margin: 0 0 22px; padding: 17px 18px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; box-shadow: var(--shadow); }
+  .watch-health-head { display: flex; align-items: start; justify-content: space-between; gap: 16px; }
+  .watch-health-label { margin: 0 0 4px; color: var(--ink-faint); font: 800 10px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
+  .watch-health-status { margin: 0; color: var(--impact-low); font-size: 16px; font-weight: 900; letter-spacing: -.015em; }
+  .watch-health-status.degraded { color: var(--amber-600); }
+  .watch-health-status.critical { color: var(--impact-high); }
+  .watch-health-date { margin: 5px 0 0; color: var(--ink-muted); font-size: 11.5px; }
+  .watch-health-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+  .watch-health-group { min-height: 76px; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); }
+  .watch-health-group.complete { border-color: #cfe9d9; background: #f5fbf7; }
+  .watch-health-group.partial { border-color: var(--amber-100); background: var(--amber-50); }
+  .watch-health-group.critical { border-color: var(--red-100); background: var(--red-50); }
+  .watch-health-group p { margin: 0; color: var(--ink-muted); font-size: 11px; font-weight: 800; }
+  .watch-health-group strong { display: block; margin-top: 5px; color: var(--ink); font: 900 22px var(--font-mono); letter-spacing: -.04em; }
+  .watch-health details { margin-top: 13px; border-top: 1px solid var(--line); padding-top: 11px; }
+  .watch-health summary { cursor: pointer; color: var(--blue-600); font-size: 11.5px; font-weight: 800; }
+  .watch-health-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 18px; margin: 11px 0 0; padding: 0; list-style: none; }
+  .watch-health-list li { color: var(--ink-muted); font-size: 11.5px; line-height: 1.45; }
+  .watch-health-list strong { color: var(--ink); }
+  .watch-health-list .failed { color: var(--amber-600); }
+  .watch-health-list .failed.critical { color: var(--impact-high); }
+  .watch-health-note { display: block; margin-top: 2px; color: var(--ink-faint); font-size: 10.5px; }
   .action-panel .action-link { margin-top: 9px; flex: none; border: 1px solid #e8aaa0; border-radius: 999px; background: #fff; color: #ad3024; padding: 6px 11px; font: 700 11.5px var(--font-ui); cursor: pointer; transition: background .15s, color .15s, transform .15s; }
   .action-panel .action-link:hover { background: var(--impact-high); color: #fff; transform: translateX(2px); }
   .view-tabs { gap: 2px; margin: 0; padding: 4px; width: fit-content; background: #e9eef5; border-radius: 11px; }
@@ -740,6 +762,7 @@
     .stat-tile { min-height: 126px; padding: 50px 13px 12px; }
     .action-panel { grid-template-columns: 1fr; gap: 10px; }
     .priority-card, .update-card { padding: 16px; }
+    .watch-health-grid, .watch-health-list { grid-template-columns: 1fr; }
     .view-tabs { width: 100%; }
     .view-tab { flex: 1; justify-content: center; padding-inline: 7px; font-size: 11px; }
     .tab-icon { display: none; }
@@ -1114,6 +1137,7 @@
     </details>
     <div class="stats-row" id="counts"></div>
     <section class="action-panel" id="actionPanel" aria-label="Évolutions prioritaires"></section>
+    <section class="watch-health" id="watchHealthPanel" aria-label="État de la veille" hidden></section>
     <section class="priorities-panel" id="prioritiesPanel" aria-label="Mes priorités"></section>
     <section class="actions-panel" id="actionsPanel" aria-label="Actions à mener"></section>
     <section class="tracking-panel" id="trackingPanel" aria-label="Mon suivi"></section>
@@ -2163,6 +2187,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="scripts/watch-health.js"></script>
 <script>
 (function() {
   var tabs = [document.getElementById('siteTabCee'), document.getElementById('siteTabCae')];
@@ -3086,6 +3111,45 @@ function watchStatusLabel(watch) {
   return "Échec du dernier contrôle";
 }
 
+function watchHealthMessage(status) {
+  if (status === "critical") return { label: "CRITIQUE", detail: "Au moins une source critique est indisponible." };
+  if (status === "degraded") return { label: "OPÉRATIONNEL — MODE DÉGRADÉ", detail: "Toutes les sources critiques sont disponibles ; certains canaux importants ou complémentaires sont indisponibles." };
+  return { label: "OPÉRATIONNEL", detail: "Toutes les sources historiques sont disponibles." };
+}
+
+function watchHealthDiagnostic(item, eexChannel) {
+  if (item.name === "Registre national EMMY") {
+    const eexState = eexChannel?.status === "success" ? "Disponible" : "État non remonté";
+    return `Cause : problème de chaîne de certificat TLS côté service distant.<span class="watch-health-note">Canal documentaire EEX : ${eexState}</span>`;
+  }
+  if (item.name === "Cour des comptes — publications CEE") return `Difficulté de connexion depuis l’infrastructure de veille.<span class="watch-health-note">Canaux testés : page officielle, flux RSS officiel.</span>`;
+  return "Indisponible lors du dernier contrôle automatisé.";
+}
+
+function buildWatchHealthPanel() {
+  const panel = document.getElementById("watchHealthPanel");
+  const watch = getWatchSummary();
+  const classifier = window.RegulatoryWatchHealth?.classifyWatch;
+  if (!watch || typeof classifier !== "function") { panel.hidden = true; return; }
+  const health = classifier(watch);
+  const summary = watchHealthMessage(health.status);
+  const eexChannel = Array.isArray(watch.supplementaryChannels) ? watch.supplementaryChannels.find(channel => channel?.id === "eex-emmy-documents") : null;
+  const groups = Object.values(health.groups);
+  const groupCards = groups.map(group => {
+    const state = group.available === group.total ? "complete" : group.key === "critical" ? "critical" : "partial";
+    const symbol = state === "complete" ? "✓" : "!";
+    return `<div class="watch-health-group ${state}"><p>${symbol} ${escapeWatchText(group.label)}</p><strong>${group.available} / ${group.total}</strong></div>`;
+  }).join("");
+  const sourceDetail = groups.map(group => `<li><strong>${escapeWatchText(group.label)}</strong><ul>${group.sources.map(item => {
+    if (item.available) return `<li>✓ ${escapeWatchText(item.name)} — Disponible</li>`;
+    const severity = group.key === "critical" ? "critical" : "";
+    return `<li class="failed ${severity}">! ${escapeWatchText(item.name)} — Indisponible<span class="watch-health-note">${watchHealthDiagnostic(item, eexChannel)}</span></li>`;
+  }).join("")}</ul></li>`).join("");
+  const eexState = eexChannel?.status === "success" ? "Disponible" : "État non remonté";
+  panel.hidden = false;
+  panel.innerHTML = `<div class="watch-health-head"><div><p class="watch-health-label">État de la veille</p><h2 class="watch-health-status ${health.status}">${summary.label}</h2><p class="watch-health-date">${summary.detail}<br>Dernier contrôle : ${formatWatchDate(watch.lastCompletedAt)}</p></div></div><div class="watch-health-grid">${groupCards}</div><details><summary>Voir le détail des 14 sources</summary><ul class="watch-health-list">${sourceDetail}</ul><ul class="watch-health-list"><li><strong>Canal documentaire complémentaire</strong><ul><li>✓ EEX — documentation EMMY — ${eexState}</li></ul></li></ul></details>`;
+}
+
 function renderWatchHeader() {
   const watch = getWatchSummary();
   if (!watch) { document.getElementById("nextRun").textContent = "État non disponible"; return; }
@@ -3630,6 +3694,7 @@ buildCounts();
 buildSources();
 renderWatchHeader();
 buildCockpitControls();
+buildWatchHealthPanel();
 buildPrioritiesPanel();
 buildActionPanel();
 buildTrackingPanel();
