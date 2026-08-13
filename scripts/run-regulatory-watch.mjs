@@ -347,11 +347,11 @@ async function main() {
       log(`Extractor: ${EXTRACTOR_ID}`);
       log(`Items extracted: ${extracted.items.length}`);
       log(`Known: ${extraction.known}`);
-      log(`New: ${extraction.newlyExtracted}`);
+      log(`New: ${extraction.initialBaseline ? 0 : extraction.newlyExtracted}`);
       log(`Modified: ${extraction.modified.length}`);
       log(`Pending added: ${extraction.addedPending.length}`);
       log(`Baseline initialized: ${extraction.initialBaseline ? "yes" : "no"}`);
-      if (extraction.initialBaseline) log("Initial baseline created; no pending items generated.");
+      if (extraction.initialBaseline) log(`Initial baseline created with ${extraction.newlyExtracted} items; no pending items generated.`);
       for (const change of extraction.modified) log(`Modified publication: ${change.externalId} (title=${change.titleChanged ? "yes" : "no"}, date=${change.dateChanged ? "yes" : "no"}, url=${change.urlChanged ? "yes" : "no"})`);
       for (const item of extraction.addedPending) log(`Potential new publication: ${item.title} — ${item.url}`);
     } catch (error) {
