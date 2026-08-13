@@ -33,6 +33,8 @@ jobs:
       SCHEDULED_RUN_ENABLED: ${{ vars.REGULATORY_WATCH_ENABLED || 'false' }}
       FORCE_RUN: ${{ github.event_name == 'workflow_dispatch' && 'true' || 'false' }}
       DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || 'false' }}
+      PISTE_LEGIFRANCE_CLIENT_ID: ${{ secrets.PISTE_LEGIFRANCE_CLIENT_ID }}
+      PISTE_LEGIFRANCE_CLIENT_SECRET: ${{ secrets.PISTE_LEGIFRANCE_CLIENT_SECRET }}
     steps:
       - name: Checkout main
         uses: actions/checkout@v4

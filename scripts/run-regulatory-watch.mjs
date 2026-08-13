@@ -6,6 +6,7 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { EXTRACTOR_ID, SOURCE_URL as ECOLOGIE_CEE_SOURCE_URL, extractEcologieCeePublications, reconcileEcologieCeePublications } from "./sources/ecologie-cee.mjs";
+import { checkLegifrancePisteConnectivity } from "./sources/legifrance-piste.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const INDEX_PATH = path.join(ROOT, "index.html");
@@ -19,6 +20,8 @@ const VALID_IMPACTS = new Set(["high", "medium", "low", "info"]);
 const DRY_RUN = process.env.DRY_RUN === "true";
 const FORCE_RUN = process.env.FORCE_RUN === "true";
 const SCHEDULED_RUN_ENABLED = process.env.SCHEDULED_RUN_ENABLED === "true";
+const LEGIFRANCE_PISTE_CLIENT_ID = process.env.PISTE_LEGIFRANCE_CLIENT_ID;
+const LEGIFRANCE_PISTE_CLIENT_SECRET = process.env.PISTE_LEGIFRANCE_CLIENT_SECRET;
 
 // Some public administrations expose IPv6 records that are not consistently
 // reachable from hosted CI runners. This changes address preference only; it
@@ -201,6 +204,18 @@ async function checkSourceUrl(source) {
   }
 }
 
+function isLegifranceSource(source) {
+  return source?.name === "Légifrance (JO, textes CEE)";
+}
+
+async function checkLegifrancePisteSource(source) {
+  const result = await checkLegifrancePisteConnectivity({ clientId: LEGIFRANCE_PISTE_CLIENT_ID, clientSecret: LEGIFRANCE_PISTE_CLIENT_SECRET, timeoutMs: REQUEST_TIMEOUT_MS });
+  if (!result.ok) return { ok: false, error: result.message, attempts: 1 };
+  log("Légifrance PISTE authentication: success");
+  log("Légifrance API connectivity: success");
+  return { ok: true, value: { finalUrl: result.endpoint, etag: null, lastModified: null, fingerprint: createHash("sha256").update("legifrance-piste-connectivity-v1").digest("hex") }, attempts: 1, message: result.message };
+}
+
 async function checkSources(sources, previousState) {
   const responses = new Map();
   const nextSources = {};
@@ -208,7 +223,7 @@ async function checkSources(sources, previousState) {
   for (const source of sources) {
     const key = sourceKey(source.url);
     if (!responses.has(source.url)) {
-      responses.set(source.url, await checkSourceUrl(source));
+      responses.set(source.url, isLegifranceSource(source) ? await checkLegifrancePisteSource(source) : await checkSourceUrl(source));
     }
     const response = responses.get(source.url);
     if (!response.ok) {
@@ -223,7 +238,7 @@ async function checkSources(sources, previousState) {
       name: source.name,
       url: source.url,
       status: previous ? (changed ? "changed" : "no-change") : "success",
-      message: previous ? (changed ? "Content fingerprint changed; human regulatory review required" : "No source-content change detected") : "Initial baseline recorded; no regulatory entry created automatically",
+      message: response.message || (previous ? (changed ? "Content fingerprint changed; human regulatory review required" : "No source-content change detected") : "Initial baseline recorded; no regulatory entry created automatically"),
       attempts: response.attempts || 1,
       checkedAt: new Date().toISOString()
     });
