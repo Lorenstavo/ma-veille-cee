@@ -192,6 +192,7 @@
     border-top: 1px solid var(--line);
   }
   .meta-strip time, .meta-strip .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 600; }
+  .next-check-note { margin: 7px 0 0; color: var(--ink-faint); font-size: 11px; }
 
   #glossary { margin-top: 2px; }
   #glossary summary {
@@ -1076,8 +1077,9 @@
       <span>·</span>
       <span class="meta-item"><svg class="meta-icon"><use href="#icon-gear"></use></svg><span class="num" id="sourceCount">0</span> sources surveillées</span>
       <span>·</span>
-      <span class="meta-item"><svg class="meta-icon"><use href="#icon-clock"></use></svg>Prochain contrôle : <span id="nextRun">Donnée indisponible</span></span>
+      <span class="meta-item"><svg class="meta-icon"><use href="#icon-clock"></use></svg>État du contrôle : <span id="nextRun">État non disponible</span></span>
     </div>
+    <p class="next-check-note">Prochain contrôle automatique : prochain jour ouvré à 08:00 (Paris)</p>
     <details id="glossary">
       <summary>Comprendre le dispositif CEE</summary>
       <div class="glossary-grid">
@@ -3044,18 +3046,25 @@ function formatWatchDate(value) {
 
 function getWatchSummary() {
   const watch = META.watch;
-  if (!watch || !["success", "partial"].includes(watch.status) || !Number.isInteger(watch.sourcesConfigured) || !Number.isInteger(watch.sourcesSucceeded) || !Number.isInteger(watch.sourcesFailed) || !Array.isArray(watch.sources) || !Number.isFinite(new Date(watch.lastCompletedAt || "").getTime())) return null;
+  if (!watch || !["success", "partial", "failed"].includes(watch.status) || !Number.isInteger(watch.sourcesConfigured) || !Number.isInteger(watch.sourcesSucceeded) || !Number.isInteger(watch.sourcesFailed) || !Array.isArray(watch.sources) || !Number.isFinite(new Date(watch.lastCompletedAt || "").getTime())) return null;
   return watch;
+}
+
+function watchStatusLabel(watch) {
+  if (!watch) return "État non disponible";
+  if (watch.status === "success") return "Contrôle complet";
+  if (watch.status === "partial") return `Contrôle partiel — ${watch.sourcesFailed} source${watch.sourcesFailed > 1 ? "s" : ""} indisponible${watch.sourcesFailed > 1 ? "s" : ""}`;
+  return "Échec du dernier contrôle";
 }
 
 function renderWatchHeader() {
   const watch = getWatchSummary();
-  if (!watch) return;
+  if (!watch) { document.getElementById("nextRun").textContent = "État non disponible"; return; }
   const lastRun = document.getElementById("lastRun");
   lastRun.textContent = formatWatchDate(watch.lastCompletedAt);
   lastRun.setAttribute("datetime", watch.lastCompletedAt);
   document.getElementById("sourceCount").textContent = `${watch.sourcesSucceeded} / ${watch.sourcesConfigured}`;
-  document.getElementById("nextRun").textContent = watch.status === "success" ? "Contrôle complet" : `Contrôle partiel — ${watch.sourcesFailed} indisponible${watch.sourcesFailed > 1 ? "s" : ""}`;
+  document.getElementById("nextRun").textContent = watchStatusLabel(watch);
 }
 
 function buildCockpitControls() {
@@ -3093,9 +3102,9 @@ function buildCockpitControls() {
   const watch = getWatchSummary();
   if (watch) {
     const unavailable = watch.sources.filter(source => source.status === "failed");
-    const statusText = watch.status === "success" ? "Contrôle complet" : `Contrôle partiel — ${watch.sourcesFailed} source${watch.sourcesFailed > 1 ? "s" : ""} indisponible${watch.sourcesFailed > 1 ? "s" : ""}`;
+    const statusText = watchStatusLabel(watch);
     const detail = unavailable.length ? `<details class="watch-detail"><summary>Voir le détail</summary><ul>${unavailable.map(source => `<li>${escapeWatchText(source.name)} — Indisponible</li>`).join("")}</ul></details>` : "";
-    update.innerHTML = `<p class="action-label">Dernier contrôle</p><h2>${formatWatchDate(watch.lastCompletedAt)}</h2><p><strong>${watch.sourcesSucceeded} / ${watch.sourcesConfigured} sources contrôlées</strong><br><span class="update-state ${watch.status === "partial" ? "partial" : ""}">${statusText}</span>${detail}</p>`;
+    update.innerHTML = `<p class="action-label">Dernier contrôle</p><h2>${formatWatchDate(watch.lastCompletedAt)}</h2><p><strong>${watch.sourcesSucceeded} / ${watch.sourcesConfigured} sources contrôlées</strong><br><span class="update-state ${watch.status === "partial" ? "partial" : watch.status === "failed" ? "unavailable" : ""}">${statusText}</span>${detail}</p>`;
   } else {
     update.querySelector(".action-label").textContent = "Dernier contrôle";
     const state = update.querySelector(".update-state");
@@ -3157,7 +3166,7 @@ function buildSources() {
   document.getElementById("sourceCount").textContent = sources.length ? sources.length : "Donnée indisponible";
   document.getElementById("lastRun").textContent = hasLastRun ? fmtDate(META.lastRun) : "Donnée indisponible";
   document.getElementById("lastRun").setAttribute("datetime", hasLastRun ? META.lastRun : "");
-  document.getElementById("nextRun").textContent = "Non renseigné";
+  document.getElementById("nextRun").textContent = "État non disponible";
   const list = sources.map(s => `<a href="${s.url}" target="_blank" rel="noopener">${s.name}</a>`).join(" · ");
   document.getElementById("sourcesList").innerHTML = sources.length ? "<strong>Sources surveillées :</strong> " + list : "<strong>Sources surveillées :</strong> Donnée indisponible";
 }
