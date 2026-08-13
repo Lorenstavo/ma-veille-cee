@@ -1,1 +1,13 @@
-[]
+[
+  {
+    "externalId": "test:v22-admin-review",
+    "sourceName": "TEST — Ma Veille CEE",
+    "sourceUrl": "https://ma-veille-cee.fr/",
+    "title": "TEST V2.2 — Publication de validation admin",
+    "url": "https://ma-veille-cee.fr/",
+    "publishedAt": "2026-08-13",
+    "rawType": "test",
+    "detectedAt": "2026-08-13T13:49:42.1617400+02:00",
+    "status": "pending"
+  }
+]
