@@ -46,9 +46,25 @@ function render() {
   document.querySelectorAll("[data-prepare]").forEach(button => button.addEventListener("click", () => prepare(button.dataset.prepare)));
 }
 async function loadPending() { const response = await fetch("../scripts/data/pending-regulatory-items.json", { cache:"no-store" }); if (!response.ok) throw new Error("La file technique est indisponible."); pendingItems = normalizePendingItems(await response.json()); }
-async function isAdmin() { const { data, error } = await client.from("admin_users").select("user_id").eq("user_id", currentUser.id).maybeSingle(); return !error && Boolean(data); }
+async function isAdmin() {
+  const { data, error } = await client.from("admin_users").select("user_id").eq("user_id", currentUser.id).maybeSingle();
+  const result = { isAdmin: !error && Boolean(data), error: error ? { code: error.code || null, message: error.message || "Unknown Supabase error" } : null };
+  console.info("[admin] Admin check result", result);
+  return result;
+}
 async function loadReviews() { const { data, error } = await client.from("regulatory_pending_reviews").select("external_id,status,notes,reviewed_at,updated_at"); if (error) throw new Error("Impossible de charger les décisions de revue."); reviews = data || []; }
-async function refresh() { if (!client) { $("authMessage").textContent = "Le service de connexion est indisponible."; setGate("auth"); return; } const { data } = await client.auth.getSession(); currentUser = data.session?.user || null; if (!currentUser) { setGate("auth"); return; } if (!await isAdmin()) { setGate("forbidden"); return; } try { await Promise.all([loadPending(), loadReviews()]); $("adminMessage").textContent = `${pendingItems.length} publication${pendingItems.length > 1 ? "s" : ""} technique${pendingItems.length > 1 ? "s" : ""} chargée${pendingItems.length > 1 ? "s" : ""}.`; setGate("workspace"); render(); } catch { $("adminMessage").textContent = "La file ou les décisions ne sont pas disponibles pour le moment."; setGate("workspace"); render(); } }
+async function refresh() {
+  console.info("[admin] Supabase project URL", SUPABASE_URL);
+  if (!client) { $("authMessage").textContent = "Le service de connexion est indisponible."; setGate("auth"); return; }
+  const { data, error } = await client.auth.getSession();
+  if (error) console.warn("[admin] Supabase session error", { code: error.code || null, message: error.message || "Unknown Supabase error" });
+  currentUser = data.session?.user || null;
+  console.info("[admin] Authenticated user id", currentUser?.id || null);
+  if (!currentUser) { setGate("auth"); return; }
+  const adminCheck = await isAdmin();
+  if (!adminCheck.isAdmin) { setGate("forbidden"); return; }
+  try { await Promise.all([loadPending(), loadReviews()]); $("adminMessage").textContent = `${pendingItems.length} publication${pendingItems.length > 1 ? "s" : ""} technique${pendingItems.length > 1 ? "s" : ""} chargée${pendingItems.length > 1 ? "s" : ""}.`; setGate("workspace"); render(); } catch (error) { console.warn("[admin] Supabase or pending load error", { code: error?.code || null, message: error?.message || "Unknown error" }); $("adminMessage").textContent = "La file ou les décisions ne sont pas disponibles pour le moment."; setGate("workspace"); render(); }
+}
 async function saveReview(externalId, status, notes) { const item = pendingItems.find(row => row.externalId === externalId); if (!item || !currentUser) return; const payload = { external_id:externalId, status, notes:notes ?? item.review?.notes ?? null, reviewed_by:currentUser.id, reviewed_at:new Date().toISOString() }; const { error } = await client.from("regulatory_pending_reviews").upsert(payload, { onConflict:"external_id" }); if (error) { $("adminMessage").textContent = "Action refusée : vérifiez vos autorisations administrateur."; return false; } const existing = reviews.findIndex(review => review.external_id === externalId); if (existing >= 0) reviews[existing] = { ...reviews[existing], ...payload }; else reviews.push(payload); render(); return true; }
 function prepare(externalId) { selectedItem = merged().find(item => item.externalId === externalId); if (!selectedItem) return; $("drawerMeta").innerHTML = `<strong>${escapeHtml(selectedItem.title)}</strong><br>${dateText(selectedItem.publishedAt)}<br><a href="${escapeHtml(selectedItem.url)}" target="_blank" rel="noopener">${escapeHtml(selectedItem.url)}</a>`; $("drawerSource").href = selectedItem.url; $("reviewNotes").value = selectedItem.review?.notes || ""; $("drawerMessage").textContent = ""; $("reviewDrawer").hidden = false; $("reviewNotes").focus(); }
 function closeDrawer() { $("reviewDrawer").hidden = true; selectedItem = null; }
