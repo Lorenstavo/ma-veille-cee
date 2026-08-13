@@ -6,6 +6,7 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { EXTRACTOR_ID, SOURCE_URL as ECOLOGIE_CEE_SOURCE_URL, extractEcologieCeePublications, reconcileEcologieCeePublications } from "./sources/ecologie-cee.mjs";
+import { checkCourDesComptes } from "./sources/cour-des-comptes.mjs";
 import { checkLegifrancePisteConnectivity } from "./sources/legifrance-piste.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -14,7 +15,6 @@ const STATE_PATH = path.join(ROOT, "scripts", "data", "regulatory-watch-state.js
 const PENDING_PATH = path.join(ROOT, "scripts", "data", "pending-regulatory-items.json");
 const USER_AGENT = "ma-veille-cee-regulatory-watch/1.0 (+https://ma-veille-cee.fr/)";
 const REQUEST_TIMEOUT_MS = 15_000;
-const RETRY_DELAY_MS = 1_500;
 const MAX_RESPONSE_BYTES = 2 * 1024 * 1024;
 const VALID_IMPACTS = new Set(["high", "medium", "low", "info"]);
 const DRY_RUN = process.env.DRY_RUN === "true";
@@ -181,31 +181,45 @@ function sourceKey(url) {
   return createHash("sha256").update(url).digest("hex");
 }
 
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-function isTemporaryNetworkError(message) {
-  return /\b(UND_ERR_CONNECT_TIMEOUT|ETIMEDOUT|ECONNRESET|ECONNREFUSED|EAI_AGAIN|ENOTFOUND|UND_ERR_SOCKET)\b/.test(message);
-}
-
 async function checkSourceUrl(source) {
   try {
     return { ok: true, value: await checkUrl(source.url, { includeBody: source.url === ECOLOGIE_CEE_SOURCE_URL }) };
   } catch (error) {
-    const message = describeRequestError(error);
-    const mayRetry = source.url.includes("ccomptes.fr") && isTemporaryNetworkError(message);
-    if (!mayRetry) return { ok: false, error: message, attempts: 1 };
-    log(`Retrying ${source.name} after a temporary network failure`);
-    await delay(RETRY_DELAY_MS);
-    try {
-      return { ok: true, value: await checkUrl(source.url, { includeBody: source.url === ECOLOGIE_CEE_SOURCE_URL }), attempts: 2 };
-    } catch (retryError) {
-      return { ok: false, error: describeRequestError(retryError), attempts: 2 };
-    }
+    return { ok: false, error: describeRequestError(error), attempts: 1 };
   }
 }
 
 function isLegifranceSource(source) {
   return source?.name === "Légifrance (JO, textes CEE)";
+}
+
+function isCourDesComptesSource(source) {
+  return source?.name === "Cour des comptes — publications CEE";
+}
+
+async function checkCourDesComptesSource(source) {
+  const result = await checkCourDesComptes({
+    url: source.url,
+    headers: {
+      "user-agent": USER_AGENT,
+      accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.5",
+      "accept-language": "fr-FR,fr;q=0.9,en;q=0.7",
+      "cache-control": "no-cache"
+    },
+    onAttempt: (attempt, maxAttempts) => log(`Cour des comptes attempt ${attempt}/${maxAttempts}`),
+    onRetry: () => log("Cour des comptes retry after temporary network failure")
+  });
+  if (!result.ok) return { ok: false, error: describeRequestError(result.error), attempts: result.attempts };
+  return {
+    ok: true,
+    value: {
+      finalUrl: result.value.finalUrl,
+      etag: result.value.etag,
+      lastModified: result.value.lastModified,
+      fingerprint: createHash("sha256").update(result.value.body).digest("hex")
+    },
+    attempts: result.attempts
+  };
 }
 
 async function checkLegifrancePisteSource(source) {
@@ -230,7 +244,11 @@ async function checkSources(sources, previousState) {
   for (const source of sources) {
     const key = sourceKey(source.url);
     if (!responses.has(source.url)) {
-      responses.set(source.url, isLegifranceSource(source) ? await checkLegifrancePisteSource(source) : await checkSourceUrl(source));
+      responses.set(source.url, isLegifranceSource(source)
+        ? await checkLegifrancePisteSource(source)
+        : isCourDesComptesSource(source)
+          ? await checkCourDesComptesSource(source)
+          : await checkSourceUrl(source));
     }
     const response = responses.get(source.url);
     if (!response.ok) {
