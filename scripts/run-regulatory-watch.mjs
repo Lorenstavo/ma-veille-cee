@@ -7,6 +7,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { EXTRACTOR_ID, SOURCE_URL as ECOLOGIE_CEE_SOURCE_URL, extractEcologieCeePublications, reconcileEcologieCeePublications } from "./sources/ecologie-cee.mjs";
 import { checkCourDesComptes } from "./sources/cour-des-comptes.mjs";
+import { EXTRACTOR_ID as COUR_DES_COMPTES_RSS_EXTRACTOR_ID, SOURCE_URL as COUR_DES_COMPTES_RSS_URL, extractCourDesComptesRss, fetchCourDesComptesRss, reconcileCourDesComptesRss } from "./sources/cour-des-comptes-rss.mjs";
 import { checkEcologieGouvFr, isTemporaryEcologieNetworkError } from "./sources/ecologie-gouv-fr.mjs";
 import { checkLegifrancePisteConnectivity } from "./sources/legifrance-piste.mjs";
 
@@ -262,6 +263,26 @@ async function checkCourDesComptesSource(source) {
   };
 }
 
+async function checkCourDesComptesRss() {
+  try {
+    const response = await fetchCourDesComptesRss({
+      headers: {
+        "user-agent": USER_AGENT,
+        accept: "application/rss+xml,application/xml;q=0.9,text/xml;q=0.8,*/*;q=0.5",
+        "accept-language": "fr-FR,fr;q=0.9,en;q=0.7",
+        "cache-control": "no-cache"
+      }
+    });
+    log("Cour des comptes RSS");
+    log(`HTTP status: ${response.statusCode}`);
+    return { ok: true, value: response };
+  } catch (error) {
+    log("Cour des comptes RSS");
+    log(`Failed: ${describeRequestError(error)}`);
+    return { ok: false, error: describeRequestError(error) };
+  }
+}
+
 async function checkLegifrancePisteSource(source) {
   const result = await checkLegifrancePisteConnectivity({ clientId: LEGIFRANCE_PISTE_CLIENT_ID, clientSecret: LEGIFRANCE_PISTE_CLIENT_SECRET, timeoutMs: REQUEST_TIMEOUT_MS });
   const diagnostics = result.diagnostics || {};
@@ -438,8 +459,11 @@ async function main() {
   log(`Configured sources: ${data.meta.sources.length} (${new Set(data.meta.sources.map(source => source.url)).size} unique URLs)`);
 
   const { results, nextState, pilotHtml } = await checkSources(data.meta.sources, previousState);
+  const courDesComptesRss = await checkCourDesComptesRss();
+  const courDesComptesResult = results.find(result => isCourDesComptesSource(result));
   let nextPending = previousPending;
   let extraction = null;
+  let courDesComptesRssExtraction = null;
   const pilotResult = results.find(result => result.url === ECOLOGIE_CEE_SOURCE_URL);
   if (pilotHtml && pilotResult) {
     try {
@@ -468,6 +492,59 @@ async function main() {
     log("Extraction skipped: pilot source was unavailable.");
   }
 
+  if (courDesComptesRss.ok) {
+    try {
+      const extracted = extractCourDesComptesRss(courDesComptesRss.value.bodyText, { detectedAt: now.toISOString() });
+      const previousItems = previousState.extractions?.[COUR_DES_COMPTES_RSS_EXTRACTOR_ID]?.items || {};
+      courDesComptesRssExtraction = reconcileCourDesComptesRss({ extracted, previousItems, pendingItems: nextPending, registryUrls: registrySourceUrls(data.items), seenAt: now.toISOString() });
+      const manualWrite = FORCE_RUN && !DRY_RUN;
+      if (!courDesComptesRssExtraction.initialBaseline || manualWrite) {
+        nextState.extractions[COUR_DES_COMPTES_RSS_EXTRACTOR_ID] = { sourceName: extracted.sourceName, sourceUrl: extracted.sourceUrl, items: courDesComptesRssExtraction.baselineItems };
+        nextPending = [...nextPending, ...courDesComptesRssExtraction.addedPending];
+      }
+      log(`Extractor: ${COUR_DES_COMPTES_RSS_EXTRACTOR_ID}`);
+      log(`Items extracted: ${extracted.items.length}`);
+      log(`CEE matches: ${courDesComptesRssExtraction.matched}`);
+      log(`RSS empty: ${extracted.empty ? "yes" : "no"}`);
+      log(`New: ${courDesComptesRssExtraction.initialBaseline ? 0 : courDesComptesRssExtraction.newlyExtracted}`);
+      log(`Pending added: ${courDesComptesRssExtraction.addedPending.length}`);
+      log(`Baseline initialized: ${courDesComptesRssExtraction.initialBaseline ? "yes" : "no"}`);
+      if (courDesComptesRssExtraction.initialBaseline) log(`Initial RSS baseline created with ${courDesComptesRssExtraction.newlyExtracted} items; no pending items generated.`);
+      if (courDesComptesRssExtraction.initialBaseline && !manualWrite) log("RSS baseline persistence deferred until a manual WRITE workflow run.");
+      for (const item of courDesComptesRssExtraction.addedPending) log(`Potential new Cour des comptes publication: ${item.title} — ${item.url}`);
+    } catch (error) {
+      courDesComptesRss.ok = false;
+      courDesComptesRss.error = `RSS extraction error: ${error instanceof Error ? error.message : "Unknown RSS extractor failure"}`;
+      log(`Extractor error for ${COUR_DES_COMPTES_RSS_EXTRACTOR_ID}: ${courDesComptesRss.error}`);
+    }
+  }
+
+  if (courDesComptesResult) {
+    if (!courDesComptesResult.status || courDesComptesResult.status === "failed") {
+      if (courDesComptesRss.ok) {
+        courDesComptesResult.status = "success";
+        courDesComptesResult.message = "RSS official channel available; publication page unavailable";
+        courDesComptesResult.failureKind = null;
+        const key = sourceKey(courDesComptesResult.url);
+        nextState.sources[key] = {
+          url: courDesComptesResult.url,
+          finalUrl: courDesComptesRss.value.finalUrl,
+          etag: null,
+          lastModified: null,
+          fingerprint: createHash("sha256").update(courDesComptesRss.value.bodyText).digest("hex"),
+          checkedAt: new Date().toISOString(),
+          channel: "rss"
+        };
+      } else {
+        courDesComptesResult.message = `${courDesComptesResult.message}; RSS unavailable: ${courDesComptesRss.error}`;
+      }
+    } else if (!courDesComptesRss.ok) {
+      courDesComptesResult.message = `${courDesComptesResult.message}; RSS degraded: ${courDesComptesRss.error}`;
+    } else {
+      courDesComptesResult.message = `${courDesComptesResult.message}; RSS official channel available`;
+    }
+  }
+
   for (const result of results) log(`Source [${result.status}] ${result.name}: ${result.message}`);
   const failed = results.filter(result => result.status === "failed");
   const changedSources = results.filter(result => result.status === "changed");
@@ -476,7 +553,7 @@ async function main() {
   log(`Sources succeeded: ${successful}`);
   log(`Sources failed: ${failed.length}`);
   log(`Source-content changes detected: ${changedSources.length}`);
-  log(`New regulatory entries detected: 0 (pending technical review: ${extraction?.addedPending.length || 0})`);
+  log(`New regulatory entries detected: 0 (pending technical review: ${(extraction?.addedPending.length || 0) + (courDesComptesRssExtraction?.addedPending.length || 0)})`);
   log("Entries added: 0");
   log("Entries modified: 0");
 
