@@ -380,6 +380,50 @@
   @media (max-width: 560px) { .cae-track { right: 52px; max-width: 100px; } .cae-account button { padding: 6px; font-size: 10px; } }
   .lang-toggle { border-radius: 999px; padding: 3px; background: var(--surface-2); border: 1px solid var(--line); }
   .lang-btn { border-radius: 999px; padding: 6px 14px; }
+
+  /* Premium dashboard alignment — presentation only */
+  body { background: #f6f8fc; color: #14213d; letter-spacing: -.005em; }
+  .top-accent { height: 3px; background: #2563eb; }
+  .site-switch { max-width: none; min-height: 64px; margin: 0; padding: 0 max(20px, calc((100% - 1120px) / 2)); align-items: stretch; gap: 2px; background: #fff; border-bottom: 1px solid #e2e8f0; }
+  .site-brand { display: flex; flex: 1 1 220px; flex-direction: column; justify-content: center; min-width: 176px; margin-right: 20px; }
+  .site-brand strong { color: #0b1f3a; font-size: 14px; letter-spacing: -.015em; }
+  .site-brand small { margin-top: 2px; color: #596579; font-size: 9.5px; font-weight: 700; letter-spacing: .035em; }
+  .site-tab { flex: 0 0 auto; min-width: 142px; padding: 15px 17px 13px; color: #14213d; background: transparent; border-bottom: 3px solid transparent; }
+  .site-tab.active { color: #2563eb; background: transparent; border-bottom-color: #2563eb; }
+  .site-tab.active::after { content: "ACTIF"; margin-left: 9px; padding: 3px 6px; border-radius: 999px; background: #eff6ff; color: #2563eb; font-size: 8.5px; letter-spacing: .08em; }
+  .guide-link { min-width: auto; margin-left: auto; text-decoration: none; }
+  .cae-notifications, .cae-account { margin-left: 6px; align-self: center; }
+  .wrap { max-width: 1120px; padding: 0 24px 80px; }
+  header.top { position: static; padding: 36px 0 20px; background: transparent; border: 0; }
+  .eyebrow { padding: 0; color: #2563eb; background: transparent; }
+  h1 { color: #0b1f3a; font-size: 34px; letter-spacing: -.028em; }
+  .subhead { max-width: 70ch; color: #596579; line-height: 1.65; }
+  .trust-row { gap: 9px; margin: 15px 0 13px; }
+  .trust-badge { padding: 7px 11px; background: #fff; color: #168653; border-color: #cfe9d9; box-shadow: 0 2px 8px rgba(25,75,46,.04); }
+  .meta-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; padding: 0; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; box-shadow: 0 8px 24px rgba(15,35,65,.06); overflow: hidden; }
+  .meta-strip > span { padding: 11px 15px; border-right: 1px solid #e2e8f0; }
+  .meta-strip > span:nth-child(even) { display: none; }
+  .meta-strip > span:last-child { border-right: 0; }
+  #glossary { margin-top: 12px; }
+  #glossary summary { color: #596579; font-size: 11.5px; }
+  .stats-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
+  .stat-tile { min-height: 100px; padding: 13px 15px; border-color: #e2e8f0; box-shadow: 0 8px 24px rgba(15,35,65,.06); }
+  .stat-tile:hover, .item:hover { box-shadow: 0 12px 30px rgba(15,35,65,.09); }
+  .stat-tile .n { color: #0b1f3a; font-size: 24px; }
+  .stat-tile.high .n { color: #dc3c30; }.stat-tile.medium .n { color: #c47a08; }.stat-tile.low .n { color: #168653; }
+  .stat-spark { display: none; }
+  .view-tabs { gap: 7px; margin-top: 18px; padding: 4px; border-radius: 12px; background: rgba(255,255,255,.62); }
+  .view-tab { border: 0; border-radius: 9px; padding: 8px 14px; background: transparent; }
+  .view-tab.active { background: #fff; color: #2563eb; box-shadow: 0 3px 9px rgba(15,35,65,.08); }
+  .filter-bar { position: static; margin-top: 16px; padding: 14px; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; box-shadow: 0 8px 24px rgba(15,35,65,.06); }
+  .chip { background: #f8fafc; border-color: #e2e8f0; }.chip.active { background: #eff6ff; border-color: #93c5fd; color: #2563eb; box-shadow: none; }
+  .btn { background: #2563eb; border-color: #2563eb; }.btn:hover { background: #1d4ed8; border-color: #1d4ed8; }
+  .item { border-color: #e2e8f0; box-shadow: 0 8px 24px rgba(15,35,65,.06); transition: box-shadow .18s ease, transform .18s ease; }
+  .item:hover { transform: translateY(-1px); }
+  .item[data-impact="high"] { border-left-color: #dc3c30; }.item[data-impact="medium"] { border-left-color: #c47a08; }.item[data-impact="low"] { border-left-color: #168653; }.item[data-impact="info"] { border-left-color: #2563eb; }
+  @media (max-width: 820px) { .wrap { padding-inline: 16px; } .hero-illustration { display: none; } .meta-strip, .stats-row { grid-template-columns: repeat(2, minmax(0, 1fr)); } .meta-strip > span:nth-child(3) { border-right: 0; } .meta-strip > span:last-child { grid-column: 1 / -1; border-top: 1px solid #e2e8f0; } }
+  @media (max-width: 760px) { .site-brand { flex: 0 0 auto; min-width: 144px; margin-right: 6px; }.site-brand small { display: none; }.site-tab { min-width: 0; padding-inline: 11px; } }
+  @media (max-width: 560px) { .site-switch { min-height: 52px; padding-inline: 8px; gap: 0; }.site-brand { display: none; }.site-tab { flex: 1; padding: 13px 7px 11px; }.site-tab.active::after { display: none; }.guide-link { margin-left: 0; }.cae-account button { padding: 6px; font-size: 10px; }.stats-row { grid-template-columns: 1fr; }.search-row { align-items: stretch; flex-direction: column; }.btn { width: 100%; }.meta-strip { grid-template-columns: 1fr; }.meta-strip > span { border-right: 0; border-bottom: 1px solid #e2e8f0; }.meta-strip > span:last-child { border-bottom: 0; } }
 </style>
 </head>
 <body>
@@ -400,6 +444,7 @@
 </svg>
 <div class="top-accent"></div>
 <div class="site-switch">
+  <div class="site-brand" aria-label="Ma Veille CEE"><strong>Ma Veille CEE</strong><small>Veille réglementaire automatisée</small></div>
   <button class="site-tab" id="siteTabCee" type="button" data-frame-url="/">🇫🇷 CEE France</button>
   <button class="site-tab active" id="siteTabCae" type="button" data-frame-url="">🇪🇸 CAE Espagne</button>
   <a class="site-tab guide-link" href="/guide.html">Guide</a>
@@ -427,6 +472,7 @@
     <div class="trust-row">
       <span class="trust-badge"><span class="check">✓</span> <span id="trust1"></span></span>
       <span class="trust-badge"><span class="check">✓</span> <span id="trust2"></span></span>
+      <span class="trust-badge"><span class="check">✓</span> <span id="trust3"></span></span>
     </div>
     <div class="meta-strip">
       <span class="meta-item"><svg class="meta-icon"><use href="#icon-calendar"></use></svg><span id="metaLastRunLabel"></span> <time id="lastRun" datetime="">—</time></span>
@@ -2146,6 +2192,7 @@ const UI = {
     subhead: "Suivi centralisé des textes officiels (Real Decreto, Órdenes TED, Resoluciones), du catalogue de fiches de mesures standardisées et des acteurs du dispositif espagnol des Certificats d'Ahorro Energético (CAE) — avec, pour chaque entrée, l'impact concret sur chacun des acteurs de la chaîne.",
     trust1: "Sources officielles (BOE, MITECO, IDAE, ENAC)",
     trust2: "Contenu bilingue français / espagnol",
+    trust3: "Mise à jour réglementaire",
     metaLastRun: "Dernier contrôle :",
     metaSources: "sources surveillées",
     metaNext: "Prochain contrôle : jour ouvré suivant",
@@ -2190,6 +2237,7 @@ const UI = {
     subhead: "Seguimiento centralizado de los textos oficiales (Real Decreto, Órdenes TED, Resoluciones), del catálogo de fichas de medidas estandarizadas y de los actores del sistema de Certificados de Ahorro Energético (CAE) — con, para cada entrada, el impacto concreto sobre cada uno de los actores de la cadena.",
     trust1: "Fuentes oficiales (BOE, MITECO, IDAE, ENAC)",
     trust2: "Contenido bilingüe español / francés",
+    trust3: "Actualización normativa",
     metaLastRun: "Última comprobación:",
     metaSources: "fuentes vigiladas",
     metaNext: "Próxima comprobación: siguiente día laborable",
@@ -2348,10 +2396,10 @@ function buildCounts() {
   const byImpact = { high: 0, medium: 0, low: 0, info: 0 };
   ITEMS.forEach(i => byImpact[i.impactLevel]++);
   wrap.innerHTML = [
-    `<div class="stat-tile total"><div class="stat-icon-wrap"><svg class="stat-icon"><use href="#icon-list"></use></svg></div><div class="n">${ITEMS.length}</div><div class="l">${t("statTotal")}</div><svg class="stat-spark" viewBox="0 0 100 26" preserveAspectRatio="none"><polyline points="0,18 15,20 30,14 45,16 60,9 75,11 100,3"></polyline></svg></div>`,
-    `<div class="stat-tile high"><div class="stat-icon-wrap"><svg class="stat-icon"><use href="#icon-trend"></use></svg></div><div class="n">${byImpact.high}</div><div class="l">${t("statHigh")}</div><svg class="stat-spark" viewBox="0 0 100 26" preserveAspectRatio="none"><polyline points="0,6 15,10 30,7 45,15 60,12 75,19 100,22"></polyline></svg></div>`,
-    `<div class="stat-tile medium"><div class="stat-icon-wrap"><svg class="stat-icon"><use href="#icon-balance"></use></svg></div><div class="n">${byImpact.medium}</div><div class="l">${t("statMedium")}</div><svg class="stat-spark" viewBox="0 0 100 26" preserveAspectRatio="none"><polyline points="0,13 15,10 30,15 45,11 60,16 75,10 100,13"></polyline></svg></div>`,
-    `<div class="stat-tile low"><div class="stat-icon-wrap"><svg class="stat-icon"><use href="#icon-check"></use></svg></div><div class="n">${byImpact.low}</div><div class="l">${t("statLow")}</div><svg class="stat-spark" viewBox="0 0 100 26" preserveAspectRatio="none"><polyline points="0,22 15,17 30,19 45,11 60,13 75,6 100,4"></polyline></svg></div>`
+    `<div class="stat-tile total"><div class="stat-icon-wrap"><svg class="stat-icon"><use href="#icon-list"></use></svg></div><div class="n">${ITEMS.length}</div><div class="l">${t("statTotal")}</div></div>`,
+    `<div class="stat-tile high"><div class="stat-icon-wrap"><svg class="stat-icon"><use href="#icon-trend"></use></svg></div><div class="n">${byImpact.high}</div><div class="l">${t("statHigh")}</div></div>`,
+    `<div class="stat-tile medium"><div class="stat-icon-wrap"><svg class="stat-icon"><use href="#icon-balance"></use></svg></div><div class="n">${byImpact.medium}</div><div class="l">${t("statMedium")}</div></div>`,
+    `<div class="stat-tile low"><div class="stat-icon-wrap"><svg class="stat-icon"><use href="#icon-check"></use></svg></div><div class="n">${byImpact.low}</div><div class="l">${t("statLow")}</div></div>`
   ].join("");
 }
 
@@ -2556,6 +2604,7 @@ function applyStaticText() {
   document.getElementById("subhead").textContent = t("subhead");
   document.getElementById("trust1").textContent = t("trust1");
   document.getElementById("trust2").textContent = t("trust2");
+  document.getElementById("trust3").textContent = t("trust3");
   document.getElementById("metaLastRunLabel").textContent = t("metaLastRun");
   document.getElementById("metaSourcesLabel").textContent = t("metaSources");
   document.getElementById("metaNextLabel").textContent = t("metaNext") + (state.lang === "es" ? ", 8:00 (Madrid)" : ", 8h00 (Madrid)");
