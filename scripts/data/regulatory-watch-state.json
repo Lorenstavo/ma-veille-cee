@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "sources": {
+    "cf7ffd515813e655beaeb8709027e5fbbc6ab8fb50069a6661c6f647a60280b4": {
+      "url": "https://www.ecologie.gouv.fr/politiques-publiques/energies",
+      "finalUrl": "https://www.ecologie.gouv.fr/politiques-publiques/energies",
+      "etag": "W/\"1786615627\"",
+      "lastModified": "Thu, 13 Aug 2026 10:07:07 GMT",
+      "fingerprint": "2ea4305964f5e74f73a55178b52d7082c44a97ce1ac2575c526ad6b76b22bddd",
+      "checkedAt": "2026-08-13T10:32:09.595Z"
+    },
+    "b4dad8e8250596a75146e982c1e369a2992b027e48e4e8a1c75e42bd158b75bb": {
+      "url": "https://www.ecologie.gouv.fr/politiques-publiques/dispositif-certificats-deconomies-denergie",
+      "finalUrl": "https://www.ecologie.gouv.fr/politiques-publiques/dispositif-certificats-deconomies-denergie",
+      "etag": "W/\"1786612927\"",
+      "lastModified": "Thu, 13 Aug 2026 09:22:07 GMT",
+      "fingerprint": "aa0456e1e18732db778a33c8c40499fc6a9406ad044704323706f2d7fa0575ac",
+      "checkedAt": "2026-08-13T10:32:11.806Z"
+    },
+    "73d57d13c47b5ad33117fd6e2fe0d15d4e19a63b7463564c44d9468093be27ac": {
+      "url": "https://www.ecologie.gouv.fr/politiques-publiques/operations-standardisees-deconomies-denergie",
+      "finalUrl": "https://www.ecologie.gouv.fr/politiques-publiques/operations-standardisees-deconomies-denergie",
+      "etag": "W/\"1786612934\"",
+      "lastModified": "Thu, 13 Aug 2026 09:22:14 GMT",
+      "fingerprint": "0de1d6140c3c41451a07254bfc65099d8b0f55c0b5f7029b494f0027f442253a",
+      "checkedAt": "2026-08-13T10:32:10.214Z"
+    },
+    "60e33f0db8eeb850a8e24662c8b353182c1a2779739314b3dfe6546f76defe99": {
+      "url": "https://www.ecologie.gouv.fr/politiques-publiques/questions-reponses-dispositif-cee",
+      "finalUrl": "https://www.ecologie.gouv.fr/politiques-publiques/questions-reponses-dispositif-cee",
+      "etag": "W/\"1786612927\"",
+      "lastModified": "Thu, 13 Aug 2026 09:22:07 GMT",
+      "fingerprint": "f618245c606734465f9b7f5d67f618d86a8456a12ff76ab0e354caff5a90797f",
+      "checkedAt": "2026-08-13T10:32:10.375Z"
+    },
+    "877a02789c0b9b52aefe4552e2322fd6ebf21735afc48773d24b6abd6c7d466d": {
+      "url": "https://www.consultations-publiques.developpement-durable.gouv.fr/",
+      "finalUrl": "https://www.consultations-publiques.developpement-durable.gouv.fr/",
+      "etag": null,
+      "lastModified": "Thu, 13 Aug 2026 10:32:11 GMT",
+      "fingerprint": "e0ffa498659bd865b106136bedc01f869718eddc2203a6eef81a64511e780bf0",
+      "checkedAt": "2026-08-13T10:32:11.806Z"
+    },
+    "7a288c6a35a8c4534abf36e556df323e5fc9e94d28d09f6cc6fcd62c901c072e": {
+      "url": "https://atee.fr/efficacite-energetique/club-c2e/actualites-evenements",
+      "finalUrl": "https://atee.fr/efficacite-energetique/club-c2e/actualites-evenements",
+      "etag": "\"1786608601-gzip\"",
+      "lastModified": "Thu, 13 Aug 2026 08:10:01 GMT",
+      "fingerprint": "84d163c8a1573c5015cfd3f5d6ca2838a8db7ae7094b372866f6687ded8fed8e",
+      "checkedAt": "2026-08-13T10:32:12.660Z"
+    },
+    "947b4e5ae18483333697ec1058323e8585c302b94c7ba78d9e399d26e51492fd": {
+      "url": "https://www.ecologie.gouv.fr/politiques-publiques/comites-pilotage-lettres-dinformation-statistiques-du-dispositif-certificats",
+      "finalUrl": "https://www.ecologie.gouv.fr/politiques-publiques/comites-pilotage-lettres-dinformation-statistiques-du-dispositif-certificats",
+      "etag": "W/\"1786612935\"",
+      "lastModified": "Thu, 13 Aug 2026 09:22:15 GMT",
+      "fingerprint": "a6e47d46198d68a74f09a86f8db8d76341c04cd945cad2991f853fe366ba20b6",
+      "checkedAt": "2026-08-13T10:32:13.117Z"
+    },
+    "0053c6250c932435c66c1002f824afc82164e2b09105d22567432c5a1b3f4e67": {
+      "url": "https://www.ecologie.gouv.fr/politiques-publiques/conseil-superieur-lenergie-cse",
+      "finalUrl": "https://www.ecologie.gouv.fr/politiques-publiques/conseil-superieur-lenergie-cse",
+      "etag": "W/\"1786612980\"",
+      "lastModified": "Thu, 13 Aug 2026 09:23:00 GMT",
+      "fingerprint": "dbeda01b5e7002f27b1d0f18d655cdb3cac6d9ce2f2adee4b06a1e45a3c17c95",
+      "checkedAt": "2026-08-13T10:32:13.273Z"
+    },
+    "73b1ca317c1fa245a3499675a20f5ac0b5c5c8e2137301c93d5ba1062edf56b5": {
+      "url": "https://www.ecologie.gouv.fr/politiques-publiques/cee-programmes-daccompagnement",
+      "finalUrl": "https://www.ecologie.gouv.fr/politiques-publiques/cee-programmes-daccompagnement",
+      "etag": "W/\"1786612938\"",
+      "lastModified": "Thu, 13 Aug 2026 09:22:18 GMT",
+      "fingerprint": "dee4947160f842383cda081192a3710e487cfa2e7d9d2af70ee12471b74fa647",
+      "checkedAt": "2026-08-13T10:32:37.169Z"
+    },
+    "0a51c55b1db8f68128d72df477f39391575ff7c62746bb465451d0678e51d024": {
+      "url": "https://bonus-pac.ademe.fr/",
+      "finalUrl": "https://bonus-pac.ademe.fr/",
+      "etag": null,
+      "lastModified": null,
+      "fingerprint": "b8e73ca0e08423b1f5f7dab457f7d261962a8644ccdb1015dd68ac734ef23649",
+      "checkedAt": "2026-08-13T10:32:38.166Z"
+    }
+  }
+}
