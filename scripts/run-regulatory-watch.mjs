@@ -210,6 +210,13 @@ function isLegifranceSource(source) {
 
 async function checkLegifrancePisteSource(source) {
   const result = await checkLegifrancePisteConnectivity({ clientId: LEGIFRANCE_PISTE_CLIENT_ID, clientSecret: LEGIFRANCE_PISTE_CLIENT_SECRET, timeoutMs: REQUEST_TIMEOUT_MS });
+  const diagnostics = result.diagnostics || {};
+  log(`Légifrance PISTE OAuth token obtained: ${diagnostics.oauthTokenObtained ? "yes" : "no"}`);
+  log(`Légifrance API endpoint: ${diagnostics.endpoint || "not called"}`);
+  if (Number.isInteger(diagnostics.oauthStatus)) log(`Légifrance OAuth HTTP status: ${diagnostics.oauthStatus}`);
+  if (Number.isInteger(diagnostics.apiStatus)) log(`Légifrance API HTTP status: ${diagnostics.apiStatus}`);
+  if (diagnostics.oauthErrorBody) log(`Légifrance OAuth error body (sanitized): ${diagnostics.oauthErrorBody}`);
+  if (diagnostics.apiErrorBody) log(`Légifrance API error body (sanitized): ${diagnostics.apiErrorBody}`);
   if (!result.ok) return { ok: false, error: result.message, attempts: 1 };
   log("Légifrance PISTE authentication: success");
   log("Légifrance API connectivity: success");
