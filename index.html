@@ -607,8 +607,14 @@
   }
   body { background: var(--bg); letter-spacing: -.005em; }
   .top-accent { height: 3px; background: linear-gradient(90deg, #0d4fae, #287ceb); }
-  .site-switch { max-width: none; margin: 0; padding: 0 max(20px, calc((100% - 1120px) / 2)); background: #fff; border-bottom: 1px solid var(--line); }
-  .site-tab { flex: 0 0 auto; min-width: 166px; padding: 15px 20px 13px; font-size: 12px; letter-spacing: .01em; background: transparent; border-bottom: 3px solid transparent; }
+  .site-switch { max-width: none; min-height: 64px; margin: 0; padding: 0 max(20px, calc((100% - 1120px) / 2)); background: #fff; border-bottom: 1px solid var(--line); align-items: stretch; gap: 2px; }
+  .site-brand { display: flex; flex: 1 1 220px; flex-direction: column; justify-content: center; min-width: 176px; margin-right: 20px; }
+  .site-brand strong { color: var(--navy-950); font-size: 14px; letter-spacing: -.015em; }
+  .site-brand small { margin-top: 2px; color: var(--text-muted); font-size: 9.5px; font-weight: 700; letter-spacing: .035em; }
+  .site-tab { flex: 0 0 auto; min-width: 142px; padding: 15px 17px 13px; font-size: 12px; letter-spacing: .01em; background: transparent; border-bottom: 3px solid transparent; }
+  .guide-link { min-width: auto; margin-left: auto; }
+  .notification-zone { margin-left: 6px; }
+  .account-zone { margin-left: 6px; }
   .site-tab.active { color: var(--primary-strong); border-bottom-color: var(--primary); background: transparent; }
   .site-tab.active::after { content: "ACTIF"; margin-left: 9px; padding: 3px 6px; border-radius: 999px; background: var(--primary-tint); color: var(--primary-strong); font-size: 8.5px; letter-spacing: .08em; }
   .wrap { max-width: 1120px; padding: 0 24px 80px; }
@@ -719,9 +725,16 @@
     .meta-strip > span:last-child { grid-column: 1 / -1; border-top: 1px solid var(--line); }
     .filter-row .label { min-width: 100%; }
   }
+  @media (max-width: 760px) {
+    .site-brand { flex: 0 0 auto; min-width: 144px; margin-right: 6px; }
+    .site-brand small { display: none; }
+    .site-tab { min-width: 0; padding-inline: 11px; }
+  }
   @media (max-width: 560px) {
-    .site-switch { padding-inline: 8px; }
+    .site-switch { min-height: 52px; padding-inline: 8px; gap: 0; }
+    .site-brand { display: none; }
     .site-tab { flex: 1; min-width: 0; padding: 13px 7px 11px; }
+    .guide-link { margin-left: 0; }
     .site-tab.active::after { display: none; }
     .stats-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
     .stat-tile { min-height: 126px; padding: 50px 13px 12px; }
@@ -1035,6 +1048,7 @@
 </svg>
 <div class="top-accent"></div>
 <div class="site-switch">
+  <div class="site-brand" aria-label="Ma Veille CEE"><strong>Ma Veille CEE</strong><small>Veille réglementaire automatisée</small></div>
   <button class="site-tab active" id="siteTabCee" type="button" data-frame-url="">🇫🇷 CEE France</button>
   <button class="site-tab" id="siteTabCae" type="button" data-frame-url="/cae-espagne/">🇪🇸 CAE Espagne</button>
   <a class="site-tab guide-link" href="/guide.html">Guide</a>
@@ -1070,12 +1084,13 @@
     </div>
     <div class="trust-row">
       <span class="trust-badge"><span class="check">✓</span> Sources officielles (Légifrance, ecologie.gouv.fr, PNCEE)</span>
-      <span class="trust-badge"><span class="check">✓</span> Mise à jour automatique chaque jour ouvré</span>
+      <span class="trust-badge"><span class="check">✓</span> Mise à jour automatique</span>
+      <span class="trust-badge"><span class="check">✓</span> Chaque jour ouvré à 8h</span>
     </div>
     <div class="meta-strip">
       <span class="meta-item"><svg class="meta-icon"><use href="#icon-calendar"></use></svg>Dernier contrôle : <time id="lastRun" datetime="">—</time></span>
       <span>·</span>
-      <span class="meta-item"><svg class="meta-icon"><use href="#icon-gear"></use></svg><span class="num" id="sourceCount">0</span> sources surveillées</span>
+      <span class="meta-item"><svg class="meta-icon"><use href="#icon-gear"></use></svg><span class="num" id="sourceCount">0</span> sources contrôlées</span>
       <span>·</span>
       <span class="meta-item"><svg class="meta-icon"><use href="#icon-clock"></use></svg>État du contrôle : <span id="nextRun">État non disponible</span></span>
     </div>
@@ -1104,8 +1119,8 @@
     <section class="tracking-panel" id="trackingPanel" aria-label="Mon suivi"></section>
     <div class="view-tabs">
       <button class="view-tab active" id="tabFeed" data-view="feed"><svg class="tab-icon"><use href="#icon-list"></use></svg><span>Registre</span></button>
-      <button class="view-tab" id="tabChrono" data-view="chrono"><svg class="tab-icon"><use href="#icon-timeline"></use></svg><span>Chronologie des arrêtés</span></button>
-      <button class="view-tab" id="tabCatalog" data-view="catalog"><svg class="tab-icon"><use href="#icon-grid"></use></svg><span>Catalogue des fiches (FOS)</span></button>
+      <button class="view-tab" id="tabChrono" data-view="chrono"><svg class="tab-icon"><use href="#icon-timeline"></use></svg><span>Chronologie normative</span></button>
+      <button class="view-tab" id="tabCatalog" data-view="catalog"><svg class="tab-icon"><use href="#icon-grid"></use></svg><span>Catalogue des fiches</span></button>
     </div>
   </header>
 
@@ -2865,10 +2880,10 @@ function buildCounts() {
   const byImpact = { high: 0, medium: 0, low: 0, info: 0 };
   ITEMS.forEach(i => byImpact[i.impactLevel]++);
   const tiles = [
-    `<div class="stat-tile total"><div class="stat-icon-wrap"><svg class="stat-icon"><use href="#icon-list"></use></svg></div><div class="n">${ITEMS.length}</div><div class="l">Entrées suivies</div><svg class="stat-spark" viewBox="0 0 100 26" preserveAspectRatio="none"><polyline points="0,18 15,20 30,14 45,16 60,9 75,11 100,3"></polyline></svg></div>`,
-    `<div class="stat-tile high"><div class="stat-icon-wrap"><svg class="stat-icon"><use href="#icon-trend"></use></svg></div><div class="n">${byImpact.high}</div><div class="l">Impact fort</div><svg class="stat-spark" viewBox="0 0 100 26" preserveAspectRatio="none"><polyline points="0,6 15,10 30,7 45,15 60,12 75,19 100,22"></polyline></svg></div>`,
-    `<div class="stat-tile medium"><div class="stat-icon-wrap"><svg class="stat-icon"><use href="#icon-balance"></use></svg></div><div class="n">${byImpact.medium}</div><div class="l">Impact modéré</div><svg class="stat-spark" viewBox="0 0 100 26" preserveAspectRatio="none"><polyline points="0,13 15,10 30,15 45,11 60,16 75,10 100,13"></polyline></svg></div>`,
-    `<div class="stat-tile low"><div class="stat-icon-wrap"><svg class="stat-icon"><use href="#icon-check"></use></svg></div><div class="n">${byImpact.low}</div><div class="l">Impact faible</div><svg class="stat-spark" viewBox="0 0 100 26" preserveAspectRatio="none"><polyline points="0,22 15,17 30,19 45,11 60,13 75,6 100,4"></polyline></svg></div>`
+    `<div class="stat-tile total"><div class="stat-icon-wrap"><svg class="stat-icon"><use href="#icon-list"></use></svg></div><div class="n">${ITEMS.length}</div><div class="l">Entrées suivies</div></div>`,
+    `<div class="stat-tile high"><div class="stat-icon-wrap"><svg class="stat-icon"><use href="#icon-trend"></use></svg></div><div class="n">${byImpact.high}</div><div class="l">Impact fort</div></div>`,
+    `<div class="stat-tile medium"><div class="stat-icon-wrap"><svg class="stat-icon"><use href="#icon-balance"></use></svg></div><div class="n">${byImpact.medium}</div><div class="l">Impact modéré</div></div>`,
+    `<div class="stat-tile low"><div class="stat-icon-wrap"><svg class="stat-icon"><use href="#icon-check"></use></svg></div><div class="n">${byImpact.low}</div><div class="l">Impact faible</div></div>`
   ];
   wrap.innerHTML = tiles.join("");
   const panel = document.getElementById("actionPanel");
