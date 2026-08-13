@@ -9,6 +9,7 @@ import { EXTRACTOR_ID, SOURCE_URL as ECOLOGIE_CEE_SOURCE_URL, extractEcologieCee
 import { checkCourDesComptes } from "./sources/cour-des-comptes.mjs";
 import { EXTRACTOR_ID as COUR_DES_COMPTES_RSS_EXTRACTOR_ID, SOURCE_URL as COUR_DES_COMPTES_RSS_URL, extractCourDesComptesRss, fetchCourDesComptesRss, reconcileCourDesComptesRss } from "./sources/cour-des-comptes-rss.mjs";
 import { checkEcologieGouvFr, isTemporaryEcologieNetworkError } from "./sources/ecologie-gouv-fr.mjs";
+import { EXTRACTOR_ID as EEX_EMMY_EXTRACTOR_ID, SOURCE_URL as EEX_EMMY_SOURCE_URL, extractEexEmmyDocuments, reconcileEexEmmyDocuments } from "./sources/eex-emmy-documents.mjs";
 import { checkLegifrancePisteConnectivity } from "./sources/legifrance-piste.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -283,6 +284,20 @@ async function checkCourDesComptesRss() {
   }
 }
 
+async function checkEexEmmyDocuments() {
+  try {
+    const value = await checkUrl(EEX_EMMY_SOURCE_URL, { includeBody: true });
+    log("EEX EMMY documents");
+    log("HTTP status: 200");
+    return { ok: true, value };
+  } catch (error) {
+    const message = describeRequestError(error);
+    log("EEX EMMY documents");
+    log(`Failed: ${message}`);
+    return { ok: false, error: message };
+  }
+}
+
 async function checkLegifrancePisteSource(source) {
   const result = await checkLegifrancePisteConnectivity({ clientId: LEGIFRANCE_PISTE_CLIENT_ID, clientSecret: LEGIFRANCE_PISTE_CLIENT_SECRET, timeoutMs: REQUEST_TIMEOUT_MS });
   const diagnostics = result.diagnostics || {};
@@ -460,10 +475,12 @@ async function main() {
 
   const { results, nextState, pilotHtml } = await checkSources(data.meta.sources, previousState);
   const courDesComptesRss = await checkCourDesComptesRss();
+  const eexEmmyDocuments = await checkEexEmmyDocuments();
   const courDesComptesResult = results.find(result => isCourDesComptesSource(result));
   let nextPending = previousPending;
   let extraction = null;
   let courDesComptesRssExtraction = null;
+  let eexEmmyExtraction = null;
   const pilotResult = results.find(result => result.url === ECOLOGIE_CEE_SOURCE_URL);
   if (pilotHtml && pilotResult) {
     try {
@@ -519,6 +536,29 @@ async function main() {
     }
   }
 
+  if (eexEmmyDocuments.ok) {
+    try {
+      const extracted = extractEexEmmyDocuments(eexEmmyDocuments.value.bodyText, { detectedAt: now.toISOString() });
+      const previousItems = previousState.extractions?.[EEX_EMMY_EXTRACTOR_ID]?.items || {};
+      eexEmmyExtraction = reconcileEexEmmyDocuments({ extracted, previousItems, pendingItems: nextPending, registryUrls: registrySourceUrls(data.items), seenAt: now.toISOString() });
+      nextState.extractions[EEX_EMMY_EXTRACTOR_ID] = { sourceName: extracted.sourceName, sourceUrl: extracted.sourceUrl, items: eexEmmyExtraction.baselineItems };
+      nextPending = [...nextPending, ...eexEmmyExtraction.addedPending];
+      log(`Extractor: ${EEX_EMMY_EXTRACTOR_ID}`);
+      log(`Items extracted: ${extracted.items.length}`);
+      log(`Known: ${eexEmmyExtraction.known}`);
+      log(`New: ${eexEmmyExtraction.initialBaseline ? 0 : eexEmmyExtraction.newlyExtracted}`);
+      log(`Modified: ${eexEmmyExtraction.modified.length}`);
+      log(`Pending added: ${eexEmmyExtraction.addedPending.length}`);
+      log(`Baseline initialized: ${eexEmmyExtraction.initialBaseline ? "yes" : "no"}`);
+      if (eexEmmyExtraction.initialBaseline) log(`Initial EEX documentation baseline created with ${eexEmmyExtraction.newlyExtracted} documents; no pending items generated.`);
+      for (const item of eexEmmyExtraction.addedPending) log(`Potential new EEX documentation: ${item.title} — ${item.url}`);
+    } catch (error) {
+      eexEmmyDocuments.ok = false;
+      eexEmmyDocuments.error = `EEX extraction error: ${error instanceof Error ? error.message : "Unknown extractor failure"}`;
+      log(`Extractor error for ${EEX_EMMY_EXTRACTOR_ID}: ${eexEmmyDocuments.error}`);
+    }
+  }
+
   if (courDesComptesResult) {
     if (!courDesComptesResult.status || courDesComptesResult.status === "failed") {
       if (courDesComptesRss.ok) {
@@ -553,7 +593,7 @@ async function main() {
   log(`Sources succeeded: ${successful}`);
   log(`Sources failed: ${failed.length}`);
   log(`Source-content changes detected: ${changedSources.length}`);
-  log(`New regulatory entries detected: 0 (pending technical review: ${(extraction?.addedPending.length || 0) + (courDesComptesRssExtraction?.addedPending.length || 0)})`);
+  log(`New regulatory entries detected: 0 (pending technical review: ${(extraction?.addedPending.length || 0) + (courDesComptesRssExtraction?.addedPending.length || 0) + (eexEmmyExtraction?.addedPending.length || 0)})`);
   log("Entries added: 0");
   log("Entries modified: 0");
 
