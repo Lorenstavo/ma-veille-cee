@@ -7,6 +7,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { EXTRACTOR_ID, SOURCE_URL as ECOLOGIE_CEE_SOURCE_URL, extractEcologieCeePublications, reconcileEcologieCeePublications } from "./sources/ecologie-cee.mjs";
 import { checkCourDesComptes } from "./sources/cour-des-comptes.mjs";
+import { checkEcologieGouvFr, isTemporaryEcologieNetworkError } from "./sources/ecologie-gouv-fr.mjs";
 import { checkLegifrancePisteConnectivity } from "./sources/legifrance-piste.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -197,6 +198,45 @@ function isCourDesComptesSource(source) {
   return source?.name === "Cour des comptes — publications CEE";
 }
 
+function isEcologieSource(source) {
+  try { return new URL(source?.url).hostname === "www.ecologie.gouv.fr"; } catch { return false; }
+}
+
+async function checkEcologieSource(source) {
+  const result = await checkEcologieGouvFr({
+    url: source.url,
+    headers: {
+      "user-agent": USER_AGENT,
+      accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.5",
+      "accept-language": "fr-FR,fr;q=0.9,en;q=0.7",
+      "cache-control": "no-cache"
+    },
+    onAttempt: (attempt, maxAttempts) => log(`ecologie.gouv.fr attempt ${attempt}/${maxAttempts}: ${source.url}`),
+    onRetry: () => log("ecologie.gouv.fr retry after temporary network failure")
+  });
+  if (!result.ok) {
+    return {
+      ok: false,
+      error: describeRequestError(result.error),
+      attempts: result.attempts,
+      retries: result.retries,
+      failureKind: isTemporaryEcologieNetworkError(result.error) ? "host-connectivity-failure" : "source-failure"
+    };
+  }
+  return {
+    ok: true,
+    value: {
+      finalUrl: result.value.finalUrl,
+      etag: result.value.etag,
+      lastModified: result.value.lastModified,
+      fingerprint: createHash("sha256").update(result.value.body).digest("hex"),
+      bodyText: source.url === ECOLOGIE_CEE_SOURCE_URL ? result.value.body.toString("utf8") : undefined
+    },
+    attempts: result.attempts,
+    retries: result.retries
+  };
+}
+
 async function checkCourDesComptesSource(source) {
   const result = await checkCourDesComptes({
     url: source.url,
@@ -241,18 +281,28 @@ async function checkSources(sources, previousState) {
   const responses = new Map();
   const nextSources = {};
   const results = [];
+  const ecologieSummary = { urlsConfigured: sources.filter(isEcologieSource).length, networkRequestsPerformed: 0, succeeded: 0, failed: 0, retries: 0 };
   for (const source of sources) {
     const key = sourceKey(source.url);
     if (!responses.has(source.url)) {
-      responses.set(source.url, isLegifranceSource(source)
+      const response = isLegifranceSource(source)
         ? await checkLegifrancePisteSource(source)
         : isCourDesComptesSource(source)
           ? await checkCourDesComptesSource(source)
-          : await checkSourceUrl(source));
+          : isEcologieSource(source)
+            ? await checkEcologieSource(source)
+            : await checkSourceUrl(source);
+      responses.set(source.url, response);
+      if (isEcologieSource(source)) {
+        ecologieSummary.networkRequestsPerformed += response.attempts || 1;
+        ecologieSummary.retries += response.retries || 0;
+        if (response.ok) ecologieSummary.succeeded += 1;
+        else ecologieSummary.failed += 1;
+      }
     }
     const response = responses.get(source.url);
     if (!response.ok) {
-      results.push({ name: source.name, url: source.url, status: "failed", message: response.error, attempts: response.attempts || 1, checkedAt: new Date().toISOString() });
+      results.push({ name: source.name, url: source.url, status: "failed", message: response.error, attempts: response.attempts || 1, failureKind: response.failureKind || "source-failure", checkedAt: new Date().toISOString() });
       continue;
     }
     const current = response.value;
@@ -267,6 +317,19 @@ async function checkSources(sources, previousState) {
       attempts: response.attempts || 1,
       checkedAt: new Date().toISOString()
     });
+  }
+  const hostConnectivityFailures = results.filter(result => result.status === "failed" && isEcologieSource(result) && result.failureKind === "host-connectivity-failure");
+  if (hostConnectivityFailures.length > 1) {
+    for (const result of hostConnectivityFailures) result.failureKind = "host-connectivity-failure";
+    log(`ecologie.gouv.fr host connectivity incident suspected: ${hostConnectivityFailures.length} logical sources failed after ${ecologieSummary.networkRequestsPerformed} network requests`);
+  }
+  if (ecologieSummary.urlsConfigured) {
+    log("ecologie.gouv.fr");
+    log(`URLs configured: ${ecologieSummary.urlsConfigured}`);
+    log(`network requests performed: ${ecologieSummary.networkRequestsPerformed}`);
+    log(`succeeded: ${ecologieSummary.succeeded}`);
+    log(`failed: ${ecologieSummary.failed}`);
+    log(`retries: ${ecologieSummary.retries}`);
   }
   return { results, nextState: { version: 2, sources: nextSources, extractions: previousState.extractions || {} }, pilotHtml: responses.get(ECOLOGIE_CEE_SOURCE_URL)?.ok ? responses.get(ECOLOGIE_CEE_SOURCE_URL).value.bodyText : null };
 }
@@ -333,6 +396,7 @@ function buildWatchMetadata({ results, status, completedAt, previousWatch }) {
       status: result.status === "failed" ? "failed" : "success",
       checkedAt: result.checkedAt,
       attempts: result.attempts,
+      failureKind: result.failureKind || null,
       message: result.message
     }))
   };
