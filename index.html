@@ -654,6 +654,12 @@
   .update-card .action-label { color: var(--primary-strong); }
   .update-card p:last-child { margin: 7px 0 0; color: var(--ink-muted); font-size: 12px; line-height: 1.55; }
   .update-state { color: var(--impact-low); font-weight: 800; }
+  .update-state.partial { color: var(--amber-600); }
+  .update-state.unavailable { color: var(--ink-faint); }
+  .watch-detail { margin-top: 7px; font-size: 11px; color: var(--ink-muted); }
+  .watch-detail summary { cursor: pointer; color: var(--blue-600); font-weight: 800; }
+  .watch-detail ul { margin: 6px 0 0; padding-left: 16px; }
+  .watch-detail li { margin: 2px 0; }
   .action-panel .action-link { margin-top: 9px; flex: none; border: 1px solid #e8aaa0; border-radius: 999px; background: #fff; color: #ad3024; padding: 6px 11px; font: 700 11.5px var(--font-ui); cursor: pointer; transition: background .15s, color .15s, transform .15s; }
   .action-panel .action-link:hover { background: var(--impact-high); color: #fff; transform: translateX(2px); }
   .view-tabs { gap: 2px; margin: 0; padding: 4px; width: fit-content; background: #e9eef5; border-radius: 11px; }
@@ -2901,6 +2907,34 @@ function buildPrioritiesPanel() {
   }));
 }
 
+function escapeWatchText(value) {
+  return String(value || "Source non renseignée").replace(/[&<>'"]/g, character => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[character]);
+}
+
+function formatWatchDate(value) {
+  const date = new Date(value || "");
+  if (!Number.isFinite(date.getTime())) return "Donnée indisponible";
+  const formatted = new Intl.DateTimeFormat("fr-FR", { timeZone: "Europe/Paris", day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(date);
+  const part = type => formatted.find(item => item.type === type)?.value || "";
+  return `${part("day")} ${part("month")} ${part("year")} — ${part("hour")}:${part("minute")}`;
+}
+
+function getWatchSummary() {
+  const watch = META.watch;
+  if (!watch || !["success", "partial"].includes(watch.status) || !Number.isInteger(watch.sourcesConfigured) || !Number.isInteger(watch.sourcesSucceeded) || !Number.isInteger(watch.sourcesFailed) || !Array.isArray(watch.sources) || !Number.isFinite(new Date(watch.lastCompletedAt || "").getTime())) return null;
+  return watch;
+}
+
+function renderWatchHeader() {
+  const watch = getWatchSummary();
+  if (!watch) return;
+  const lastRun = document.getElementById("lastRun");
+  lastRun.textContent = formatWatchDate(watch.lastCompletedAt);
+  lastRun.setAttribute("datetime", watch.lastCompletedAt);
+  document.getElementById("sourceCount").textContent = `${watch.sourcesSucceeded} / ${watch.sourcesConfigured}`;
+  document.getElementById("nextRun").textContent = watch.status === "success" ? "Contrôle complet" : `Contrôle partiel — ${watch.sourcesFailed} indisponible${watch.sourcesFailed > 1 ? "s" : ""}`;
+}
+
 function buildCockpitControls() {
   const tiles = [...document.querySelectorAll("#counts .stat-tile")];
   const totalTile = tiles[0];
@@ -2933,6 +2967,17 @@ function buildCockpitControls() {
   const sourceCount = Array.isArray(META.sources) ? META.sources.filter(source => source && /^https?:\/\//i.test(source.url || "")).length : 0;
   const hasLastRun = /^\d{4}-\d{2}-\d{2}$/.test(META.lastRun || "") && Number.isFinite(new Date(META.lastRun + "T00:00:00").getTime());
   update.innerHTML = `<p class="action-label">Dernière mise à jour</p><h2>${hasLastRun ? fmtDate(META.lastRun) : "Donnée indisponible"}</h2><p><strong>${sourceCount ? `${sourceCount} sources déclarées` : "Sources indisponibles"}</strong><br><span class="update-state">Prochain contrôle : non renseigné</span></p>`;
+  const watch = getWatchSummary();
+  if (watch) {
+    const unavailable = watch.sources.filter(source => source.status === "failed");
+    const statusText = watch.status === "success" ? "Contrôle complet" : `Contrôle partiel — ${watch.sourcesFailed} source${watch.sourcesFailed > 1 ? "s" : ""} indisponible${watch.sourcesFailed > 1 ? "s" : ""}`;
+    const detail = unavailable.length ? `<details class="watch-detail"><summary>Voir le détail</summary><ul>${unavailable.map(source => `<li>${escapeWatchText(source.name)} — Indisponible</li>`).join("")}</ul></details>` : "";
+    update.innerHTML = `<p class="action-label">Dernier contrôle</p><h2>${formatWatchDate(watch.lastCompletedAt)}</h2><p><strong>${watch.sourcesSucceeded} / ${watch.sourcesConfigured} sources contrôlées</strong><br><span class="update-state ${watch.status === "partial" ? "partial" : ""}">${statusText}</span>${detail}</p>`;
+  } else {
+    update.querySelector(".action-label").textContent = "Dernier contrôle";
+    const state = update.querySelector(".update-state");
+    if (state) { state.textContent = "État détaillé non disponible"; state.classList.add("unavailable"); }
+  }
   panel.appendChild(update);
   const action = document.getElementById("showHighImpact");
   action.textContent = "Voir uniquement les impacts forts →";
@@ -3422,6 +3467,7 @@ initializeAuth().catch(() => updateAuthInterface(null));
 buildFilters();
 buildCounts();
 buildSources();
+renderWatchHeader();
 buildCockpitControls();
 buildPrioritiesPanel();
 buildActionPanel();

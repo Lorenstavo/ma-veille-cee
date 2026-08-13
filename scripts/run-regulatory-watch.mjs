@@ -11,6 +11,7 @@ const INDEX_PATH = path.join(ROOT, "index.html");
 const STATE_PATH = path.join(ROOT, "scripts", "data", "regulatory-watch-state.json");
 const USER_AGENT = "ma-veille-cee-regulatory-watch/1.0 (+https://ma-veille-cee.fr/)";
 const REQUEST_TIMEOUT_MS = 15_000;
+const RETRY_DELAY_MS = 1_500;
 const MAX_RESPONSE_BYTES = 2 * 1024 * 1024;
 const VALID_IMPACTS = new Set(["high", "medium", "low", "info"]);
 const DRY_RUN = process.env.DRY_RUN === "true";
@@ -162,6 +163,29 @@ function sourceKey(url) {
   return createHash("sha256").update(url).digest("hex");
 }
 
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+function isTemporaryNetworkError(message) {
+  return /\b(UND_ERR_CONNECT_TIMEOUT|ETIMEDOUT|ECONNRESET|ECONNREFUSED|EAI_AGAIN|ENOTFOUND|UND_ERR_SOCKET)\b/.test(message);
+}
+
+async function checkSourceUrl(source) {
+  try {
+    return { ok: true, value: await checkUrl(source.url) };
+  } catch (error) {
+    const message = describeRequestError(error);
+    const mayRetry = source.url.includes("ccomptes.fr") && isTemporaryNetworkError(message);
+    if (!mayRetry) return { ok: false, error: message, attempts: 1 };
+    log(`Retrying ${source.name} after a temporary network failure`);
+    await delay(RETRY_DELAY_MS);
+    try {
+      return { ok: true, value: await checkUrl(source.url), attempts: 2 };
+    } catch (retryError) {
+      return { ok: false, error: describeRequestError(retryError), attempts: 2 };
+    }
+  }
+}
+
 async function checkSources(sources, previousState) {
   const responses = new Map();
   const nextSources = {};
@@ -169,15 +193,11 @@ async function checkSources(sources, previousState) {
   for (const source of sources) {
     const key = sourceKey(source.url);
     if (!responses.has(source.url)) {
-      try {
-        responses.set(source.url, { ok: true, value: await checkUrl(source.url) });
-      } catch (error) {
-        responses.set(source.url, { ok: false, error: describeRequestError(error) });
-      }
+      responses.set(source.url, await checkSourceUrl(source));
     }
     const response = responses.get(source.url);
     if (!response.ok) {
-      results.push({ name: source.name, url: source.url, status: "failed", message: response.error });
+      results.push({ name: source.name, url: source.url, status: "failed", message: response.error, attempts: response.attempts || 1, checkedAt: new Date().toISOString() });
       continue;
     }
     const current = response.value;
@@ -188,16 +208,79 @@ async function checkSources(sources, previousState) {
       name: source.name,
       url: source.url,
       status: previous ? (changed ? "changed" : "no-change") : "success",
-      message: previous ? (changed ? "Content fingerprint changed; human regulatory review required" : "No source-content change detected") : "Initial baseline recorded; no regulatory entry created automatically"
+      message: previous ? (changed ? "Content fingerprint changed; human regulatory review required" : "No source-content change detected") : "Initial baseline recorded; no regulatory entry created automatically",
+      attempts: response.attempts || 1,
+      checkedAt: new Date().toISOString()
     });
   }
   return { results, nextState: { version: 1, sources: nextSources } };
 }
 
-function replaceLastRun(html, rawJson, nextDate) {
+function replaceLastRun(rawJson, nextDate) {
   const replacement = rawJson.replace(/("lastRun"\s*:\s*")\d{4}-\d{2}-\d{2(?=")/m, (_match, prefix) => `${prefix}${nextDate}`);
   if (replacement === rawJson) throw new Error("META.lastRun could not be updated safely");
-  return html.replace(rawJson, replacement);
+  return replacement;
+}
+
+function serialiseWatch(watch, newline) {
+  return JSON.stringify(watch, null, 2).replace(/\n/g, `${newline}    `);
+}
+
+function findJsonValueEnd(text, start) {
+  const opener = text[start];
+  if (opener !== "{" && opener !== "[") throw new Error("Expected JSON object or array value");
+  const closer = opener === "{" ? "}" : "]";
+  let depth = 0, string = false, escaped = false;
+  for (let index = start; index < text.length; index++) {
+    const character = text[index];
+    if (string) {
+      if (escaped) escaped = false;
+      else if (character === "\\") escaped = true;
+      else if (character === '"') string = false;
+      continue;
+    }
+    if (character === '"') string = true;
+    else if (character === opener) depth++;
+    else if (character === closer && --depth === 0) return index + 1;
+  }
+  throw new Error("Unterminated JSON value");
+}
+
+function upsertWatch(rawJson, watch) {
+  const newline = rawJson.includes("\r\n") ? "\r\n" : "\n";
+  const existing = /\r?\n    "watch"\s*:\s*/.exec(rawJson);
+  const serialised = serialiseWatch(watch, newline);
+  if (existing) {
+    const valueStart = existing.index + existing[0].length;
+    const valueEnd = findJsonValueEnd(rawJson, valueStart);
+    return `${rawJson.slice(0, valueStart)}${serialised}${rawJson.slice(valueEnd)}`;
+  }
+  const lastRun = /("lastRun"\s*:\s*"\d{4}-\d{2}-\d{2}"\s*,\r?\n)/.exec(rawJson);
+  if (!lastRun) throw new Error("META.lastRun insertion point was not found");
+  const insertAt = lastRun.index + lastRun[0].length;
+  return `${rawJson.slice(0, insertAt)}    "watch": ${serialised},${newline}${rawJson.slice(insertAt)}`;
+}
+
+function buildWatchMetadata({ results, status, completedAt, previousWatch }) {
+  const failed = results.filter(result => result.status === "failed");
+  const succeeded = results.length - failed.length;
+  return {
+    version: 1,
+    status,
+    lastCompletedAt: completedAt,
+    lastFullSuccessAt: status === "success" ? completedAt : (typeof previousWatch?.lastFullSuccessAt === "string" ? previousWatch.lastFullSuccessAt : null),
+    sourcesConfigured: results.length,
+    sourcesSucceeded: succeeded,
+    sourcesFailed: failed.length,
+    sources: results.map(result => ({
+      name: result.name,
+      url: result.url,
+      status: result.status === "failed" ? "failed" : "success",
+      checkedAt: result.checkedAt,
+      attempts: result.attempts,
+      message: result.message
+    }))
+  };
 }
 
 async function main() {
@@ -235,18 +318,23 @@ async function main() {
   log("Entries added: 0");
   log("Entries modified: 0");
 
-  // Conservative policy: a single source failure invalidates the whole run.
-  if (failed.length) throw new Error(`Global run failed: ${failed.length} configured source(s) could not be checked`);
+  if (!successful) throw new Error("Global run failed: no configured source could be checked");
 
-  data.meta.lastRun = paris.date;
-  const updatedHtml = replaceLastRun(originalHtml, rawJson, paris.date);
+  const status = failed.length ? "partial" : "success";
+  const completedAt = now.toISOString();
+  const watch = buildWatchMetadata({ results, status, completedAt, previousWatch: data.meta.watch });
+  log(`Global status: ${status}`);
+
+  let updatedRawJson = status === "success" ? replaceLastRun(rawJson, paris.date) : rawJson;
+  updatedRawJson = upsertWatch(updatedRawJson, watch);
+  const updatedHtml = originalHtml.replace(rawJson, updatedRawJson);
   const finalData = parseEmbeddedData(updatedHtml).data;
   const finalIds = validateData(finalData);
   if (originalIds.size !== finalIds.size || [...originalIds].some(id => !finalIds.has(id))) throw new Error("An existing regulatory entry would disappear; aborting");
 
   const indexChanged = updatedHtml !== originalHtml;
   const stateChanged = JSON.stringify(nextState) !== JSON.stringify(previousState);
-  log(`lastRun updated: ${indexChanged ? "yes" : "no (already current)"}`);
+  log(`lastRun updated: ${status === "success" ? "yes" : "no (partial control)"}`);
   log(`Run summary state changed: ${stateChanged ? "yes" : "no"}`);
 
   if (DRY_RUN) {
