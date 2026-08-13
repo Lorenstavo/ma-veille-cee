@@ -53,14 +53,14 @@ jobs:
         if: success() && env.DRY_RUN != 'true'
         shell: bash
         run: |
-          if git diff --quiet -- index.html scripts/data/regulatory-watch-state.json; then
+          if git diff --quiet -- index.html scripts/data/regulatory-watch-state.json scripts/data/pending-regulatory-items.json; then
             echo "created=no" >> "$GITHUB_OUTPUT"
             echo "Commit créé : non"
             exit 0
           fi
           git config user.name "ma-veille-cee-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- index.html scripts/data/regulatory-watch-state.json
+          git add -- index.html scripts/data/regulatory-watch-state.json scripts/data/pending-regulatory-items.json
           git commit -m "chore(watch): regulatory update $(TZ=Europe/Paris date +%F)"
           git push origin HEAD:main
           echo "created=yes" >> "$GITHUB_OUTPUT"

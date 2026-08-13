@@ -5,10 +5,12 @@ import { setDefaultResultOrder } from "node:dns";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { EXTRACTOR_ID, SOURCE_URL as ECOLOGIE_CEE_SOURCE_URL, extractEcologieCeePublications, reconcileEcologieCeePublications } from "./sources/ecologie-cee.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const INDEX_PATH = path.join(ROOT, "index.html");
 const STATE_PATH = path.join(ROOT, "scripts", "data", "regulatory-watch-state.json");
+const PENDING_PATH = path.join(ROOT, "scripts", "data", "pending-regulatory-items.json");
 const USER_AGENT = "ma-veille-cee-regulatory-watch/1.0 (+https://ma-veille-cee.fr/)";
 const REQUEST_TIMEOUT_MS = 15_000;
 const RETRY_DELAY_MS = 1_500;
@@ -91,14 +93,26 @@ function validateData(data) {
 async function readState() {
   try {
     const parsed = JSON.parse(await readFile(STATE_PATH, "utf8"));
-    if (parsed?.version === 1 && parsed.sources && typeof parsed.sources === "object") return parsed;
+    if (parsed?.version === 2 && parsed.sources && typeof parsed.sources === "object" && parsed.extractions && typeof parsed.extractions === "object") return parsed;
+    if (parsed?.version === 1 && parsed.sources && typeof parsed.sources === "object") return { version: 2, sources: parsed.sources, extractions: {} };
   } catch (error) {
     if (error?.code !== "ENOENT") throw new Error("Existing watch state is invalid");
   }
-  return { version: 1, sources: {} };
+  return { version: 2, sources: {}, extractions: {} };
 }
 
-async function checkUrl(url) {
+async function readPending() {
+  try {
+    const parsed = JSON.parse(await readFile(PENDING_PATH, "utf8"));
+    if (Array.isArray(parsed)) return parsed;
+  } catch (error) {
+    if (error?.code === "ENOENT") return [];
+    throw new Error("Existing pending regulatory items are invalid");
+  }
+  throw new Error("Existing pending regulatory items are invalid");
+}
+
+async function checkUrl(url, { includeBody = false } = {}) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
   try {
@@ -121,7 +135,8 @@ async function checkUrl(url) {
       finalUrl: response.url,
       etag: response.headers.get("etag") || null,
       lastModified: response.headers.get("last-modified") || null,
-      fingerprint: createHash("sha256").update(body).digest("hex")
+      fingerprint: createHash("sha256").update(body).digest("hex"),
+      bodyText: includeBody ? body.toString("utf8") : undefined
     };
   } catch (error) {
     if (controller.signal.aborted) {
@@ -171,7 +186,7 @@ function isTemporaryNetworkError(message) {
 
 async function checkSourceUrl(source) {
   try {
-    return { ok: true, value: await checkUrl(source.url) };
+    return { ok: true, value: await checkUrl(source.url, { includeBody: source.url === ECOLOGIE_CEE_SOURCE_URL }) };
   } catch (error) {
     const message = describeRequestError(error);
     const mayRetry = source.url.includes("ccomptes.fr") && isTemporaryNetworkError(message);
@@ -179,7 +194,7 @@ async function checkSourceUrl(source) {
     log(`Retrying ${source.name} after a temporary network failure`);
     await delay(RETRY_DELAY_MS);
     try {
-      return { ok: true, value: await checkUrl(source.url), attempts: 2 };
+      return { ok: true, value: await checkUrl(source.url, { includeBody: source.url === ECOLOGIE_CEE_SOURCE_URL }), attempts: 2 };
     } catch (retryError) {
       return { ok: false, error: describeRequestError(retryError), attempts: 2 };
     }
@@ -213,7 +228,7 @@ async function checkSources(sources, previousState) {
       checkedAt: new Date().toISOString()
     });
   }
-  return { results, nextState: { version: 1, sources: nextSources } };
+  return { results, nextState: { version: 2, sources: nextSources, extractions: previousState.extractions || {} }, pilotHtml: responses.get(ECOLOGIE_CEE_SOURCE_URL)?.ok ? responses.get(ECOLOGIE_CEE_SOURCE_URL).value.bodyText : null };
 }
 
 function replaceLastRun(rawJson, nextDate) {
@@ -283,6 +298,18 @@ function buildWatchMetadata({ results, status, completedAt, previousWatch }) {
   };
 }
 
+function registrySourceUrls(items) {
+  const urls = new Set();
+  for (const item of items) {
+    try {
+      const url = new URL(item.sourceUrl);
+      url.hash = "";
+      urls.add(url.href);
+    } catch { /* validateData already rejects invalid registry URLs */ }
+  }
+  return urls;
+}
+
 async function main() {
   const now = new Date();
   const paris = parisParts(now);
@@ -303,9 +330,40 @@ async function main() {
   const { data, rawJson } = parseEmbeddedData(originalHtml);
   const originalIds = validateData(data);
   const previousState = await readState();
+  const previousPending = await readPending();
   log(`Configured sources: ${data.meta.sources.length} (${new Set(data.meta.sources.map(source => source.url)).size} unique URLs)`);
 
-  const { results, nextState } = await checkSources(data.meta.sources, previousState);
+  const { results, nextState, pilotHtml } = await checkSources(data.meta.sources, previousState);
+  let nextPending = previousPending;
+  let extraction = null;
+  const pilotResult = results.find(result => result.url === ECOLOGIE_CEE_SOURCE_URL);
+  if (pilotHtml && pilotResult) {
+    try {
+      const extracted = extractEcologieCeePublications(pilotHtml, { detectedAt: now.toISOString() });
+      const previousItems = previousState.extractions?.[EXTRACTOR_ID]?.items || {};
+      extraction = reconcileEcologieCeePublications({ extracted, previousItems, pendingItems: previousPending, registryUrls: registrySourceUrls(data.items), seenAt: now.toISOString() });
+      nextState.extractions[EXTRACTOR_ID] = { sourceName: extracted.sourceName, sourceUrl: extracted.sourceUrl, items: extraction.baselineItems };
+      nextPending = [...previousPending, ...extraction.addedPending];
+      log(`Extractor: ${EXTRACTOR_ID}`);
+      log(`Items extracted: ${extracted.items.length}`);
+      log(`Known: ${extraction.known}`);
+      log(`New: ${extraction.newlyExtracted}`);
+      log(`Modified: ${extraction.modified.length}`);
+      log(`Pending added: ${extraction.addedPending.length}`);
+      log(`Baseline initialized: ${extraction.initialBaseline ? "yes" : "no"}`);
+      if (extraction.initialBaseline) log("Initial baseline created; no pending items generated.");
+      for (const change of extraction.modified) log(`Modified publication: ${change.externalId} (title=${change.titleChanged ? "yes" : "no"}, date=${change.dateChanged ? "yes" : "no"}, url=${change.urlChanged ? "yes" : "no"})`);
+      for (const item of extraction.addedPending) log(`Potential new publication: ${item.title} — ${item.url}`);
+    } catch (error) {
+      pilotResult.status = "failed";
+      pilotResult.message = `Extraction error: ${error instanceof Error ? error.message : "Unknown extractor failure"}`;
+      log(`Extraction error for ${EXTRACTOR_ID}: ${pilotResult.message}`);
+    }
+  } else {
+    log(`Extractor: ${EXTRACTOR_ID}`);
+    log("Extraction skipped: pilot source was unavailable.");
+  }
+
   for (const result of results) log(`Source [${result.status}] ${result.name}: ${result.message}`);
   const failed = results.filter(result => result.status === "failed");
   const changedSources = results.filter(result => result.status === "changed");
@@ -314,7 +372,7 @@ async function main() {
   log(`Sources succeeded: ${successful}`);
   log(`Sources failed: ${failed.length}`);
   log(`Source-content changes detected: ${changedSources.length}`);
-  log("New regulatory entries detected: 0 (V1 has no source-specific extractor)");
+  log(`New regulatory entries detected: 0 (pending technical review: ${extraction?.addedPending.length || 0})`);
   log("Entries added: 0");
   log("Entries modified: 0");
 
@@ -334,8 +392,10 @@ async function main() {
 
   const indexChanged = updatedHtml !== originalHtml;
   const stateChanged = JSON.stringify(nextState) !== JSON.stringify(previousState);
+  const pendingChanged = JSON.stringify(nextPending) !== JSON.stringify(previousPending);
   log(`lastRun updated: ${status === "success" ? "yes" : "no (partial control)"}`);
   log(`Run summary state changed: ${stateChanged ? "yes" : "no"}`);
+  log(`Pending queue changed: ${pendingChanged ? "yes" : "no"}`);
 
   if (DRY_RUN) {
     log("DRY_RUN complete: no file was modified and no commit will be created.");
@@ -347,6 +407,7 @@ async function main() {
     await mkdir(path.dirname(STATE_PATH), { recursive: true });
     await writeFile(STATE_PATH, `${JSON.stringify(nextState, null, 2)}\n`, "utf8");
   }
+  if (pendingChanged) await writeFile(PENDING_PATH, `${JSON.stringify(nextPending, null, 2)}\n`, "utf8");
   log("Run completed successfully. Commit created: pending workflow step.");
 }
 
