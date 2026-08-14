@@ -1,0 +1,7 @@
+[functions."trigger-regulatory-watch"]
+  # 08:05 Europe/Paris during CEST; the function verifies Paris time itself.
+  schedule = "5 6 * * 1-5"
+
+[functions."trigger-regulatory-watch-winter"]
+  # 08:05 Europe/Paris during CET; the function verifies Paris time itself.
+  schedule = "5 7 * * 1-5"
