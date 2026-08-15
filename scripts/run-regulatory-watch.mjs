@@ -11,6 +11,7 @@ import { EXTRACTOR_ID as COUR_DES_COMPTES_RSS_EXTRACTOR_ID, SOURCE_URL as COUR_D
 import { checkEcologieGouvFr, isTemporaryEcologieNetworkError } from "./sources/ecologie-gouv-fr.mjs";
 import { EXTRACTOR_ID as EEX_EMMY_EXTRACTOR_ID, SOURCE_URL as EEX_EMMY_SOURCE_URL, extractEexEmmyDocuments, reconcileEexEmmyDocuments } from "./sources/eex-emmy-documents.mjs";
 import { checkLegifrancePisteConnectivity } from "./sources/legifrance-piste.mjs";
+import { checkEmmyRegistre, isEmmyRegistreUrl } from "./sources/emmy-registre.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const INDEX_PATH = path.join(ROOT, "index.html");
@@ -204,6 +205,36 @@ function isEcologieSource(source) {
   try { return new URL(source?.url).hostname === "www.ecologie.gouv.fr"; } catch { return false; }
 }
 
+function isEmmySource(source) {
+  return isEmmyRegistreUrl(source?.url);
+}
+
+async function checkEmmySource(source) {
+  try {
+    const value = await checkEmmyRegistre({
+      url: source.url,
+      headers: {
+        "user-agent": USER_AGENT,
+        accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.5",
+        "accept-language": "fr-FR,fr;q=0.9,en;q=0.7",
+        "cache-control": "no-cache"
+      }
+    });
+    return {
+      ok: true,
+      value: {
+        finalUrl: value.finalUrl,
+        etag: value.etag,
+        lastModified: value.lastModified,
+        fingerprint: createHash("sha256").update(value.body).digest("hex")
+      },
+      attempts: 1
+    };
+  } catch (error) {
+    return { ok: false, error: describeRequestError(error), attempts: 1 };
+  }
+}
+
 async function checkEcologieSource(source) {
   const result = await checkEcologieGouvFr({
     url: source.url,
@@ -327,7 +358,9 @@ async function checkSources(sources, previousState) {
           ? await checkCourDesComptesSource(source)
           : isEcologieSource(source)
             ? await checkEcologieSource(source)
-            : await checkSourceUrl(source);
+            : isEmmySource(source)
+              ? await checkEmmySource(source)
+              : await checkSourceUrl(source);
       responses.set(source.url, response);
       if (isEcologieSource(source)) {
         ecologieSummary.networkRequestsPerformed += response.attempts || 1;
