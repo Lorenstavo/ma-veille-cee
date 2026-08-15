@@ -1,0 +1,76 @@
+name: CAE watch
+
+on:
+  schedule:
+    # ~08:47 Paris in summer (CEST), checked again in the script. Offset ~40min
+    # after the CEE regulatory watch to avoid both jobs racing to push main.
+    - cron: "47 6 * * *"
+    # ~08:47 Paris in winter (CET), checked again in the script.
+    - cron: "47 7 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Contrôler les sources sans modifier ni committer de fichier"
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cae-watch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    name: Check CAE Espagne regulatory sources
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      # Reuses the same repository variable as the CEE watch: both watches are
+      # meant to run in lockstep once scheduled execution has been validated.
+      SCHEDULED_RUN_ENABLED: ${{ vars.REGULATORY_WATCH_ENABLED || 'false' }}
+      FORCE_RUN: ${{ github.event_name == 'workflow_dispatch' && 'true' || 'false' }}
+      DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || 'false' }}
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run CAE watch
+        id: watch
+        run: node scripts/run-cae-watch.mjs
+
+      - name: Commit successful watch result
+        id: commit
+        if: success() && env.DRY_RUN != 'true'
+        shell: bash
+        run: |
+          if git diff --quiet -- cae-espagne/index.html scripts/data/cae-watch-state.json; then
+            echo "created=no" >> "$GITHUB_OUTPUT"
+            echo "Commit créé : non"
+            exit 0
+          fi
+          git config user.name "Veille CAE Espagne (bot)"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- cae-espagne/index.html scripts/data/cae-watch-state.json
+          SUMMARY="${{ steps.watch.outputs.summary }}"
+          SUMMARY="${SUMMARY:-mise a jour lastRun}"
+          git commit -m "Veille CAE Espagne $(TZ=Europe/Paris date +%F) : ${SUMMARY}"
+          git push origin HEAD:main
+          echo "created=yes" >> "$GITHUB_OUTPUT"
+          echo "Commit créé : oui"
+
+      - name: Publish run summary
+        if: always()
+        shell: bash
+        run: |
+          echo "Commit créé : ${{ steps.commit.outputs.created || 'non évalué (DRY_RUN ou échec)' }}"
