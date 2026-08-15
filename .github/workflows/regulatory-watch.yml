@@ -2,10 +2,10 @@ name: Regulatory watch
 
 on:
   schedule:
-    # 08:07 Paris in summer (CEST), checked again in the script.
-    - cron: "7 6 * * 1-5"
-    # 08:07 Paris in winter (CET), checked again in the script.
-    - cron: "7 7 * * 1-5"
+    # 08:07 Paris in summer (CEST), checked again in the script. Runs every day, weekends included.
+    - cron: "7 6 * * *"
+    # 08:07 Paris in winter (CET), checked again in the script. Runs every day, weekends included.
+    - cron: "7 7 * * *"
   workflow_dispatch:
     inputs:
       dry_run:
