@@ -371,7 +371,7 @@ async function checkSources(sources, previousState) {
 }
 
 function replaceLastRun(rawJson, nextDate) {
-  const replacement = rawJson.replace(/("lastRun"\s*:\s*")\d{4}-\d{2}-\d{2(?=")/m, (_match, prefix) => `${prefix}${nextDate}`);
+  const replacement = rawJson.replace(/("lastRun"\s*:\s*")\d{4}-\d{2}-\d{2}(?=")/m, (_match, prefix) => `${prefix}${nextDate}`);
   if (replacement === rawJson) throw new Error("META.lastRun could not be updated safely");
   return replacement;
 }
