@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "sources": {
+    "dd0d652c32932db2c910eb8605f6c08811de7279664ad57c470b8d37a4d104ef": {
+      "url": "https://www.boe.es/",
+      "finalUrl": "https://www.boe.es/",
+      "etag": null,
+      "lastModified": null,
+      "fingerprint": "c85fb42cfb2b032b8e0cfb61787753e9dc359140534b17841523b286a9c4f502",
+      "checkedAt": "2026-08-15T09:36:02.137Z"
+    },
+    "6c2e97c71eba2dbff383e1d4e64f30621f681896dffd9cc901dc8453fc9cd3d7": {
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae.html",
+      "finalUrl": "https://www.miteco.gob.es/es/energia/eficiencia/cae.html",
+      "etag": null,
+      "lastModified": null,
+      "fingerprint": "39235c7f8592a1433b96d5298bf0a88f35d367e33428c5521a4ebbbb4f24a6e4",
+      "checkedAt": "2026-08-15T09:36:03.097Z"
+    },
+    "1627e38b9436f9a1338f5e63876963a277bd0f0ace72c10f59f28ee7f1c22e4b": {
+      "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/normativa.html",
+      "finalUrl": "https://www.miteco.gob.es/es/energia/eficiencia/cae/normativa.html",
+      "etag": null,
+      "lastModified": null,
+      "fingerprint": "f9251fd40d4fdece23f5be090bb20548d8aa713190fdddf53452ab4e0f473ffc",
+      "checkedAt": "2026-08-15T09:36:04.236Z"
+    },
+    "2c948725b46027cfe6572c06d3472e7a989f0aa95f39ac97eddc1ac5ea286f93": {
+      "url": "https://www.idae.es/",
+      "finalUrl": "https://www.idae.es/",
+      "etag": "\"1786780779-gzip\"",
+      "lastModified": "Sat, 15 Aug 2026 07:59:39 GMT",
+      "fingerprint": "e8b36099d6617ac9efd9db283abf787b43c4889b69fabbdc7ccb74fddd295d21",
+      "checkedAt": "2026-08-15T09:36:05.117Z"
+    },
+    "a735e6f67e244293c34c019854d02318bdb27ee14e7ced7b65efb8c88611c17a": {
+      "url": "https://www.idae.es/ayudas-y-financiacion/fondo-nacional-de-eficiencia-energetica",
+      "finalUrl": "https://www.idae.es/ayudas-y-financiacion/fondo-nacional-de-eficiencia-energetica",
+      "etag": "\"1786766567-gzip\"",
+      "lastModified": "Sat, 15 Aug 2026 04:02:47 GMT",
+      "fingerprint": "6308d8a85485e6be70f83611d51bc725d4d22e6f8648ef69bcb0bea2fdcd1064",
+      "checkedAt": "2026-08-15T09:36:05.263Z"
+    },
+    "d5d04d2a58057ace204d4c344680fa3d03cbc83d74cfec98ecc6dba7a97ba25a": {
+      "url": "https://www.boe.es/buscar/legislacion.php",
+      "finalUrl": "https://www.boe.es/buscar/legislacion.php",
+      "etag": null,
+      "lastModified": null,
+      "fingerprint": "d76a948c0568014ab04b02b1fe5fa1bafe1e69d1cefd6827072aceb0d7e48cfa",
+      "checkedAt": "2026-08-15T09:36:06.189Z"
+    },
+    "ed3df9255db5dbe841ef74a5a559138e64b02a11a1eb71579832b21b4f1ba12b": {
+      "url": "https://www.boe.es/buscar/doc.php?id=BOE-A-2023-2027",
+      "finalUrl": "https://www.boe.es/buscar/doc.php?id=BOE-A-2023-2027",
+      "etag": null,
+      "lastModified": null,
+      "fingerprint": "552e3c532068676b39bb7df14e7d3b7e87931922cbd4efc17d62113ccb68f0a2",
+      "checkedAt": "2026-08-15T09:36:07.113Z"
+    },
+    "f2a64ff3a58e6bae238c14fc709579d07c8ef5898358dd23dcfafc68d3176856": {
+      "url": "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2023-16940",
+      "finalUrl": "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2023-16940",
+      "etag": null,
+      "lastModified": null,
+      "fingerprint": "7f1c537630b58c0e4597aaf399562b410031a31525128b324ca0d1f9b138cd0b",
+      "checkedAt": "2026-08-15T09:36:07.781Z"
+    }
+  }
+}
