@@ -22,13 +22,13 @@ const okResponse = (body = Buffer.from("<html>ecologie</html>")) => ({
 });
 const temporaryError = code => Object.assign(new Error(code), { code });
 
-test("uses a shared keep-alive IPv4 agent with strict TLS on first success", async () => {
+test("uses a shared non-keep-alive IPv4 agent with strict TLS on first success", async () => {
   const agent = createEcologieGouvFrAgent();
   const calls = [];
   const result = await checkEcologieGouvFr({ url, agent, requestImpl: async options => { calls.push(options); return okResponse(); } });
   assert.equal(result.ok, true);
   assert.equal(result.attempts, 1);
-  assert.equal(agent.options.keepAlive, true);
+  assert.equal(agent.options.keepAlive, false);
   assert.equal(agent.maxSockets, 1);
   assert.equal(calls[0].agent, agent);
   assert.equal(calls[0].family, 4);

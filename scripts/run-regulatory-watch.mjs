@@ -20,7 +20,8 @@ const PENDING_PATH = path.join(ROOT, "scripts", "data", "pending-regulatory-item
 const USER_AGENT = "ma-veille-cee-regulatory-watch/1.0 (+https://ma-veille-cee.fr/)";
 const REQUEST_TIMEOUT_MS = 15_000;
 const MAX_RESPONSE_BYTES = 2 * 1024 * 1024;
-const ECOLOGIE_INTER_REQUEST_DELAY_MS = 3_000;
+const ECOLOGIE_INTER_REQUEST_DELAY_MS = 15_000;
+const ECOLOGIE_INTER_REQUEST_JITTER_MS = 7_000;
 const VALID_IMPACTS = new Set(["high", "medium", "low", "info"]);
 const DRY_RUN = process.env.DRY_RUN === "true";
 const FORCE_RUN = process.env.FORCE_RUN === "true";
@@ -356,14 +357,18 @@ async function checkSources(sources, previousState) {
     if (!responses.has(source.url)) {
       if (isEcologieSource(source) && ecologieRequestsIssued > 0) {
         // A single ecologie.gouv.fr request from this runner pool succeeds
-        // (diagnosed separately); the production run instead fires ~8 of
-        // them back-to-back over one keep-alive connection and every one
-        // times out. That pattern reads as scraping to a WAF/rate-limiter,
-        // so pacing distinct pages is a reasonable mitigation to try — not
-        // a confirmed fix, since the root cause on ecologie.gouv.fr's side
-        // isn't directly observable from here.
-        log(`ecologie.gouv.fr pacing: waiting ${ECOLOGIE_INTER_REQUEST_DELAY_MS}ms before the next page`);
-        await new Promise(resolve => setTimeout(resolve, ECOLOGIE_INTER_REQUEST_DELAY_MS));
+        // (diagnosed separately); firing ~8 of them back-to-back read as
+        // scraping to a WAF/rate-limiter and every page past the first
+        // timed out — even with a 3s pace and even after the checker
+        // stopped reusing one keep-alive connection (see
+        // createEcologieGouvFrAgent). Spacing pages further apart, with
+        // jitter so the run doesn't look like a fixed-interval bot, is the
+        // next mitigation to try — still not a confirmed fix, since the
+        // root cause on ecologie.gouv.fr's side isn't directly observable
+        // from here.
+        const delayMs = ECOLOGIE_INTER_REQUEST_DELAY_MS + Math.floor(Math.random() * ECOLOGIE_INTER_REQUEST_JITTER_MS);
+        log(`ecologie.gouv.fr pacing: waiting ${delayMs}ms before the next page`);
+        await new Promise(resolve => setTimeout(resolve, delayMs));
       }
       const response = isLegifranceSource(source)
         ? await checkLegifrancePisteSource(source)

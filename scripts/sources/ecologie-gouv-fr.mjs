@@ -8,7 +8,13 @@ const MAX_RESPONSE_BYTES = 2 * 1024 * 1024;
 const MAX_REDIRECTS = 3;
 
 export function createEcologieGouvFrAgent() {
-  return new https.Agent({ keepAlive: true, maxSockets: 1, family: 4, rejectUnauthorized: true });
+  // keepAlive is deliberately off: a lone request over a fresh connection
+  // reaches ecologie.gouv.fr fine, but firing several pages back-to-back
+  // over one reused TLS session times out on every page past the first
+  // (looks like a WAF/rate-limiter flagging sustained connection reuse from
+  // this self-identifying bot UA). Closing the socket after each response
+  // forces a fresh TCP+TLS handshake per page instead.
+  return new https.Agent({ keepAlive: false, maxSockets: 1, family: 4, rejectUnauthorized: true });
 }
 
 const sharedAgent = createEcologieGouvFrAgent();
