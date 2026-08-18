@@ -9,7 +9,7 @@ vm.runInContext(source, context);
 const { classifyWatch } = context.globalThis.RegulatoryWatchHealth;
 
 const names = [
-  "Légifrance (JO, textes CEE)", "PNCEE", "Dispositif CEE — ecologie.gouv.fr", "Opérations standardisées — ecologie.gouv.fr", "Consultations publiques — developpement-durable.gouv.fr", "Questions-réponses CEE — ecologie.gouv.fr",
+  "Légifrance (JO, textes CEE)", "PNCEE — modalités de dépôt des dossiers CEE", "Dispositif CEE — ecologie.gouv.fr", "Opérations standardisées — ecologie.gouv.fr", "Consultations publiques — developpement-durable.gouv.fr", "Questions-réponses CEE — ecologie.gouv.fr",
   "Lettres d'information & Flash Info CEE — ecologie.gouv.fr", "Conseil supérieur de l'énergie (CSE)", "Registre national EMMY", "Liste des PAC agréées (bonus-pac.ademe.fr)",
   "Cour des comptes — publications CEE", "ATEE — Club C2E", "Programmes CEE d'accompagnement — ecologie.gouv.fr", "Énergies — ecologie.gouv.fr"
 ];
@@ -23,7 +23,7 @@ test("six critical sources available never produce a critical health state", () 
 });
 
 test("one unavailable critical source produces a critical health state", () => {
-  const health = classifyWatch(watch(["PNCEE"]));
+  const health = classifyWatch(watch(["PNCEE — modalités de dépôt des dossiers CEE"]));
   assert.equal(health.groups.critical.available, 5);
   assert.equal(health.status, "critical");
 });

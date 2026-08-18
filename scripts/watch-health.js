@@ -4,7 +4,7 @@
   const tiers = {
     critical: {
       label: "Sources critiques",
-      sources: ["Légifrance (JO, textes CEE)", "PNCEE", "Dispositif CEE — ecologie.gouv.fr", "Opérations standardisées — ecologie.gouv.fr", "Consultations publiques — developpement-durable.gouv.fr", "Questions-réponses CEE — ecologie.gouv.fr"]
+      sources: ["Légifrance (JO, textes CEE)", "PNCEE — modalités de dépôt des dossiers CEE", "Dispositif CEE — ecologie.gouv.fr", "Opérations standardisées — ecologie.gouv.fr", "Consultations publiques — developpement-durable.gouv.fr", "Questions-réponses CEE — ecologie.gouv.fr"]
     },
     important: {
       label: "Sources importantes",
