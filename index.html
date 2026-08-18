@@ -513,6 +513,37 @@
   .fiche-evolution a { font-weight: 600; }
   .no-evolution { font-size: 11px; color: var(--ink-faint); margin-top: 7px; padding-top: 7px; border-top: 1px dashed var(--line); }
 
+  .fiche-guide-badge {
+    display: inline-block; margin-top: 6px; font-size: 10px; font-weight: 700;
+    color: var(--primary-strong); background: var(--primary-tint); border-radius: 999px; padding: 2px 8px;
+  }
+  .fiche-card.has-guide:has(.fiche-guide[open]) { grid-column: 1 / -1; }
+  .fiche-guide { margin-top: 9px; border-top: 1px solid var(--line); padding-top: 8px; }
+  .fiche-guide > summary { cursor: pointer; font-size: 12px; font-weight: 700; color: var(--primary-strong); list-style: none; }
+  .fiche-guide > summary::-webkit-details-marker { display: none; }
+  .fiche-guide > summary::before { content: "▸ "; }
+  .fiche-guide[open] > summary::before { content: "▾ "; }
+  .fiche-guide-body { margin-top: 10px; font-size: 12.5px; color: var(--ink); line-height: 1.55; }
+  .fiche-guide-body section { margin-top: 14px; }
+  .fiche-guide-body h4 { font-size: 12px; font-weight: 800; color: var(--ink); margin: 0 0 6px; }
+  .fiche-guide-body ul, .fiche-guide-body ol { margin: 0; padding-left: 18px; }
+  .fiche-guide-body li { margin-bottom: 4px; }
+  .fiche-guide-version { font-size: 11px; color: var(--ink-faint); font-family: var(--font-mono); }
+  .fiche-guide-note { font-size: 11px; color: var(--ink-faint); margin-top: 6px; }
+  .pill-list { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; }
+  .pill-list li { background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px; padding: 2px 9px; font-size: 11px; margin: 0; }
+  .fiche-guide-table-wrap { overflow-x: auto; }
+  .fiche-guide-table { border-collapse: collapse; width: 100%; min-width: 520px; font-size: 11.5px; }
+  .fiche-guide-table caption { text-align: left; font-size: 11px; color: var(--ink-faint); margin-bottom: 6px; caption-side: top; }
+  .fiche-guide-table th, .fiche-guide-table td { border: 1px solid var(--line); padding: 4px 7px; text-align: right; }
+  .fiche-guide-table th:first-child, .fiche-guide-table td:first-child,
+  .fiche-guide-table th:nth-child(2), .fiche-guide-table td:nth-child(2) { text-align: left; }
+  .fiche-guide-table thead th { background: var(--surface-2); font-weight: 700; }
+  .control-rates { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin: 8px 0; }
+  .control-rates ul { padding-left: 16px; margin-top: 4px; }
+  .fiche-guide-sources ul { padding-left: 16px; }
+  .fiche-guide-disclaimer { margin-top: 14px; padding-top: 8px; border-top: 1px dashed var(--line); font-size: 10.5px; color: var(--ink-faint); }
+
   footer.page-foot {
     margin-top: 36px; padding-top: 16px; border-top: 1px solid var(--line);
     font-size: 11.5px; color: var(--ink-faint); display: flex; flex-direction: column; gap: 6px;
@@ -1182,7 +1213,7 @@
 
   <div id="catalogView" style="display:none;">
     <p class="catalog-note">
-      <strong>Catalogue des fiches d'opérations standardisées (FOS)</strong> — extrait du catalogue officiel consolidé publié par la DGEC (arrêté du 22 décembre 2014 modifié). Les intitulés et statuts sont issus d'une extraction automatisée du document officiel : en cas de doute sur une fiche précise, vérifiez-la sur le <a href="https://www.ecologie.gouv.fr/politiques-publiques/operations-standardisees-deconomies-denergie" target="_blank" rel="noopener">catalogue officiel</a>. Quand une fiche du catalogue a fait l'objet d'une évolution suivie dans le Registre, un lien apparaît sous sa carte.
+      <strong>Catalogue des fiches d'opérations standardisées (FOS)</strong> — extrait du catalogue officiel consolidé publié par la DGEC (arrêté du 22 décembre 2014 modifié). Les intitulés et statuts sont issus d'une extraction automatisée du document officiel : en cas de doute sur une fiche précise, vérifiez-la sur le <a href="https://www.ecologie.gouv.fr/politiques-publiques/operations-standardisees-deconomies-denergie" target="_blank" rel="noopener">catalogue officiel</a>. Quand une fiche du catalogue a fait l'objet d'une évolution suivie dans le Registre, un lien apparaît sous sa carte. Certaines fiches — marquées <span class="fiche-guide-badge" style="margin-top:0;">📘 Guide complet disponible</span> — disposent en plus d'un guide détaillé (valorisation, points de contrôle, pièces justificatives) sourcé sur les textes officiels en vigueur ; ce guide s'enrichit progressivement, fiche par fiche.
     </p>
     <div class="catalog-stats" id="catalogStats"></div>
     <div class="catalog-search-row">
@@ -1647,7 +1678,86 @@
       { "c": "TRA-SE-115", "t": "Covoiturage de courte distance", "s": "Transport" },
       { "c": "TRA-SE-116", "t": "Fret ferroviaire", "s": "Transport" },
       { "c": "TRA-SE-117", "t": "Fret fluvial", "s": "Transport" }
-    ]
+    ],
+    "ficheDetails": {
+      "BAT-TH-116": {
+        "version": "v. A62.6",
+        "appliesFrom": "2025-01-01",
+        "appliesUntil": "2030-01-01",
+        "lastReviewed": "2026-08-18",
+        "scope": "Mise en place d'un système de gestion technique du bâtiment (GTB) pour un usage chauffage et, le cas échéant, eau chaude sanitaire, refroidissement/climatisation, éclairage et auxiliaires, dans un bâtiment tertiaire existant depuis plus de deux ans. Concerne soit l'achat d'un système neuf, soit l'amélioration d'un système existant.",
+        "eligibleSectors": ["Bureaux", "Enseignement", "Commerces", "Hôtellerie / Restauration", "Santé"],
+        "exclusions": ["Entrepôts de logistique", "Réserves", "Entrepôts frigorifiques ou non", "Locaux de stockage"],
+        "requiredWorks": [
+          "Installation ou mise à niveau d'un système de gestion technique du bâtiment conforme à la norme NF EN ISO 52120-1:2022, atteignant au minimum la classe B (idéalement classe A) sur les usages gérés.",
+          "En cas d'amélioration d'un système existant, celui-ci doit être au plus de classe C avant l'opération pour être éligible.",
+          "Le système doit gérer l'usage chauffage et peut, selon le périmètre retenu, gérer également l'ECS, le refroidissement/climatisation, l'éclairage et les auxiliaires — chaque usage géré doit être renseigné avec sa surface (m²)."
+        ],
+        "valuation": {
+          "unit": "kWh cumac par m² de surface gérée par usage, selon la classe (A ou B) et le secteur d'activité — valeurs de référence pour la zone climatique H1 ; à multiplier par 0,9 en zone H2 et par 0,6 en zone H3.",
+          "lifetime": "15 ans",
+          "climateCoefficients": { "H1": 1.1, "H2": 0.9, "H3": 0.6 },
+          "table": [
+            { "class": "A", "sector": "Bureaux", "chauffage": 360, "ecs": 15, "refroidissement": 233, "eclairage": 184, "auxiliaires": 19 },
+            { "class": "A", "sector": "Enseignement", "chauffage": 170, "ecs": 30, "refroidissement": 60, "eclairage": 46, "auxiliaires": 6 },
+            { "class": "A", "sector": "Commerces", "chauffage": 520, "ecs": 32, "refroidissement": 150, "eclairage": null, "auxiliaires": 6 },
+            { "class": "A", "sector": "Hôtellerie / Restauration", "chauffage": 400, "ecs": 87, "refroidissement": 60, "eclairage": 65, "auxiliaires": 6 },
+            { "class": "A", "sector": "Santé", "chauffage": 150, "ecs": 82, "refroidissement": 60, "eclairage": null, "auxiliaires": 19 },
+            { "class": "B", "sector": "Bureaux", "chauffage": 240, "ecs": 7, "refroidissement": 97, "eclairage": 90, "auxiliaires": 8 },
+            { "class": "B", "sector": "Enseignement", "chauffage": 100, "ecs": 13, "refroidissement": 23, "eclairage": 21, "auxiliaires": 3 },
+            { "class": "B", "sector": "Commerces", "chauffage": 250, "ecs": 14, "refroidissement": 44, "eclairage": null, "auxiliaires": 3 },
+            { "class": "B", "sector": "Hôtellerie / Restauration", "chauffage": 200, "ecs": 40, "refroidissement": 23, "eclairage": 30, "auxiliaires": 3 },
+            { "class": "B", "sector": "Santé", "chauffage": 90, "ecs": 38, "refroidissement": 23, "eclairage": null, "auxiliaires": 9 }
+          ],
+          "sourceLabel": "Arrêté du 24 octobre 2024 (JORFTEXT000050500689)",
+          "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000050500689"
+        },
+        "controlPoints": {
+          "regulationLabel": "Arrêté du 22 février 2024 mettant en place des contrôles dans le cadre du dispositif des CEE",
+          "regulationUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000049205050",
+          "appliesFrom": "Opérations engagées à partir du 1er mars 2024",
+          "onSiteRate": [
+            { "period": "01/03/2024 – 31/12/2024", "rate": "12,5 %" },
+            { "period": "à partir du 01/01/2025", "rate": "15 %" }
+          ],
+          "contactRate": [
+            { "period": "01/03/2024 – 31/12/2024", "rate": "25 % (en sus du contrôle sur site)" },
+            { "period": "à partir du 01/01/2025", "rate": "30 % (en sus du contrôle sur site)" }
+          ],
+          "nonConformCriteria": [
+            "Pièces justificatives manquantes",
+            "Système installé non conforme à la norme NF EN ISO 52120-1:2022",
+            "Simple raccordement du système sans mise en service réelle",
+            "Système déjà de classe A ou B avant l'opération (cas « amélioration » alors non éligible)",
+            "Secteur d'activité du bâtiment non éligible",
+            "Capteurs manifestement insuffisants au regard des surfaces gérées déclarées",
+            "Écart entre la surface déclarée et la surface réelle supérieur à 10 %"
+          ],
+          "contactChecks": [
+            "Existence d'un système de gestion technique du bâtiment installé ou amélioré",
+            "Secteur d'activité du bâtiment concerné",
+            "Absence de vice apparent constaté par le bénéficiaire sur les travaux réalisés"
+          ]
+        },
+        "justificationDocs": [
+          "Attestation sur l'honneur signée (partie A, annexe 1 de la fiche) : dates d'engagement et de réalisation, référence de la facture, adresse des travaux.",
+          "Confirmation que le bâtiment tertiaire est existant depuis plus de deux ans à la date d'engagement.",
+          "Nature de l'opération cochée : achat d'un système neuf OU amélioration d'un système existant.",
+          "Si amélioration : confirmation que le système existant était au plus de classe C avant travaux.",
+          "Secteur d'activité coché parmi Bureaux / Enseignement / Commerces / Hôtellerie-Restauration / Santé.",
+          "Surface (en m²) gérée par le système pour chaque usage concerné (chauffage, ECS, refroidissement/climatisation, éclairage, auxiliaires).",
+          "Classe du système installé (A ou B) selon NF EN ISO 52120-1:2022.",
+          "Marque et référence du système, si non mentionnées sur la preuve de réalisation.",
+          "Coût de l'opération HT et TTC.",
+          "Montant total des autres aides publiques perçues pour l'opération, hors dispositif CEE."
+        ],
+        "sources": [
+          { "label": "Fiche BAT-TH-116 (v. A62.6) — annexe 1, attestation sur l'honneur, partie A à compter du 01/07/2026", "url": "https://www.ecologie.gouv.fr/sites/default/files/documents/BAT-TH-116%20vA62-6%20%C3%A0%20compter%20du%2001-01-2025%20-%20Partie%20A%20%C3%A0%20compter%20du%2001-07-2026.pdf" },
+          { "label": "Arrêté du 24 octobre 2024 modifiant la fiche BAT-TH-116 (montants et tableau de valorisation)", "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000050500689" },
+          { "label": "Arrêté du 22 février 2024 (référentiel de contrôle applicable à BAT-TH-116)", "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000049205050" }
+        ]
+      }
+    }
   },
   "items": [
     {
@@ -3411,12 +3521,67 @@ function pdfSearchUrl(code) {
   return "https://www.google.com/search?q=" + encodeURIComponent('site:ecologie.gouv.fr "' + code + '" filetype:pdf');
 }
 
+// Rendu du guide détaillé d'une fiche (valorisation, points de contrôle, pièces
+// justificatives). N'existe que pour les fiches déjà documentées à la main à partir de
+// sources officielles (Légifrance, PDF ecologie.gouv.fr) — voir META.ficheDetails.
+// Aucune valeur n'est calculée ou déduite ici : tout provient tel quel des sources citées.
+function renderFicheDetail(code, d, openByDefault) {
+  const val = d.valuation;
+  const usageCols = [["chauffage", "Chauffage"], ["ecs", "ECS"], ["refroidissement", "Refroid. / Clim."], ["eclairage", "Éclairage"], ["auxiliaires", "Auxiliaires"]];
+  const valuationTable = val ? `
+    <div class="fiche-guide-table-wrap">
+      <table class="fiche-guide-table">
+        <caption>${escAttr(val.unit)}</caption>
+        <thead><tr><th>Classe</th><th>Secteur</th>${usageCols.map(([, label]) => `<th>${label}</th>`).join("")}</tr></thead>
+        <tbody>${(val.table || []).map(row => `<tr>
+          <td>${escAttr(row.class)}</td>
+          <td>${escAttr(row.sector)}</td>
+          ${usageCols.map(([key]) => `<td>${row[key] == null ? "—" : row[key] + " kWh"}</td>`).join("")}
+        </tr>`).join("")}</tbody>
+      </table>
+    </div>
+    <p class="fiche-guide-note">Durée de vie conventionnelle : <strong>${escAttr(val.lifetime)}</strong>. Coefficients zone climatique : ${Object.entries(val.climateCoefficients || {}).map(([z, c]) => `${z} = ${c}`).join(" · ")}.
+      Source : <a href="${escAttr(val.sourceUrl)}" target="_blank" rel="noopener">${escAttr(val.sourceLabel)}</a></p>` : "";
+
+  const control = d.controlPoints ? `
+    <div class="fiche-guide-control">
+      <p>${escAttr(d.controlPoints.appliesFrom)} — référentiel : <a href="${escAttr(d.controlPoints.regulationUrl)}" target="_blank" rel="noopener">${escAttr(d.controlPoints.regulationLabel)}</a></p>
+      <div class="control-rates">
+        <div><strong>Taux de contrôle sur site</strong><ul>${(d.controlPoints.onSiteRate || []).map(r => `<li>${escAttr(r.period)} : ${escAttr(r.rate)}</li>`).join("")}</ul></div>
+        <div><strong>Taux de contrôle par contact</strong><ul>${(d.controlPoints.contactRate || []).map(r => `<li>${escAttr(r.period)} : ${escAttr(r.rate)}</li>`).join("")}</ul></div>
+      </div>
+      <p><strong>Motifs de non-conformité (contrôle sur site)</strong></p>
+      <ul>${(d.controlPoints.nonConformCriteria || []).map(c => `<li>${escAttr(c)}</li>`).join("")}</ul>
+      <p><strong>Vérifications par contact</strong></p>
+      <ul>${(d.controlPoints.contactChecks || []).map(c => `<li>${escAttr(c)}</li>`).join("")}</ul>
+    </div>` : "";
+
+  return `<details class="fiche-guide"${openByDefault ? " open" : ""}>
+    <summary>📘 Fiche complète — valorisation, contrôle, justificatifs</summary>
+    <div class="fiche-guide-body">
+      <p class="fiche-guide-version">${escAttr(d.version || "")}${d.appliesUntil ? ` · applicable aux opérations engagées jusqu'au ${fmtDate(d.appliesUntil)}` : ""}</p>
+      <section><h4>Périmètre de l'opération</h4><p>${escAttr(d.scope)}</p></section>
+      ${d.eligibleSectors ? `<section><h4>Secteurs d'activité éligibles</h4><ul class="pill-list">${d.eligibleSectors.map(s => `<li>${escAttr(s)}</li>`).join("")}</ul>${d.exclusions ? `<p class="fiche-guide-note">Exclus : ${d.exclusions.map(escAttr).join(", ")}.</p>` : ""}</section>` : ""}
+      ${d.requiredWorks ? `<section><h4>Travaux à réaliser</h4><ul>${d.requiredWorks.map(w => `<li>${escAttr(w)}</li>`).join("")}</ul></section>` : ""}
+      ${val ? `<section><h4>Comment valoriser cette fiche</h4>${valuationTable}</section>` : ""}
+      ${control ? `<section><h4>Points de contrôle</h4>${control}</section>` : ""}
+      ${d.justificationDocs ? `<section><h4>Pièces justificatives à réunir</h4><ol>${d.justificationDocs.map(x => `<li>${escAttr(x)}</li>`).join("")}</ol></section>` : ""}
+      ${d.sources ? `<section class="fiche-guide-sources"><h4>Sources citées</h4><ul>${d.sources.map(s => `<li><a href="${escAttr(s.url)}" target="_blank" rel="noopener">${escAttr(s.label)}</a></li>`).join("")}</ul></section>` : ""}
+      <p class="fiche-guide-disclaimer">Dernière vérification de ce guide : <time>${d.lastReviewed ? fmtDate(d.lastReviewed) : "—"}</time>. La fiche officielle en vigueur et le référentiel de contrôle publiés par la DGEC prévalent toujours — vérifiez-les avant toute décision engageante sur un dossier.</p>
+    </div>
+  </details>`;
+}
+
 function renderCatalog() {
   const wrap = document.getElementById("catalogSectors");
   const cat = META.ficheCatalog || [];
   const q = catalogState.q.trim().toLowerCase();
   const byCode = codeToItemsMap();
   const sectors = [...new Set(cat.map(f => f.s))];
+  const matches = q ? cat.filter(f => f.c.toLowerCase().includes(q) || f.t.toLowerCase().includes(q)) : [];
+  // Une recherche qui isole une seule fiche documentée ouvre directement son guide complet,
+  // pour que taper un code (ex. "BAT-TH-116") donne tout de suite le détail sans clic de plus.
+  const soleMatchCode = matches.length === 1 ? matches[0].c : null;
 
   const blocks = sectors.filter(s => !catalogState.sectors.size || catalogState.sectors.has(s)).map(sector => {
     const fiches = cat.filter(f => f.s === sector && (!q || f.c.toLowerCase().includes(q) || f.t.toLowerCase().includes(q)));
@@ -3426,14 +3591,17 @@ function renderCatalog() {
       const evo = related.length
         ? `<div class="fiche-evolution">Dernière évolution suivie : <time>${fmtDate(related[0].date)}</time> — <a class="source-link" href="#" data-jump="${f.c}">${related[0].title}</a></div>`
         : `<div class="no-evolution">Aucune évolution suivie dans le registre.</div>`;
-      return `<div class="fiche-card ${f.a ? 'is-abrogee' : ''}">
+      const detail = (META.ficheDetails || {})[f.c];
+      return `<div class="fiche-card ${f.a ? 'is-abrogee' : ''} ${detail ? 'has-guide' : ''}">
         <div class="fiche-card-top">
           <span class="fiche-code-lg">${f.c}</span>
           <span class="fiche-status ${f.a ? 'abrogee' : 'active'}">${f.a ? 'Abrogée' : 'Active'}</span>
         </div>
         <div class="fiche-card-title">${f.t}</div>
+        ${detail ? `<span class="fiche-guide-badge">📘 Guide complet disponible</span>` : ""}
         <a class="fiche-pdf-link" href="${pdfSearchUrl(f.c)}" target="_blank" rel="noopener">📄 Voir le PDF en vigueur ↗</a>
         ${evo}
+        ${detail ? renderFicheDetail(f.c, detail, f.c === soleMatchCode) : ""}
       </div>`;
     }).join("");
     return `<div class="sector-block">
