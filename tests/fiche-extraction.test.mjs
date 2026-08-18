@@ -61,3 +61,26 @@ test("rejects an empty PDF buffer before calling the API", async () => {
     /pdfBuffer/
   );
 });
+
+test("rejects when neither pdfBuffer nor sourceText is given", async () => {
+  await assert.rejects(
+    () => extractFicheDetail({ code: "TEST", client: {} }),
+    /pdfBuffer ou sourceText/
+  );
+});
+
+test("accepts sourceText (e.g. a fetched Légifrance page) instead of a PDF", async () => {
+  let capturedContent;
+  const fakeClient = {
+    messages: {
+      parse: async (params) => {
+        capturedContent = params.messages[0].content;
+        return { stop_reason: "end_turn", parsed_output: { scope: "from text" }, usage: {} };
+      },
+    },
+  };
+  const result = await extractFicheDetail({ code: "TEST", sourceText: "Arrêté du 1er janvier 2027...", client: fakeClient });
+  assert.deepEqual(result.data, { scope: "from text" });
+  assert.equal(capturedContent[0].type, "text");
+  assert.equal(capturedContent[0].text, "Arrêté du 1er janvier 2027...");
+});

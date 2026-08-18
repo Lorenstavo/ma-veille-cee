@@ -103,13 +103,21 @@ Règle absolue : extraction fidèle uniquement. Ne calcule rien, ne déduis rien
 /**
  * @param {object} params
  * @param {string} params.code - Code de la fiche (ex. "BAT-TH-116"), pour le contexte du prompt.
- * @param {Buffer} params.pdfBuffer - Contenu binaire du PDF (fiche officielle ou arrêté).
+ * @param {Buffer} [params.pdfBuffer] - Contenu binaire du PDF (fiche officielle ou arrêté), si disponible.
+ * @param {string} [params.sourceText] - Texte brut (ex. page Légifrance HTML/texte convertie) —
+ *   utilisé uniquement si `pdfBuffer` n'est pas fourni. L'un des deux est obligatoire.
  * @param {Anthropic} [params.client] - Client injectable pour les tests.
  * @returns {Promise<{data: object, usage: object} | null>} `null` en cas d'échec — l'appelant
  *   doit alors conserver la donnée précédemment publiée, jamais écrire un résultat partiel.
  */
-export async function extractFicheDetail({ code, pdfBuffer, client = new Anthropic() }) {
-  if (!pdfBuffer || !pdfBuffer.length) throw new Error("pdfBuffer manquant ou vide");
+export async function extractFicheDetail({ code, pdfBuffer, sourceText, client = new Anthropic() }) {
+  const hasPdf = pdfBuffer && pdfBuffer.length;
+  const hasText = typeof sourceText === "string" && sourceText.trim().length;
+  if (!hasPdf && !hasText) throw new Error("pdfBuffer ou sourceText requis (aucun des deux fourni)");
+
+  const documentBlock = hasPdf
+    ? { type: "document", source: { type: "base64", media_type: "application/pdf", data: pdfBuffer.toString("base64") } }
+    : { type: "text", text: sourceText };
 
   let response;
   try {
@@ -124,8 +132,8 @@ export async function extractFicheDetail({ code, pdfBuffer, client = new Anthrop
       messages: [{
         role: "user",
         content: [
-          { type: "document", source: { type: "base64", media_type: "application/pdf", data: pdfBuffer.toString("base64") } },
-          { type: "text", text: `Extrait le contenu de la fiche ${code} (ou de l'arrêté la modifiant) ci-joint selon le schéma demandé.` }
+          documentBlock,
+          { type: "text", text: `Extrait le contenu de la fiche ${code} (ou de l'arrêté la modifiant) ci-joint/ci-dessus selon le schéma demandé.` }
         ]
       }]
     });

@@ -35,6 +35,11 @@ jobs:
       DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || 'false' }}
       PISTE_LEGIFRANCE_CLIENT_ID: ${{ secrets.PISTE_LEGIFRANCE_CLIENT_ID }}
       PISTE_LEGIFRANCE_CLIENT_SECRET: ${{ secrets.PISTE_LEGIFRANCE_CLIENT_SECRET }}
+      # Not yet configured as a repository secret. Until it is, update-fiche-details.mjs
+      # resolves this to an empty string, logs that it has nothing to do, and exits without
+      # touching any file -- see the script's own header comment for the "no invented
+      # content in place of a missing key" rationale.
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
     steps:
       - name: Checkout main
         uses: actions/checkout@v4
@@ -46,9 +51,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Run regulatory watch
         run: node scripts/run-regulatory-watch.mjs
+
+      - name: Update fiche details (AI-assisted, no-op without ANTHROPIC_API_KEY)
+        if: success()
+        run: node scripts/update-fiche-details.mjs
 
       - name: Commit successful watch result
         id: commit

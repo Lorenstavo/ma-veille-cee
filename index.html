@@ -529,6 +529,12 @@
   .fiche-guide-body ul, .fiche-guide-body ol { margin: 0; padding-left: 18px; }
   .fiche-guide-body li { margin-bottom: 4px; }
   .fiche-guide-version { font-size: 11px; color: var(--ink-faint); font-family: var(--font-mono); }
+  .fiche-guide-stale {
+    margin-top: 8px; padding: 8px 10px; border-radius: var(--radius-sm);
+    background: var(--impact-medium-tint); border: 1px solid var(--impact-medium-line); color: var(--impact-medium);
+    font-size: 11.5px; line-height: 1.5;
+  }
+  .fiche-guide-stale a { color: inherit; font-weight: 700; }
   .fiche-guide-note { font-size: 11px; color: var(--ink-faint); margin-top: 6px; }
   .pill-list { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; }
   .pill-list li { background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px; padding: 2px 9px; font-size: 11px; margin: 0; }
@@ -3525,7 +3531,17 @@ function pdfSearchUrl(code) {
 // justificatives). N'existe que pour les fiches déjà documentées à la main à partir de
 // sources officielles (Légifrance, PDF ecologie.gouv.fr) — voir META.ficheDetails.
 // Aucune valeur n'est calculée ou déduite ici : tout provient tel quel des sources citées.
-function renderFicheDetail(code, d, openByDefault) {
+// Une évolution du registre plus récente que la dernière vérification du guide signale
+// qu'un arrêté a peut-être modifié cette fiche depuis — le guide n'est pas mis à jour tout
+// seul (voir scripts/sources/fiche-extraction.mjs pour le pipeline d'extraction), donc on
+// affiche un avertissement plutôt que de laisser croire que le contenu est encore à jour.
+function ficheGuideStaleness(code, d, latestItem) {
+  if (!latestItem || !d.lastReviewed) return null;
+  if (latestItem.date <= d.lastReviewed) return null;
+  return `<p class="fiche-guide-stale">⚠️ Une évolution plus récente existe dans le registre (<time>${fmtDate(latestItem.date)}</time> — <a class="source-link" href="#" data-jump="${escAttr(code)}">${escAttr(latestItem.title)}</a>) : ce guide peut être obsolète, à revérifier avant de s'y fier.</p>`;
+}
+
+function renderFicheDetail(code, d, openByDefault, latestItem) {
   const val = d.valuation;
   const usageCols = [["chauffage", "Chauffage"], ["ecs", "ECS"], ["refroidissement", "Refroid. / Clim."], ["eclairage", "Éclairage"], ["auxiliaires", "Auxiliaires"]];
   const valuationTable = val ? `
@@ -3560,6 +3576,7 @@ function renderFicheDetail(code, d, openByDefault) {
     <summary>📘 Fiche complète — valorisation, contrôle, justificatifs</summary>
     <div class="fiche-guide-body">
       <p class="fiche-guide-version">${escAttr(d.version || "")}${d.appliesUntil ? ` · applicable aux opérations engagées jusqu'au ${fmtDate(d.appliesUntil)}` : ""}</p>
+      ${ficheGuideStaleness(code, d, latestItem) || ""}
       <section><h4>Périmètre de l'opération</h4><p>${escAttr(d.scope)}</p></section>
       ${d.eligibleSectors ? `<section><h4>Secteurs d'activité éligibles</h4><ul class="pill-list">${d.eligibleSectors.map(s => `<li>${escAttr(s)}</li>`).join("")}</ul>${d.exclusions ? `<p class="fiche-guide-note">Exclus : ${d.exclusions.map(escAttr).join(", ")}.</p>` : ""}</section>` : ""}
       ${d.requiredWorks ? `<section><h4>Travaux à réaliser</h4><ul>${d.requiredWorks.map(w => `<li>${escAttr(w)}</li>`).join("")}</ul></section>` : ""}
@@ -3601,7 +3618,7 @@ function renderCatalog() {
         ${detail ? `<span class="fiche-guide-badge">📘 Guide complet disponible</span>` : ""}
         <a class="fiche-pdf-link" href="${pdfSearchUrl(f.c)}" target="_blank" rel="noopener">📄 Voir le PDF en vigueur ↗</a>
         ${evo}
-        ${detail ? renderFicheDetail(f.c, detail, f.c === soleMatchCode) : ""}
+        ${detail ? renderFicheDetail(f.c, detail, f.c === soleMatchCode, related[0]) : ""}
       </div>`;
     }).join("");
     return `<div class="sector-block">
