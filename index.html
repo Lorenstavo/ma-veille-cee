@@ -536,6 +536,9 @@
   }
   .fiche-guide-stale a { color: inherit; font-weight: 700; }
   .fiche-guide-note { font-size: 11px; color: var(--ink-faint); margin-top: 6px; }
+  .fiche-guide-formula { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink); background: var(--surface-2); border-radius: var(--radius-sm); padding: 6px 9px; margin: 6px 0; }
+  .fiche-guide-variables { font-size: 11.5px; margin: 6px 0 0; padding-left: 18px; }
+  .fiche-guide-variables li { margin-bottom: 3px; }
   .pill-list { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; }
   .pill-list li { background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px; padding: 2px 9px; font-size: 11px; margin: 0; }
   .fiche-guide-table-wrap { overflow-x: auto; }
@@ -1703,20 +1706,23 @@
           "unit": "kWh cumac par m² de surface gérée par usage, selon la classe (A ou B) et le secteur d'activité — valeurs de référence pour la zone climatique H1 ; à multiplier par 0,9 en zone H2 et par 0,6 en zone H3.",
           "lifetime": "15 ans",
           "climateCoefficients": { "H1": 1.1, "H2": 0.9, "H3": 0.6 },
-          "table": [
-            { "class": "A", "sector": "Bureaux", "chauffage": 360, "ecs": 15, "refroidissement": 233, "eclairage": 184, "auxiliaires": 19 },
-            { "class": "A", "sector": "Enseignement", "chauffage": 170, "ecs": 30, "refroidissement": 60, "eclairage": 46, "auxiliaires": 6 },
-            { "class": "A", "sector": "Commerces", "chauffage": 520, "ecs": 32, "refroidissement": 150, "eclairage": null, "auxiliaires": 6 },
-            { "class": "A", "sector": "Hôtellerie / Restauration", "chauffage": 400, "ecs": 87, "refroidissement": 60, "eclairage": 65, "auxiliaires": 6 },
-            { "class": "A", "sector": "Santé", "chauffage": 150, "ecs": 82, "refroidissement": 60, "eclairage": null, "auxiliaires": 19 },
-            { "class": "B", "sector": "Bureaux", "chauffage": 240, "ecs": 7, "refroidissement": 97, "eclairage": 90, "auxiliaires": 8 },
-            { "class": "B", "sector": "Enseignement", "chauffage": 100, "ecs": 13, "refroidissement": 23, "eclairage": 21, "auxiliaires": 3 },
-            { "class": "B", "sector": "Commerces", "chauffage": 250, "ecs": 14, "refroidissement": 44, "eclairage": null, "auxiliaires": 3 },
-            { "class": "B", "sector": "Hôtellerie / Restauration", "chauffage": 200, "ecs": 40, "refroidissement": 23, "eclairage": 30, "auxiliaires": 3 },
-            { "class": "B", "sector": "Santé", "chauffage": 90, "ecs": 38, "refroidissement": 23, "eclairage": null, "auxiliaires": 9 }
-          ],
-          "sourceLabel": "Arrêté du 24 octobre 2024 (JORFTEXT000050500689)",
-          "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000050500689"
+          "formula": null,
+          "table": {
+            "columns": ["Classe", "Secteur", "Chauffage", "ECS", "Refroid. / Clim.", "Éclairage", "Auxiliaires"],
+            "rows": [
+              ["A", "Bureaux", 360, 15, 233, 184, 19],
+              ["A", "Enseignement", 170, 30, 60, 46, 6],
+              ["A", "Commerces", 520, 32, 150, null, 6],
+              ["A", "Hôtellerie / Restauration", 400, 87, 60, 65, 6],
+              ["A", "Santé", 150, 82, 60, null, 19],
+              ["B", "Bureaux", 240, 7, 97, 90, 8],
+              ["B", "Enseignement", 100, 13, 23, 21, 3],
+              ["B", "Commerces", 250, 14, 44, null, 3],
+              ["B", "Hôtellerie / Restauration", 200, 40, 23, 30, 3],
+              ["B", "Santé", 90, 38, 23, null, 9]
+            ]
+          },
+          "notes": null
         },
         "controlPoints": {
           "regulationLabel": "Arrêté du 22 février 2024 mettant en place des contrôles dans le cadre du dispositif des CEE",
@@ -1761,6 +1767,156 @@
           { "label": "Fiche BAT-TH-116 (v. A62.6) — annexe 1, attestation sur l'honneur, partie A à compter du 01/07/2026", "url": "https://www.ecologie.gouv.fr/sites/default/files/documents/BAT-TH-116%20vA62-6%20%C3%A0%20compter%20du%2001-01-2025%20-%20Partie%20A%20%C3%A0%20compter%20du%2001-07-2026.pdf" },
           { "label": "Arrêté du 24 octobre 2024 modifiant la fiche BAT-TH-116 (montants et tableau de valorisation)", "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000050500689" },
           { "label": "Arrêté du 22 février 2024 (référentiel de contrôle applicable à BAT-TH-116)", "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000049205050" }
+        ]
+      },
+      "BAR-EN-101": {
+        "version": "v. A64.6",
+        "appliesFrom": "2025-01-01",
+        "appliesUntil": "2027-05-01",
+        "lastReviewed": "2026-08-18",
+        "scope": "Mise en place d'un procédé d'isolation thermique en comble perdu ou en rampant de toiture, dans un bâtiment résidentiel existant depuis plus de deux ans (maison individuelle ou copropriété).",
+        "eligibleSectors": null,
+        "exclusions": null,
+        "requiredWorks": [
+          "Isolation posée en comble perdu : résistance thermique R ≥ 7 m².K/W.",
+          "Isolation posée en rampant de toiture : résistance thermique R ≥ 6 m².K/W.",
+          "La résistance thermique de l'isolation déjà en place n'est pas prise en compte dans le calcul du R après travaux.",
+          "Mise en place d'un pare-vapeur, ou de tout autre dispositif permettant d'atteindre un résultat équivalent.",
+          "Résistance thermique évaluée selon NF EN 12664, NF EN 12667 ou NF EN 12939 (isolants non réfléchissants) ou NF EN ISO 22097 (isolants réfléchissants).",
+          "Le professionnel réalisant l'opération doit être titulaire d'un signe de qualité conforme à l'article 2 du décret n° 2014-812 du 16 juillet 2014 (travaux relevant du 11°, 13° ou 14° du I de l'article 1er du décret).",
+          "Visite préalable du bâtiment requise avant le début des travaux."
+        ],
+        "valuation": {
+          "unit": "kWh cumac par m² de surface d'isolant posé, selon la zone climatique — valeur unique par zone, quel que soit le type de pose (comble perdu ou rampant).",
+          "lifetime": "30 ans",
+          "climateCoefficients": null,
+          "formula": null,
+          "table": {
+            "columns": ["Zone climatique", "Montant (kWh cumac/m²)"],
+            "rows": [
+              ["H1", 1700],
+              ["H2", 1400],
+              ["H3", 920]
+            ]
+          },
+          "notes": null
+        },
+        "controlPoints": {
+          "regulationLabel": "Arrêté du 28 septembre 2021 relatif aux contrôles dans le cadre du dispositif des CEE (version consolidée)",
+          "regulationUrl": "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000044162840",
+          "appliesFrom": "Taux ci-dessous applicables selon la date d'engagement de l'opération",
+          "onSiteRate": [
+            { "period": "01/01/2022 – 31/12/2022", "rate": "7,5 %" },
+            { "period": "01/01/2023 – 31/12/2023", "rate": "10 %" },
+            { "period": "01/01/2024 – 31/12/2024", "rate": "12,5 %" },
+            { "period": "01/01/2025 – 31/12/2026", "rate": "15 %" },
+            { "period": "à partir du 01/01/2027", "rate": "20 %" }
+          ],
+          "contactRate": [
+            { "period": "01/01/2022 – 31/12/2022", "rate": "15 % (en sus du contrôle sur site)" },
+            { "period": "01/01/2023 – 31/12/2023", "rate": "20 % (en sus du contrôle sur site)" },
+            { "period": "01/01/2024 – 31/12/2024", "rate": "25 % (en sus du contrôle sur site)" },
+            { "period": "à partir du 01/01/2025", "rate": "30 % (en sus du contrôle sur site)" }
+          ],
+          "nonConformCriteria": [
+            "Absence de devis, de preuve de réalisation ou de cadre contribution",
+            "Non-respect du délai minimal de 7 jours francs entre l'acceptation du devis et le début des travaux",
+            "Résistance thermique de l'isolant posé inférieure à la résistance minimale requise (R < 7 en comble perdu, R < 6 en rampant)",
+            "Défaut ou mauvais positionnement du pare-vapeur côté froid",
+            "Écart de surface supérieur à 10 % entre la surface déclarée et la surface mesurée",
+            "Absence de réalisation des travaux",
+            "Tout constat de non-qualité manifeste de nature à remettre en cause la résistance thermique, la pérennité ou la sécurité de l'isolation"
+          ],
+          "contactChecks": null
+        },
+        "justificationDocs": [
+          "Attestation sur l'honneur signée (partie A, annexe 1 de la fiche) : dates d'engagement, de visite préalable, de début des travaux et de réalisation ; référence de la facture.",
+          "Confirmation que le bâtiment résidentiel est existant depuis plus de deux ans à la date d'engagement.",
+          "Type de pose coché : comble perdu ou rampant de toiture.",
+          "Surface d'isolant posé (m²) et résistance thermique R (m².K/W) — ou épaisseur si le R n'est pas mentionné sur la preuve de réalisation.",
+          "Confirmation de la mise en place d'un pare-vapeur ou d'un dispositif équivalent.",
+          "Marque et référence de l'isolant, si non mentionnées sur la preuve de réalisation.",
+          "Justificatif du signe de qualité (RGE) du professionnel ayant réalisé les travaux, et identité du titulaire si différent du signataire de l'attestation.",
+          "Coût de l'opération HT et TTC.",
+          "Montant total des autres aides publiques perçues pour l'opération."
+        ],
+        "sources": [
+          { "label": "Fiche BAR-EN-101 (v. A64.6) — annexe 1, attestation sur l'honneur, partie A à compter du 01/07/2026", "url": "https://www.ecologie.gouv.fr/sites/default/files/documents/BAR-EN-101%20vA64-6%20%C3%A0%20compter%20du%2001-01-2025%20-%20Partie%20A%20%C3%A0%20compter%20du%2001-07-2026.pdf" },
+          { "label": "Arrêté du 18 novembre 2024 (montants et tableau de valorisation BAR-EN-101)", "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000050613057" },
+          { "label": "Arrêté du 28 septembre 2021, version consolidée (référentiel de contrôle applicable à BAR-EN-101)", "url": "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000044162840" }
+        ]
+      },
+      "BAR-TH-171": {
+        "version": "v. A78.4",
+        "appliesFrom": "2026-01-01",
+        "appliesUntil": null,
+        "lastReviewed": "2026-08-19",
+        "scope": "Installation d'une pompe à chaleur de type air/eau pour le chauffage (et, le cas échéant, l'eau chaude sanitaire) d'un logement résidentiel existant, en maison individuelle ou en appartement.",
+        "eligibleSectors": null,
+        "exclusions": null,
+        "requiredWorks": [
+          "Etas (efficacité énergétique saisonnière pour le chauffage) minimal de 126 % pour une PAC basse température, ou 111 % pour une PAC moyenne/haute température.",
+          "Régulateur de classe IV à VIII au sens de la classification de la Commission européenne (2014/C 207/02).",
+          "Note de dimensionnement obligatoire, établie à partir des déperditions thermiques calculées du logement.",
+          "En cas de système déporté pour l'eau chaude sanitaire : même marque que la PAC, avec régulation donnant la priorité à la PAC.",
+          "Une bonification « Coup de pouce Chauffage » ×5 s'applique aux opérations engagées entre le 01/10/2025 et le 31/12/2030 sur une résidence principale (résidences secondaires exclues) ; à compter du 01/09/2026, cette bonification est conditionnée à l'agrément qualité du modèle de PAC installé (voir les évolutions suivies dans le registre pour le détail)."
+        ],
+        "valuation": {
+          "unit": "Montant de base en kWh cumac (selon le type de logement et la classe Etas) × facteur de surface × facteur de zone climatique.",
+          "lifetime": "17 ans",
+          "climateCoefficients": { "H1": 1.2, "H2": 1, "H3": 0.7 },
+          "formula": "AE = Montant de base × Facteur de surface × Facteur de zone climatique",
+          "table": {
+            "columns": ["Type de logement", "Classe Etas", "Montant de base (kWh cumac)"],
+            "rows": [
+              ["Appartement", "111 % ≤ Etas < 140 %", 48700],
+              ["Appartement", "Etas ≥ 140 %", 58900],
+              ["Maison individuelle", "111 % ≤ Etas < 140 %", 90900],
+              ["Maison individuelle", "Etas ≥ 140 %", 110000]
+            ]
+          },
+          "notes": "Facteur de surface — Appartement : 0,5 (S < 35 m²) · 0,7 (35 ≤ S < 60 m²) · 1 (S ≥ 60 m²). Maison individuelle : 0,5 (S < 70 m²) · 0,7 (70 ≤ S < 100 m²) · 1 (S ≥ 100 m²)."
+        },
+        "controlPoints": {
+          "regulationLabel": "Arrêté du 28 septembre 2021 relatif aux contrôles dans le cadre du dispositif des CEE (version consolidée, taux PAC actualisés par l'arrêté du 15 décembre 2025)",
+          "regulationUrl": "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000044162840",
+          "appliesFrom": "Taux ci-dessous applicables selon la date d'engagement de l'opération — montée en charge accélérée à partir de 2026 propre aux fiches PAC (BAR-TH-171/172)",
+          "onSiteRate": [
+            { "period": "01/04/2022 – 31/12/2022", "rate": "7,5 %" },
+            { "period": "01/01/2023 – 31/12/2023", "rate": "10 %" },
+            { "period": "01/01/2024 – 31/12/2024", "rate": "12,5 %" },
+            { "period": "01/01/2025 – 31/12/2025", "rate": "15 %" },
+            { "period": "01/01/2026 – 31/12/2026", "rate": "25 %" },
+            { "period": "01/01/2027 – 31/12/2027", "rate": "50 %" },
+            { "period": "à partir du 01/01/2028", "rate": "100 %" }
+          ],
+          "contactRate": [
+            { "period": "01/04/2022 – 31/12/2022", "rate": "15 %" },
+            { "period": "01/01/2023 – 31/12/2023", "rate": "20 %" },
+            { "period": "01/01/2024 – 31/12/2024", "rate": "25 %" },
+            { "period": "01/01/2025 – 31/12/2025", "rate": "30 %" },
+            { "period": "01/01/2026 – 31/12/2026", "rate": "30 %" },
+            { "period": "01/01/2027 – 31/12/2027", "rate": "100 %" }
+          ],
+          "nonConformCriteria": null,
+          "contactChecks": null
+        },
+        "justificationDocs": [
+          "Attestation sur l'honneur signée : dates d'engagement et de réalisation, référence de la facture, adresse des travaux.",
+          "Confirmation du type de logement (maison individuelle ou appartement) et de la surface chauffée.",
+          "Etas de la PAC installée et classe du régulateur (IV à VIII).",
+          "Note de dimensionnement basée sur les déperditions thermiques calculées du logement.",
+          "Zone climatique du logement.",
+          "Si bonification ×5 revendiquée : caractère de résidence principale du logement et, à compter du 01/09/2026, numéro d'agrément qualité du modèle de PAC installé.",
+          "Marque, référence et numéro de série de la PAC installée.",
+          "Coût de l'opération HT et TTC.",
+          "Montant total des autres aides publiques perçues pour l'opération."
+        ],
+        "sources": [
+          { "label": "Arrêté du 15 décembre 2025 (formule de valorisation, conditions techniques et taux de contrôle actualisés BAR-TH-171/172)", "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000053043176" },
+          { "label": "Arrêté du 28 septembre 2021, version consolidée (référentiel de contrôle général applicable à BAR-TH-171/172)", "url": "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000044162840" },
+          { "label": "Arrêté du 6 septembre 2025 (bonification ×5 Coup de pouce Chauffage)", "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000052212320" },
+          { "label": "Arrêté du 29 mai 2026 (agrément qualité conditionnant la bonification ×5 à compter du 01/09/2026)", "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000054152008" }
         ]
       }
     }
@@ -3543,21 +3699,26 @@ function ficheGuideStaleness(code, d, latestItem) {
 
 function renderFicheDetail(code, d, openByDefault, latestItem) {
   const val = d.valuation;
-  const usageCols = [["chauffage", "Chauffage"], ["ecs", "ECS"], ["refroidissement", "Refroid. / Clim."], ["eclairage", "Éclairage"], ["auxiliaires", "Auxiliaires"]];
-  const valuationTable = val ? `
+  // Format colonnes/lignes générique — couvre aussi bien un tableau par classe×secteur
+  // (BAT-TH-116) qu'un tableau par zone climatique seule (BAR-EN-101) ou toute autre forme :
+  // les libellés de colonnes viennent du contenu lui-même, rien n'est présupposé ici.
+  const formulaBlock = val && val.formula ? `
+    <p class="fiche-guide-formula"><strong>${escAttr(val.formula)}</strong></p>
+    ${val.formulaVariables && val.formulaVariables.length ? `<ul class="fiche-guide-variables">${val.formulaVariables.map(v => `<li><strong>${escAttr(v.symbol)}</strong> : ${escAttr(v.description)}</li>`).join("")}</ul>` : ""}` : "";
+  const tableBlock = val && val.table && val.table.columns && val.table.rows ? `
     <div class="fiche-guide-table-wrap">
       <table class="fiche-guide-table">
-        <caption>${escAttr(val.unit)}</caption>
-        <thead><tr><th>Classe</th><th>Secteur</th>${usageCols.map(([, label]) => `<th>${label}</th>`).join("")}</tr></thead>
-        <tbody>${(val.table || []).map(row => `<tr>
-          <td>${escAttr(row.class)}</td>
-          <td>${escAttr(row.sector)}</td>
-          ${usageCols.map(([key]) => `<td>${row[key] == null ? "—" : row[key] + " kWh"}</td>`).join("")}
-        </tr>`).join("")}</tbody>
+        <thead><tr>${val.table.columns.map(c => `<th>${escAttr(c)}</th>`).join("")}</tr></thead>
+        <tbody>${val.table.rows.map(row => `<tr>${row.map(cell => `<td>${cell == null ? "—" : escAttr(String(cell))}</td>`).join("")}</tr>`).join("")}</tbody>
       </table>
-    </div>
-    <p class="fiche-guide-note">Durée de vie conventionnelle : <strong>${escAttr(val.lifetime)}</strong>. Coefficients zone climatique : ${Object.entries(val.climateCoefficients || {}).map(([z, c]) => `${z} = ${c}`).join(" · ")}.
-      Source : <a href="${escAttr(val.sourceUrl)}" target="_blank" rel="noopener">${escAttr(val.sourceLabel)}</a></p>` : "";
+    </div>` : "";
+  const climateLine = val && val.climateCoefficients ? `Coefficients zone climatique : ${Object.entries(val.climateCoefficients).map(([z, c]) => `${z} = ${c}`).join(" · ")}. ` : "";
+  const valuationTable = val ? `
+    <p class="fiche-guide-note">${escAttr(val.unit || "")}</p>
+    ${formulaBlock}
+    ${tableBlock}
+    ${val.notes ? `<p class="fiche-guide-note">${escAttr(val.notes)}</p>` : ""}
+    <p class="fiche-guide-note">${val.lifetime ? `Durée de vie conventionnelle : <strong>${escAttr(val.lifetime)}</strong>. ` : ""}${climateLine}</p>` : "";
 
   const control = d.controlPoints ? `
     <div class="fiche-guide-control">
@@ -3566,10 +3727,10 @@ function renderFicheDetail(code, d, openByDefault, latestItem) {
         <div><strong>Taux de contrôle sur site</strong><ul>${(d.controlPoints.onSiteRate || []).map(r => `<li>${escAttr(r.period)} : ${escAttr(r.rate)}</li>`).join("")}</ul></div>
         <div><strong>Taux de contrôle par contact</strong><ul>${(d.controlPoints.contactRate || []).map(r => `<li>${escAttr(r.period)} : ${escAttr(r.rate)}</li>`).join("")}</ul></div>
       </div>
-      <p><strong>Motifs de non-conformité (contrôle sur site)</strong></p>
-      <ul>${(d.controlPoints.nonConformCriteria || []).map(c => `<li>${escAttr(c)}</li>`).join("")}</ul>
-      <p><strong>Vérifications par contact</strong></p>
-      <ul>${(d.controlPoints.contactChecks || []).map(c => `<li>${escAttr(c)}</li>`).join("")}</ul>
+      ${d.controlPoints.nonConformCriteria && d.controlPoints.nonConformCriteria.length ? `<p><strong>Motifs de non-conformité (contrôle sur site)</strong></p>
+      <ul>${d.controlPoints.nonConformCriteria.map(c => `<li>${escAttr(c)}</li>`).join("")}</ul>` : ""}
+      ${d.controlPoints.contactChecks && d.controlPoints.contactChecks.length ? `<p><strong>Vérifications par contact</strong></p>
+      <ul>${d.controlPoints.contactChecks.map(c => `<li>${escAttr(c)}</li>`).join("")}</ul>` : ""}
     </div>` : "";
 
   return `<details class="fiche-guide"${openByDefault ? " open" : ""}>
