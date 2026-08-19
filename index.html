@@ -1918,6 +1918,64 @@
           { "label": "Arrêté du 6 septembre 2025 (bonification ×5 Coup de pouce Chauffage)", "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000052212320" },
           { "label": "Arrêté du 29 mai 2026 (agrément qualité conditionnant la bonification ×5 à compter du 01/09/2026)", "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000054152008" }
         ]
+      },
+      "BAR-TH-174": {
+        "version": null,
+        "appliesFrom": null,
+        "appliesUntil": "2030-12-31",
+        "lastReviewed": "2026-08-19",
+        "scope": "Rénovation d'ampleur d'une maison individuelle en France métropolitaine : bouquet de travaux (isolation de l'enveloppe et système(s) de chauffage/ventilation) permettant un gain d'au moins deux classes au diagnostic de performance énergétique (DPE).",
+        "eligibleSectors": null,
+        "exclusions": null,
+        "requiredWorks": [
+          "Audit énergétique préalable obligatoire, réalisé selon les modalités de l'arrêté du 17 novembre 2020.",
+          "Gain minimal d'au moins 2 classes au DPE après travaux.",
+          "Au moins 2 postes d'isolation de l'enveloppe traités parmi : murs, planchers bas, toiture, fenêtres (portant sur au moins 25 % des surfaces concernées).",
+          "Résistances thermiques minimales (sauf contraintes techniques justifiées) : combles R ≥ 7 m².K/W ; toiture R ≥ 6 m².K/W ; murs par l'intérieur R ≥ 3,7 m².K/W ; murs par l'extérieur R ≥ 4,4 m².K/W ; planchers bas R ≥ 3 m².K/W.",
+          "Fenêtres : Uw ≤ 1,3 W/m².K et Sw ≥ 0,3, ou Uw ≤ 1,7 W/m².K et Sw ≥ 0,36.",
+          "Aucun équipement de chauffage ou d'ECS installé ne doit émettre plus de 300 gCO2eq/kWh PCI dès lors qu'il couvre plus de 30 % des besoins (exclut de fait le fioul et le charbon) ; limitation supplémentaire au-delà de 150 gCO2eq/kWh dans les mêmes conditions de taux de couverture.",
+          "Pour les opérations engagées après le 17 janvier 2026 : la bonification Coup de pouce n'est plus mobilisable sur une résidence secondaire.",
+          "⚠️ Un projet d'arrêté en consultation (clôture le 7 août 2026, non encore publié à la date de vérification de ce guide) prévoit un nouveau resserrement de la bonification Coup de pouce au 1er septembre 2026 (sortie possible des logements chauffés au fossile et non classés E/F/G) — à vérifier avant toute décision engageante, voir l'évolution suivie dans le registre."
+        ],
+        "valuation": {
+          "unit": "kWh cumac, selon le nombre de sauts de classe DPE obtenus et la surface habitable (Shab) du logement.",
+          "lifetime": "30 ans",
+          "climateCoefficients": null,
+          "formula": "AE = Montant unitaire (selon le nombre de sauts de classe DPE) × Facteur correctif de surface habitable",
+          "table": {
+            "columns": ["Sauts de classe DPE", "Montant unitaire (kWh cumac)"],
+            "rows": [
+              ["2 classes", 360200],
+              ["3 classes", 447900],
+              ["4 classes ou plus", 568600]
+            ]
+          },
+          "notes": "Facteur correctif de surface habitable (Shab), identique pour les trois paliers ci-dessus : 0,4 (Shab < 35 m²) · 0,5 (35 ≤ Shab < 60 m²) · 0,8 (60 ≤ Shab < 90 m²) · 1 (90 ≤ Shab < 110 m²) · 1,2 (110 ≤ Shab < 130 m²) · 1,3 (Shab ≥ 130 m²). Un coefficient de conversion de l'électricité de 1,9 (abaissé depuis 2,3) s'applique dans le calcul du gain énergétique support du DPE ; la condition de performance de l'enveloppe (Ubat) est supprimée pour les logements réalisant un saut d'au moins 4 classes."
+        },
+        "controlPoints": {
+          "regulationLabel": "Arrêté du 28 septembre 2021 relatif aux contrôles dans le cadre du dispositif des CEE — référentiel spécifique en annexe III, partie E ter",
+          "regulationUrl": "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000044162840",
+          "appliesFrom": null,
+          "onSiteRate": null,
+          "contactRate": null,
+          "nonConformCriteria": null,
+          "contactChecks": null
+        },
+        "justificationDocs": [
+          "Rapport d'audit énergétique préalable conforme à l'arrêté du 17 novembre 2020.",
+          "DPE avant travaux et DPE après travaux, établissant le nombre de classes gagnées.",
+          "Attestation sur l'honneur signée, avec le détail des postes de travaux réalisés.",
+          "Surface habitable (Shab) du logement.",
+          "Justificatifs techniques par poste d'isolation traité (résistances thermiques, ou Uw/Sw pour les fenêtres).",
+          "Justificatif du ou des équipements de chauffage/ECS installés et de leur facteur d'émission (gCO2eq/kWh PCI).",
+          "Si bonification Coup de pouce revendiquée : caractère de résidence principale du logement pour les opérations engagées après le 17/01/2026.",
+          "Coût de l'opération HT et TTC.",
+          "Montant total des autres aides publiques perçues pour l'opération (dont, le cas échéant, MaPrimeRénov')."
+        ],
+        "sources": [
+          { "label": "Arrêté du 7 janvier 2026 modifiant BAR-TH-174/175/177 (formule de valorisation, conditions techniques, prolongation et restriction du Coup de pouce)", "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000053373748" },
+          { "label": "Arrêté du 28 septembre 2021, version consolidée (référentiel de contrôle, annexe III partie E ter)", "url": "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000044162840" }
+        ]
       }
     }
   },
@@ -3722,11 +3780,11 @@ function renderFicheDetail(code, d, openByDefault, latestItem) {
 
   const control = d.controlPoints ? `
     <div class="fiche-guide-control">
-      <p>${escAttr(d.controlPoints.appliesFrom)} — référentiel : <a href="${escAttr(d.controlPoints.regulationUrl)}" target="_blank" rel="noopener">${escAttr(d.controlPoints.regulationLabel)}</a></p>
-      <div class="control-rates">
-        <div><strong>Taux de contrôle sur site</strong><ul>${(d.controlPoints.onSiteRate || []).map(r => `<li>${escAttr(r.period)} : ${escAttr(r.rate)}</li>`).join("")}</ul></div>
-        <div><strong>Taux de contrôle par contact</strong><ul>${(d.controlPoints.contactRate || []).map(r => `<li>${escAttr(r.period)} : ${escAttr(r.rate)}</li>`).join("")}</ul></div>
-      </div>
+      <p>${d.controlPoints.appliesFrom ? `${escAttr(d.controlPoints.appliesFrom)} — ` : ""}référentiel : <a href="${escAttr(d.controlPoints.regulationUrl)}" target="_blank" rel="noopener">${escAttr(d.controlPoints.regulationLabel)}</a></p>
+      ${(d.controlPoints.onSiteRate && d.controlPoints.onSiteRate.length) || (d.controlPoints.contactRate && d.controlPoints.contactRate.length) ? `<div class="control-rates">
+        ${d.controlPoints.onSiteRate && d.controlPoints.onSiteRate.length ? `<div><strong>Taux de contrôle sur site</strong><ul>${d.controlPoints.onSiteRate.map(r => `<li>${escAttr(r.period)} : ${escAttr(r.rate)}</li>`).join("")}</ul></div>` : ""}
+        ${d.controlPoints.contactRate && d.controlPoints.contactRate.length ? `<div><strong>Taux de contrôle par contact</strong><ul>${d.controlPoints.contactRate.map(r => `<li>${escAttr(r.period)} : ${escAttr(r.rate)}</li>`).join("")}</ul></div>` : ""}
+      </div>` : `<p class="fiche-guide-note">Taux de contrôle non détaillés dans les sources consultées pour cette fiche — se référer au texte officiel ci-dessus.</p>`}
       ${d.controlPoints.nonConformCriteria && d.controlPoints.nonConformCriteria.length ? `<p><strong>Motifs de non-conformité (contrôle sur site)</strong></p>
       <ul>${d.controlPoints.nonConformCriteria.map(c => `<li>${escAttr(c)}</li>`).join("")}</ul>` : ""}
       ${d.controlPoints.contactChecks && d.controlPoints.contactChecks.length ? `<p><strong>Vérifications par contact</strong></p>
@@ -3736,7 +3794,7 @@ function renderFicheDetail(code, d, openByDefault, latestItem) {
   return `<details class="fiche-guide"${openByDefault ? " open" : ""}>
     <summary>📘 Fiche complète — valorisation, contrôle, justificatifs</summary>
     <div class="fiche-guide-body">
-      <p class="fiche-guide-version">${escAttr(d.version || "")}${d.appliesUntil ? ` · applicable aux opérations engagées jusqu'au ${fmtDate(d.appliesUntil)}` : ""}</p>
+      ${d.version || d.appliesUntil ? `<p class="fiche-guide-version">${d.version ? escAttr(d.version) : ""}${d.version && d.appliesUntil ? " · " : ""}${d.appliesUntil ? `applicable aux opérations engagées jusqu'au ${fmtDate(d.appliesUntil)}` : ""}</p>` : ""}
       ${ficheGuideStaleness(code, d, latestItem) || ""}
       <section><h4>Périmètre de l'opération</h4><p>${escAttr(d.scope)}</p></section>
       ${d.eligibleSectors ? `<section><h4>Secteurs d'activité éligibles</h4><ul class="pill-list">${d.eligibleSectors.map(s => `<li>${escAttr(s)}</li>`).join("")}</ul>${d.exclusions ? `<p class="fiche-guide-note">Exclus : ${d.exclusions.map(escAttr).join(", ")}.</p>` : ""}</section>` : ""}
