@@ -1976,6 +1976,127 @@
           { "label": "Arrêté du 7 janvier 2026 modifiant BAR-TH-174/175/177 (formule de valorisation, conditions techniques, prolongation et restriction du Coup de pouce)", "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000053373748" },
           { "label": "Arrêté du 28 septembre 2021, version consolidée (référentiel de contrôle, annexe III partie E ter)", "url": "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000044162840" }
         ]
+      },
+      "BAR-EN-102": {
+        "version": "v. A65.4",
+        "appliesFrom": "2025-01-01",
+        "appliesUntil": "2027-04-30",
+        "lastReviewed": "2026-08-19",
+        "scope": "Mise en place d'un procédé d'isolation (complexe ou sur ossature) sur mur(s) en façade ou en pignon, dans un bâtiment résidentiel existant depuis plus de deux ans.",
+        "eligibleSectors": null,
+        "exclusions": null,
+        "requiredWorks": [
+          "Résistance thermique de l'isolant posé R ≥ 3,7 m².K/W.",
+          "La résistance thermique de l'isolation déjà en place n'est pas prise en compte dans le calcul du R après travaux.",
+          "Résistance thermique évaluée selon NF EN 12664, NF EN 12667 ou NF EN 12939 (isolants non réfléchissants) ou NF EN ISO 22097 (isolants réfléchissants), conformément à l'annexe 7 de l'arrêté du 22 décembre 2014.",
+          "En cas de pose superposée de plusieurs isolants : indiquer marques et références de chacun, le R global, et la surface résultant de la superposition.",
+          "Le professionnel réalisant l'opération doit être titulaire d'un signe de qualité conforme à l'article 2 du décret n° 2014-812 du 16 juillet 2014 (travaux relevant du 11° ou du 12° du I de l'article 1er du décret).",
+          "Visite préalable du bâtiment requise avant le début des travaux."
+        ],
+        "valuation": {
+          "unit": "kWh cumac par m² de surface d'isolant posé, selon la zone climatique.",
+          "lifetime": null,
+          "climateCoefficients": null,
+          "formula": "AE = Montant par m² (selon la zone climatique) × Surface isolée (S en m²)",
+          "table": {
+            "columns": ["Zone climatique", "Montant (kWh cumac/m²)"],
+            "rows": [
+              ["H1", 1600],
+              ["H2", 1300],
+              ["H3", 880]
+            ]
+          },
+          "notes": null
+        },
+        "controlPoints": {
+          "regulationLabel": "Arrêté du 28 septembre 2021 relatif aux contrôles dans le cadre du dispositif des CEE (version consolidée)",
+          "regulationUrl": "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000044162840",
+          "appliesFrom": "Taux ci-dessous applicables selon la date d'engagement de l'opération",
+          "onSiteRate": [
+            { "period": "01/01/2022 – 31/12/2022", "rate": "7,5 %" },
+            { "period": "01/01/2023 – 31/12/2023", "rate": "10 %" },
+            { "period": "01/01/2024 – 31/12/2024", "rate": "12,5 %" },
+            { "period": "01/01/2025 – 31/12/2026", "rate": "15 %" },
+            { "period": "à partir du 01/01/2027", "rate": "20 %" }
+          ],
+          "contactRate": [
+            { "period": "01/01/2022 – 31/12/2022", "rate": "15 % (cumulé, incluant le contrôle sur site)" },
+            { "period": "01/01/2023 – 31/12/2023", "rate": "20 % (cumulé)" },
+            { "period": "01/01/2024 – 31/12/2024", "rate": "25 % (cumulé)" },
+            { "period": "à partir du 01/01/2025", "rate": "30 % (cumulé)" }
+          ],
+          "nonConformCriteria": [
+            "Surface déclarée ne correspondant pas exclusivement à la surface isolée des volumes chauffés",
+            "Écart entre la surface d'isolant posée et la surface déclarée supérieur à 10 % sans justification",
+            "Résistance thermique de l'isolant posé inférieure à 3,7 m².K/W",
+            "Tout constat de non-qualité manifeste de nature à remettre en cause la résistance thermique, la pérennité ou la sécurité de l'isolation"
+          ],
+          "contactChecks": null
+        },
+        "justificationDocs": [
+          "Attestation sur l'honneur signée (partie A, annexe 1 de la fiche) : dates d'engagement, de visite préalable, de début des travaux et de réalisation ; référence de la facture.",
+          "Confirmation que le bâtiment résidentiel est existant depuis plus de deux ans à la date d'engagement.",
+          "Surface d'isolant posé (m²) et résistance thermique R (m².K/W) — ou épaisseur si le R n'est pas mentionné sur la preuve de réalisation.",
+          "Marque et référence de l'isolant, si non mentionnées sur la preuve de réalisation.",
+          "Justificatif du signe de qualité (RGE) du professionnel ayant réalisé les travaux, et identité du titulaire si différent du signataire de l'attestation.",
+          "Coût de l'opération HT et TTC.",
+          "Montant total des autres aides publiques perçues pour l'opération."
+        ],
+        "sources": [
+          { "label": "Fiche BAR-EN-102 (v. A65.4) — annexe 1, attestation sur l'honneur, partie A", "url": "https://www.ecologie.gouv.fr/sites/default/files/documents/BAR-EN-102%20vA65-4%20%C3%A0%20compter%20du%2001-01-2025%20-%20Partie%20A%20%C3%A0%20compter%20du%2001-07-2026.pdf" },
+          { "label": "Arrêté du 28 septembre 2021, version consolidée (référentiel de contrôle applicable à BAR-EN-102)", "url": "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000044162840" }
+        ]
+      },
+      "BAR-TH-148": {
+        "version": "v. A78.4",
+        "appliesFrom": null,
+        "appliesUntil": "2031-01-01",
+        "lastReviewed": "2026-08-19",
+        "scope": "Mise en place d'un chauffe-eau thermodynamique individuel à accumulation dans un bâtiment résidentiel existant.",
+        "eligibleSectors": null,
+        "exclusions": null,
+        "requiredWorks": [
+          "Efficacité énergétique pour le chauffage de l'eau (règlement délégué (UE) n° 814/2013), selon le profil de soutirage déclaré : ≥ 95 % pour le profil M, ≥ 100 % pour le profil L, ≥ 110 % pour le profil XL.",
+          "Mise en place réalisée par un professionnel titulaire d'un signe de qualité conforme à l'article 2 du décret n° 2014-812 du 16 juillet 2014 (travaux relevant du 6° du I de l'article 1er du décret).",
+          "Opération non cumulable avec les opérations relevant des fiches BAR-TH-171 (PAC air/eau) et BAR-TH-172 (PAC eau/eau ou eau glycolée/eau).",
+          "La preuve de réalisation doit mentionner la mise en place du chauffe-eau thermodynamique à accumulation et son efficacité énergétique pour le profil de soutirage déclaré ; à défaut, un document du fabricant précisant marque, référence et efficacité énergétique selon le règlement (UE) n° 814/2013 est requis."
+        ],
+        "valuation": {
+          "unit": "Montant unitaire en kWh cumac, selon le type de logement.",
+          "lifetime": "17 ans",
+          "climateCoefficients": null,
+          "formula": null,
+          "table": {
+            "columns": ["Type de logement", "Montant unitaire (kWh cumac)"],
+            "rows": [
+              ["Maison individuelle", 14700],
+              ["Appartement", 11800]
+            ]
+          },
+          "notes": null
+        },
+        "controlPoints": {
+          "regulationLabel": "Arrêté du 28 septembre 2021 relatif aux contrôles dans le cadre du dispositif des CEE (version consolidée)",
+          "regulationUrl": "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000044162840",
+          "appliesFrom": null,
+          "onSiteRate": null,
+          "contactRate": null,
+          "nonConformCriteria": null,
+          "contactChecks": null
+        },
+        "justificationDocs": [
+          "Attestation sur l'honneur signée (partie A, annexe 1 de la fiche) : date d'engagement, référence de la facture, adresse des travaux.",
+          "Confirmation que le bâtiment résidentiel est existant depuis plus de deux ans à la date d'engagement.",
+          "Type de logement (maison individuelle ou appartement).",
+          "Profil de soutirage déclaré (M, L ou XL) et efficacité énergétique correspondante de l'équipement installé.",
+          "Marque et référence du chauffe-eau thermodynamique, si non mentionnées sur la preuve de réalisation.",
+          "Décision de qualification ou de certification du professionnel ayant réalisé l'opération.",
+          "Confirmation de non-cumul avec une opération BAR-TH-171 ou BAR-TH-172 sur le même équipement."
+        ],
+        "sources": [
+          { "label": "Fiche BAR-TH-148 (v. A78.4), texte intégral et annexe 1 (attestation sur l'honneur, partie A)", "url": "https://www.ecologie.gouv.fr/sites/default/files/documents/BAR-TH-148%20vA78.4%20%C3%A0%20compter%20du%2001-01-2026.pdf" },
+          { "label": "Arrêté du 28 septembre 2021, version consolidée (référentiel de contrôle applicable à BAR-TH-148)", "url": "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000044162840" }
+        ]
       }
     }
   },
