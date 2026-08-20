@@ -1240,9 +1240,10 @@
     <details id="raw-data" hidden>
       <summary>Journal de données (JSON) — support de la mise à jour automatique</summary>
       <pre id="data-json">
+
 {
   "meta": {
-    "lastRun": "2026-08-18",
+    "lastRun": "2026-08-20",
     "watch": {
       "version": 1,
       "status": "partial",
@@ -1394,7 +1395,9 @@
       { "name": "Registre national EMMY", "url": "https://www.emmy.fr/public/registre" },
       { "name": "Cour des comptes — publications CEE", "url": "https://www.ccomptes.fr/fr/publications/les-certificats-deconomies-denergie-0" },
       { "name": "Programmes CEE d'accompagnement — ecologie.gouv.fr", "url": "https://www.ecologie.gouv.fr/politiques-publiques/cee-programmes-daccompagnement" },
-      { "name": "Liste des PAC agréées (bonus-pac.ademe.fr)", "url": "https://bonus-pac.ademe.fr/" }
+      { "name": "Liste des PAC agréées (bonus-pac.ademe.fr)", "url": "https://bonus-pac.ademe.fr/" },
+      { "name": "Assemblée nationale — Questions", "url": "https://questions.assemblee-nationale.fr/" },
+      { "name": "Conseil d'État — Arianeweb (décisions)", "url": "https://www.conseil-etat.fr/fr/arianeweb" }
     ],
     "arreteSeries": [
       { "num": 71, "date": "2025-06-27", "title": "Suppression de 10 fiches et révision de 6 (critère TRI)", "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000051857168", "confirmed": true },
@@ -2102,6 +2105,44 @@
   },
   "items": [
     {
+      "id": "jurisprudence-2026-07-30-ce-512110",
+      "date": "2026-07-30",
+      "category": "Jurisprudence",
+      "statusLabel": "Requête rejetée par le Conseil d'État (décision inédite au recueil Lebon)",
+      "impactLevel": "info",
+      "ficheCodes": [],
+      "title": "Conseil d'État, 5ème chambre, 30 juillet 2026, n° 512110 — rejet du recours contre le refus de modifier le référentiel de contrôle CEE",
+      "summary": "Par une décision du 30 juillet 2026 (inédite au recueil Lebon), le Conseil d'État rejette la requête tendant à l'annulation de la décision implicite par laquelle la ministre chargée de la Transition écologique a refusé de modifier des dispositions du référentiel de contrôle des CEE (arrêté du 28 septembre 2021 relatif aux contrôles).",
+      "impactText": "Incertitude à signaler : le détail précis des dispositions dont la modification était demandée et les motifs exacts du rejet n'ont pas pu être confirmés via WebSearch (accès direct à la décision sur conseil-etat.fr non disponible ce jour) — à vérifier sur la source officielle avant toute analyse engageante. En l'état, cette décision confirme la validité du référentiel de contrôle CEE en vigueur (arrêté du 28/09/2021, éventuellement dans sa version modifiée par l'arrêté du 27 juillet 2026 sur les taux de non-conformité), sans changement réglementaire nouveau à ce stade.",
+      "actorImpacts": {
+        "delegataireMandataire": { "level": "info", "text": "Aucune conséquence opérationnelle immédiate ; cette décision confirme la stabilité juridique du référentiel de contrôle CEE face à une contestation, sans modification des règles applicables." },
+        "bureauControle": { "level": "info", "text": "Le référentiel de contrôle applicable reste inchangé à la suite du rejet de ce recours ; aucune adaptation des grilles de contrôle n'est nécessaire à ce stade sur la base des informations disponibles." },
+        "professionnel": { "level": "none", "text": "Pas d'impact direct identifié." }
+      },
+      "sourceName": "Doctrine.fr (relais de la décision Conseil d'État — source secondaire, à recouper avec conseil-etat.fr)",
+      "sourceUrl": "https://www.doctrine.fr/d/CE/2026/CETATEXT000054592587",
+      "official": false
+    },
+    {
+      "id": "evenement-2026-04-29-question-parlementaire-cee-pac-preference-europeenne",
+      "date": "2026-04-29",
+      "category": "Événement",
+      "statusLabel": "Réponse ministérielle publiée le 29 avril 2026 (date à confirmer)",
+      "impactLevel": "info",
+      "ficheCodes": [],
+      "title": "Question n°701 (Assemblée nationale) — Mme Brigitte Klinkert alerte sur l'impact de la « préférence européenne » CEE pour les PAC sur Weishaupt SAS",
+      "summary": "Question orale sans débat déposée le 21 avril 2026 par la députée Brigitte Klinkert (Haut-Rhin), alertant le ministre chargé de l'Économie sur les conséquences, pour l'entreprise Weishaupt SAS (Colmar, environ 330 emplois, plus de 50 M€ investis en France), du décret conditionnant à compter du 1er septembre 2026 la bonification CEE des pompes à chaleur individuelles à une fabrication en France ou dans l'Espace économique européen. Réponse publiée le 29 avril 2026.",
+      "impactText": "Cette question illustre les tensions industrielles suscitées par l'agrément « qualité et résilience industrielle » des PAC (décret n° 2026-413 du 29 mai 2026 et arrêté du 2 juillet 2026 fixant la première liste des modèles agréés, déjà suivis dans ce registre) : des fabricants dont la chaîne de production est en partie hors UE/EEE s'inquiètent de perdre l'accès à la bonification ×5 à compter du 1er septembre 2026. Incertitude à signaler : le contenu précis de la réponse ministérielle et la date exacte de publication n'ont pas pu être confirmés avec certitude via WebSearch — à vérifier sur la source officielle. Aucune conséquence réglementaire nouvelle par rapport aux textes déjà publiés et suivis dans ce registre.",
+      "actorImpacts": {
+        "delegataireMandataire": { "level": "info", "text": "Aucun changement réglementaire nouveau, mais ce débat parlementaire illustre un risque de contentieux ou d'ajustement sur le périmètre de l'agrément qualité PAC (liste des modèles agréés) à surveiller avant le 1er septembre 2026." },
+        "bureauControle": { "level": "none", "text": "Pas d'impact direct identifié." },
+        "professionnel": { "level": "low", "text": "Si vous distribuez des PAC de marques dont une partie de la production est hors UE/EEE, vérifiez dès maintenant leur présence sur la liste des modèles agréés publiée par l'ADEME (bonus-pac.ademe.fr) avant le 1er septembre 2026." }
+      },
+      "sourceName": "Assemblée nationale — Questions",
+      "sourceUrl": "https://questions.assemblee-nationale.fr/q17/17-701QOSD.htm",
+      "official": true
+    },
+    {
       "id": "consultation-2026-remplacement-chaudiere-pac-derogation-16-ans",
       "date": "2026-08-17",
       "category": "Consultation publique",
@@ -2707,6 +2748,7 @@
     }
   ]
 }
+      
       </pre>
     </details>
   </footer>
