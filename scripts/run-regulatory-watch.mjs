@@ -513,8 +513,17 @@ async function main() {
     log("Scheduled execution is gated (repository variable REGULATORY_WATCH_ENABLED is not true); exiting without changes.");
     return;
   }
-  if (!FORCE_RUN && paris.hour !== 8) {
-    log("Outside the 08:00 Paris execution hour; exiting without changes.");
+  // Fenêtre élargie (08h-11h59 Paris) plutôt qu'une heure stricte : le cron GitHub Actions
+  // a été observé avec 2 à 3h de retard sur son horaire nominal à plusieurs reprises
+  // (06:07/07:07 UTC visés, déclenchement réel parfois après 09:00 UTC), ce qui faisait
+  // sortir le run de la fenêtre d'une heure et le faisait s'arrêter sans rien vérifier —
+  // silencieusement, puisque le statut du job restait "success". Le fingerprinting des
+  // sources rend un second passage le même jour sans effet (aucun commit si rien n'a
+  // changé depuis le dernier run réussi), donc élargir la fenêtre ne risque pas de
+  // doublons visibles, seulement quelques appels réseau superflus en cas de double
+  // déclenchement dans la même fenêtre.
+  if (!FORCE_RUN && (paris.hour < 8 || paris.hour > 11)) {
+    log("Outside the 08:00-11:59 Paris execution window; exiting without changes.");
     return;
   }
 
