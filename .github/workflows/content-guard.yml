@@ -1,0 +1,78 @@
+name: Content integrity guard
+
+# Filet de sécurité déclenché par tout push sur main qui touche l'un des fichiers publiés
+# (index.html, cae-espagne/index.html), quelle que soit son origine — workflow connu,
+# workflow_dispatch manuel, ou tout autre processus qui pousserait sur ce dépôt. Réagit à
+# l'incident du 2026-08-19 où un commit a remplacé index.html en entier par le littéral
+# "FILE_CONTENT_PLACEHOLDER" (auto-corrigé ~31s plus tard par un commit suivant, par chance,
+# mais rien ne garantit que ça se reproduise) : voir scripts/guard-content-integrity.mjs.
+#
+# Si le contrôle échoue, restaure le contenu des fichiers surveillés tel qu'il était juste
+# avant le push incriminé et pousse un commit correctif — puis fait échouer le job pour que
+# l'incident reste visible même après l'auto-réparation.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - index.html
+      - cae-espagne/index.html
+
+permissions:
+  contents: write
+
+concurrency:
+  group: content-guard
+  cancel-in-progress: false
+
+jobs:
+  guard:
+    # Ne pas se re-déclencher sur son propre commit de restauration.
+    if: "!contains(github.event.head_commit.message, '[content-guard]')"
+    name: Verify published content integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      # SHA d'avant le push (avant l'ensemble des commits poussés d'un coup, pas seulement le
+      # dernier). "before" vaut la SHA nulle lors de la création d'une branche : dans ce cas
+      # improbable sur main, on retombe sur HEAD~1.
+      BASE_REF: ${{ (github.event.before && github.event.before != '0000000000000000000000000000000000000000') && github.event.before || 'HEAD~1' }}
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Check content integrity
+        id: check
+        continue-on-error: true
+        run: node scripts/guard-content-integrity.mjs
+
+      - name: Restore last known-good content
+        if: steps.check.outcome == 'failure'
+        run: |
+          set -e
+          git config user.name "ma-veille-cee-content-guard"
+          git config user.email "actions@github.com"
+          git checkout "$BASE_REF" -- index.html cae-espagne/index.html
+          git commit -m "revert(content-guard): restaure le contenu publié à l'état sain précédent
+
+Le contrôle d'intégrité automatique (scripts/guard-content-integrity.mjs) a
+détecté un écrasement ou une corruption dans le(s) fichier(s) publié(s) par
+le commit ${{ github.sha }}. Contenu restauré à l'état de ${{ env.BASE_REF }}.
+Investigation humaine nécessaire pour identifier l'origine du commit fautif.
+
+[content-guard]"
+          git push origin main
+
+      - name: Fail the job so the incident stays visible
+        if: steps.check.outcome == 'failure'
+        run: |
+          echo "::error::Contenu corrompu détecté et restauré automatiquement — voir les logs de l'étape 'Check content integrity' et enquêter sur l'origine du commit ${{ github.sha }}."
+          exit 1
