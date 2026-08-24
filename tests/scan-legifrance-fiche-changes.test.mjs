@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { parseEmbeddedData } from "../scripts/update-fiche-details.mjs";
-import { buildRegistryItem, insertRegistryItems } from "../scripts/scan-legifrance-fiche-changes.mjs";
+import { buildRegistryItem, insertRegistryItems, mergeArreteSeriesEntries, replaceArreteSeries } from "../scripts/scan-legifrance-fiche-changes.mjs";
 
 const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
 
@@ -86,4 +86,59 @@ test("insertRegistryItems supports multiple items in one pass, in the given orde
   assert.equal(finalData.items.length, data.items.length + 2);
   assert.equal(finalData.items[0].id, itemA.id);
   assert.equal(finalData.items[1].id, itemB.id);
+});
+
+test("mergeArreteSeriesEntries fills the gap between the previous max and a newly discovered higher num", () => {
+  const series = [
+    { num: 83, date: "2026-05-18", title: "a", sourceUrl: "https://x/83", confirmed: true },
+    { num: 84, date: "2026-05-23", title: "b", sourceUrl: "https://x/84", confirmed: true }
+  ];
+  const { series: merged, changed } = mergeArreteSeriesEntries(series, [
+    { num: 87, date: "2026-08-17", title: "c", sourceUrl: "https://x/87", confirmed: true }
+  ]);
+  assert.equal(changed, true);
+  const byNum = Object.fromEntries(merged.map(e => [e.num, e]));
+  assert.equal(byNum[85].confirmed, false);
+  assert.equal(byNum[86].confirmed, false);
+  assert.equal(byNum[87].confirmed, true);
+  assert.equal(byNum[87].title, "c");
+});
+
+test("mergeArreteSeriesEntries never overwrites an already-confirmed entry", () => {
+  const series = [{ num: 80, date: "2026-01-07", title: "original", sourceUrl: "https://x/80", confirmed: true }];
+  const { series: merged, notes, changed } = mergeArreteSeriesEntries(series, [
+    { num: 80, date: "2026-01-07", title: "conflicting rewrite", sourceUrl: "https://x/other", confirmed: true }
+  ]);
+  assert.equal(merged.find(e => e.num === 80).title, "original");
+  assert.equal(changed, false);
+  assert.equal(notes.length, 1);
+});
+
+test("mergeArreteSeriesEntries fills a previously unconfirmed placeholder", () => {
+  const series = [
+    { num: 80, date: "2026-01-07", title: "a", sourceUrl: "https://x/80", confirmed: true },
+    { num: 81, confirmed: false },
+    { num: 82, confirmed: false }
+  ];
+  const { series: merged, changed } = mergeArreteSeriesEntries(series, [
+    { num: 81, date: "2026-02-01", title: "identified at last", sourceUrl: "https://x/81", confirmed: true }
+  ]);
+  assert.equal(changed, true);
+  assert.equal(merged.find(e => e.num === 81).confirmed, true);
+  assert.equal(merged.find(e => e.num === 81).title, "identified at last");
+  assert.equal(merged.find(e => e.num === 82).confirmed, false);
+});
+
+test("replaceArreteSeries round-trips through the real index.html without touching anything else", () => {
+  const { data, rawJson } = parseEmbeddedData(html);
+  const { series: merged } = mergeArreteSeriesEntries(data.meta.arreteSeries, [
+    { num: 200, date: "2099-01-01", title: "entrée de test", sourceUrl: "https://www.legifrance.gouv.fr/jorf/id/TEST", confirmed: true }
+  ]);
+  const updatedRawJson = replaceArreteSeries(rawJson, merged);
+  const updatedHtml = html.replace(rawJson, updatedRawJson);
+  const { data: finalData } = parseEmbeddedData(updatedHtml);
+
+  assert.equal(finalData.meta.arreteSeries.find(e => e.num === 200).title, "entrée de test");
+  assert.deepEqual(finalData.items, data.items);
+  assert.deepEqual(finalData.meta.ficheDetails, data.meta.ficheDetails);
 });

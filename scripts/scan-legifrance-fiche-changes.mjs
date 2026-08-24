@@ -23,6 +23,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseEmbeddedData } from "./update-fiche-details.mjs";
 import { findRecentFicheChanges } from "./sources/legifrance-fiche-scan.mjs";
+import { findInformalSeriesNumber } from "./sources/arrete-series-scan.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const INDEX_PATH = path.join(ROOT, "index.html");
@@ -103,6 +104,63 @@ export function insertRegistryItems(rawJson, newItems) {
   return `${rawJson.slice(0, insertAt)}\n${block},${rawJson.slice(insertAt)}`;
 }
 
+// Alimente la Chronologie normative (meta.arreteSeries) : demande "on peut quand même
+// l'alimenter automatiquement à chaque nouvelle parution, avec les sources que tu m'as dites"
+// (2026-08-24) — recherche du numéro informel via scripts/sources/arrete-series-scan.mjs pour
+// chaque texte déjà confirmé sur Légifrance, et fusion sans écraser une entrée déjà confirmée.
+//
+// L'ordre de stockage n'a pas besoin d'être trié : le rendu client (buildChrono) re-trie
+// systématiquement par num décroissant à l'affichage.
+export function mergeArreteSeriesEntries(series, newEntries) {
+  const byNum = new Map(series.map(entry => [entry.num, entry]));
+  let maxKnown = series.length ? Math.max(...series.map(entry => entry.num)) : 0;
+  const notes = [];
+
+  for (const entry of newEntries.slice().sort((a, b) => a.num - b.num)) {
+    const existing = byNum.get(entry.num);
+    if (existing && existing.confirmed) {
+      notes.push(`num ${entry.num} déjà confirmé au registre — nouvelle correspondance ignorée pour éviter d'écraser une entrée existante`);
+      continue;
+    }
+    if (entry.num > maxKnown) {
+      for (let n = maxKnown + 1; n < entry.num; n++) {
+        if (!byNum.has(n)) byNum.set(n, { num: n, confirmed: false });
+      }
+      maxKnown = entry.num;
+    }
+    byNum.set(entry.num, entry);
+  }
+
+  const changed = newEntries.some(entry => {
+    const existing = series.find(e => e.num === entry.num);
+    return !existing || !existing.confirmed;
+  }) || byNum.size !== series.length;
+
+  return { series: [...byNum.values()].sort((a, b) => a.num - b.num), notes, changed };
+}
+
+function serializeArreteSeriesEntry(entry) {
+  if (!entry.confirmed) return `{ "num": ${entry.num}, "confirmed": false }`;
+  return `{ "num": ${entry.num}, "date": ${JSON.stringify(entry.date)}, "title": ${JSON.stringify(entry.title)}, "sourceUrl": ${JSON.stringify(entry.sourceUrl)}, "confirmed": true }`;
+}
+
+// Remplace tout le tableau "arreteSeries": [ ... ], en conservant le style compact
+// (un objet par ligne) déjà utilisé pour ce tableau dans index.html.
+export function replaceArreteSeries(rawJson, newSeries) {
+  const token = `"arreteSeries": [`;
+  const start = rawJson.indexOf(token);
+  if (start === -1) throw new Error(`"arreteSeries": [ introuvable`);
+  const bracketStart = start + token.length - 1;
+  let depth = 0, end = -1;
+  for (let i = bracketStart; i < rawJson.length; i++) {
+    if (rawJson[i] === "[") depth++;
+    else if (rawJson[i] === "]") { depth--; if (depth === 0) { end = i + 1; break; } }
+  }
+  if (end === -1) throw new Error(`Tableau arreteSeries non fermé`);
+  const serialized = `[\n${newSeries.map(entry => `      ${serializeArreteSeriesEntry(entry)}`).join(",\n")}\n    ]`;
+  return rawJson.slice(0, bracketStart) + serialized + rawJson.slice(end);
+}
+
 async function main() {
   const hasApiKey = Boolean(process.env.ANTHROPIC_API_KEY);
   const originalHtml = await readFile(INDEX_PATH, "utf8");
@@ -132,6 +190,7 @@ async function main() {
   const existingSourceUrls = new Set((data.items || []).map(item => item.sourceUrl).filter(Boolean));
   const seenThisRun = new Set();
   const newItems = [];
+  const acceptedChanges = [];
   for (const change of changes) {
     if (existingSourceUrls.has(change.sourceUrl) || seenThisRun.has(change.sourceUrl)) {
       log(`Déjà au registre, ignoré : ${change.sourceUrl}`);
@@ -139,6 +198,7 @@ async function main() {
     }
     seenThisRun.add(change.sourceUrl);
     newItems.push(buildRegistryItem(change));
+    acceptedChanges.push(change);
   }
 
   if (!newItems.length) {
@@ -146,7 +206,31 @@ async function main() {
     return;
   }
 
-  const updatedRawJson = insertRegistryItems(rawJson, newItems);
+  let updatedRawJson = insertRegistryItems(rawJson, newItems);
+
+  // Chronologie normative (meta.arreteSeries) : pour chaque texte nouvellement confirmé,
+  // tente de résoudre son numéro dans la série informelle suivie par la presse spécialisée.
+  // Best-effort : un échec ici n'empêche jamais la publication des items de registre déjà prêts.
+  const seriesEntries = [];
+  for (const change of acceptedChanges) {
+    let found;
+    try {
+      found = await findInformalSeriesNumber({ jorfUrl: change.sourceUrl, title: change.title, signatureDate: change.signatureDate });
+    } catch (err) {
+      log(`Numéro de série non résolu pour ${change.sourceUrl} (${err.message}) — laissé non numéroté.`);
+      continue;
+    }
+    if (!found) { log(`Aucun numéro de série trouvé pour ${change.sourceUrl} — laissé non numéroté (comme les entrées "confirmed": false existantes).`); continue; }
+    seriesEntries.push({ num: found.num, date: change.signatureDate, title: change.title, sourceUrl: change.sourceUrl, confirmed: true });
+    log(`Chronologie normative : ${change.sourceUrl} identifié comme le ${found.num}e arrêté (source : ${found.pressSourceUrl}).`);
+  }
+
+  if (seriesEntries.length) {
+    const { series: mergedSeries, notes, changed } = mergeArreteSeriesEntries(data.meta.arreteSeries || [], seriesEntries);
+    notes.forEach(note => log(`Chronologie normative : ${note}`));
+    if (changed) updatedRawJson = replaceArreteSeries(updatedRawJson, mergedSeries);
+  }
+
   const updatedHtml = originalHtml.replace(rawJson, updatedRawJson);
 
   // Sécurité : le JSON produit doit rester valide et n'avoir fait disparaître ni fiche ni item existant.
@@ -159,10 +243,14 @@ async function main() {
   if (reparsedCodes.length !== ficheCodes.length || ficheCodes.some(c => !reparsedCodes.includes(c))) {
     throw new Error("La mise à jour aurait fait disparaître une fiche existante ; abandon sans écriture");
   }
+  const previousSeriesCount = (data.meta.arreteSeries || []).length;
+  if (reparsed.data.meta.arreteSeries.length < previousSeriesCount) {
+    throw new Error("La mise à jour aurait fait disparaître une entrée de la chronologie normative ; abandon sans écriture");
+  }
 
   for (const item of newItems) log(`Nouvel item de registre : ${item.id} (${item.ficheCodes.join(", ")})`);
 
-  if (DRY_RUN) { log(`DRY_RUN : ${newItems.length} item(s) auraient été ajoutés, aucun fichier modifié.`); return; }
+  if (DRY_RUN) { log(`DRY_RUN : ${newItems.length} item(s) de registre et ${seriesEntries.length} entrée(s) de chronologie auraient été ajoutés, aucun fichier modifié.`); return; }
   await writeFile(INDEX_PATH, updatedHtml, "utf8");
   log(`${newItems.length} item(s) de registre ajouté(s) dans index.html.`);
 }

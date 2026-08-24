@@ -32,6 +32,17 @@ run (quotidien ou manuel) :
    pousse sur `main` (auto-publication totale, sans garde-fou humain — décision du
    2026-08-17 : voir l'historique de commits).
 
+L'étape 2 alimente aussi, en best-effort, la **Chronologie normative** (`meta.arreteSeries`,
+onglet séparé du site) : pour chaque texte confirmé sur Légifrance, elle tente de résoudre son
+numéro dans la numérotation séquentielle informelle des arrêtés modificatifs CEE (une
+convention suivie uniquement par la presse spécialisée — Hellio, Sélectra... — jamais publiée
+par Légifrance) via `scripts/sources/arrete-series-scan.mjs`, restreint à une liste fermée de
+domaines de presse spécialisée. Un texte dont le numéro n'est pas explicitement trouvé reste
+non numéroté (`"confirmed": false`, comme les entrées déjà présentes de longue date) plutôt que
+de deviner — cette source est structurellement moins certaine que le reste du site (presse, pas
+texte officiel), donc l'exigence "jamais de contenu inventé" y est appliquée avec un filtre
+supplémentaire (URL de presse dans une liste fermée + citation explicite exigée).
+
 **Portée actuelle : uniquement les fiches déjà présentes dans `meta.ficheDetails`** (6 au
 2026-08-24 : BAT-TH-116, BAR-EN-101, BAR-TH-171, BAR-TH-174, BAR-EN-102, BAR-TH-148). Étendre
 cette couverture à l'ensemble du catalogue (~200 fiches) est un chantier séparé (populer
