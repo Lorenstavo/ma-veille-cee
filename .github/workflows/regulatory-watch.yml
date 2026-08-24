@@ -35,10 +35,11 @@ jobs:
       DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || 'false' }}
       PISTE_LEGIFRANCE_CLIENT_ID: ${{ secrets.PISTE_LEGIFRANCE_CLIENT_ID }}
       PISTE_LEGIFRANCE_CLIENT_SECRET: ${{ secrets.PISTE_LEGIFRANCE_CLIENT_SECRET }}
-      # Not yet configured as a repository secret. Until it is, update-fiche-details.mjs
-      # resolves this to an empty string, logs that it has nothing to do, and exits without
-      # touching any file -- see the script's own header comment for the "no invented
-      # content in place of a missing key" rationale.
+      # Used by scan-legifrance-fiche-changes.mjs (finds new arrêtés affecting a documented
+      # fiche and adds the registry item) and update-fiche-details.mjs (refreshes the fiche
+      # guide once that item exists). Without this secret, both scripts log that they have
+      # nothing to do and exit without touching any file -- see each script's own header
+      # comment for the "no invented content in place of a missing key" rationale.
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
     steps:
       - name: Checkout main
@@ -62,6 +63,10 @@ jobs:
 
       - name: Run regulatory watch
         run: node scripts/run-regulatory-watch.mjs
+
+      - name: Scan Légifrance for changes to documented fiches (AI-assisted, no-op without ANTHROPIC_API_KEY)
+        if: success()
+        run: node scripts/scan-legifrance-fiche-changes.mjs
 
       - name: Update fiche details (AI-assisted, no-op without ANTHROPIC_API_KEY)
         if: success()
