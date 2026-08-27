@@ -1,1 +1,13 @@
-[]
+[
+  {
+    "externalId": "ecologie-cee-publications:acf6b28bb51a84096f1885095e8a2d124002125bbbe8cd23d2acbaf985289f36",
+    "sourceName": "Lettres d’information & Flash Info CEE — ecologie.gouv.fr",
+    "sourceUrl": "https://www.ecologie.gouv.fr/politiques-publiques/comites-pilotage-lettres-dinformation-statistiques-du-dispositif-certificats",
+    "title": "Télécharger 20260826 - Statistiques dépôts et délivrance CEE.xlsx XLSX – 22.56 Ko",
+    "url": "https://www.ecologie.gouv.fr/sites/default/files/documents/20260826%20-%20Statistiques%20d%C3%A9p%C3%B4ts%20et%20d%C3%A9livrance%20CEE.xlsx",
+    "publishedAt": "2026-08-26",
+    "rawType": "statistiques-cee",
+    "detectedAt": "2026-08-27T06:05:29.388Z",
+    "status": "pending"
+  }
+]
