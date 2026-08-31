@@ -7,63 +7,63 @@
       "etag": null,
       "lastModified": null,
       "fingerprint": "c85fb42cfb2b032b8e0cfb61787753e9dc359140534b17841523b286a9c4f502",
-      "checkedAt": "2026-08-30T06:50:03.219Z"
+      "checkedAt": "2026-08-31T06:49:58.700Z"
     },
     "6c2e97c71eba2dbff383e1d4e64f30621f681896dffd9cc901dc8453fc9cd3d7": {
       "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae.html",
       "finalUrl": "https://www.miteco.gob.es/es/energia/eficiencia/cae.html",
       "etag": null,
       "lastModified": null,
-      "fingerprint": "4de24e16b25024127664de52b45b1a134d63192523a3fef8e7c147bcd2187131",
-      "checkedAt": "2026-08-30T06:50:04.338Z"
+      "fingerprint": "603400ad9c1d9d2b44555f85778782f3e808304a9aee4cd58fde599084730865",
+      "checkedAt": "2026-08-31T06:49:59.421Z"
     },
     "1627e38b9436f9a1338f5e63876963a277bd0f0ace72c10f59f28ee7f1c22e4b": {
       "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/normativa.html",
       "finalUrl": "https://www.miteco.gob.es/es/energia/eficiencia/cae/normativa.html",
       "etag": null,
       "lastModified": null,
-      "fingerprint": "b4f7c485f376db98622682a29b16f0da55614c965067127a0f904f95898c4517",
-      "checkedAt": "2026-08-30T06:50:05.385Z"
+      "fingerprint": "4983acb85544f316e2b14d9bb67ccd602264e5d0a9e56d5d9306594b82047e31",
+      "checkedAt": "2026-08-31T06:50:00.032Z"
     },
     "d9c3dea506eb3a67ec6fdfed33aa2bf336be4bdc9ca5a3343a474e7aae759c4d": {
       "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/plataformacae.html",
       "finalUrl": "https://www.miteco.gob.es/es/energia/eficiencia/cae/plataformacae.html",
       "etag": null,
       "lastModified": null,
-      "fingerprint": "6f1982d08f2cfd38f5b09dfad2473b1e8c6dd595c996e0f65870dd36ba95904f",
-      "checkedAt": "2026-08-30T06:50:06.456Z"
+      "fingerprint": "bf70670514ce659799bde0cb659398da97eb859255621a9dce887ef7c0771c93",
+      "checkedAt": "2026-08-31T06:50:00.625Z"
     },
     "ade6ea5a2a8b9858081ad9ae1e38a8de74ae3826eef3d1d75c39404efb63de5a": {
       "url": "https://www.miteco.gob.es/es/energia/eficiencia/cae/seguimiento-del-sistema-de-cae.html",
       "finalUrl": "https://www.miteco.gob.es/es/energia/eficiencia/cae/seguimiento-del-sistema-de-cae.html",
       "etag": null,
       "lastModified": null,
-      "fingerprint": "ad600f931fcc1567cb6d6c05788a554f477e60b08dc1c62f3a890655eb2cc08f",
-      "checkedAt": "2026-08-30T06:50:07.496Z"
+      "fingerprint": "2defc8aea86838a1dd0d03a4a3be789617b31efd4aafbe33c0a8c58b5645685f",
+      "checkedAt": "2026-08-31T06:50:01.206Z"
     },
     "2c948725b46027cfe6572c06d3472e7a989f0aa95f39ac97eddc1ac5ea286f93": {
       "url": "https://www.idae.es/",
       "finalUrl": "https://www.idae.es/",
-      "etag": "\"1788067601-gzip\"",
-      "lastModified": "Sun, 30 Aug 2026 05:26:41 GMT",
-      "fingerprint": "3573c97296c0b6c1cb53458e21d886882ec6346dbd0e0dcd89229115e3d3cdc0",
-      "checkedAt": "2026-08-30T06:50:08.575Z"
+      "etag": "\"1788146977-gzip\"",
+      "lastModified": "Mon, 31 Aug 2026 03:29:37 GMT",
+      "fingerprint": "1a68b2c4806154685de233a152bf2dd51858e1c0b0177cae1bf96c5bc3a0cb0e",
+      "checkedAt": "2026-08-31T06:50:01.814Z"
     },
     "a735e6f67e244293c34c019854d02318bdb27ee14e7ced7b65efb8c88611c17a": {
       "url": "https://www.idae.es/ayudas-y-financiacion/fondo-nacional-de-eficiencia-energetica",
       "finalUrl": "https://www.idae.es/ayudas-y-financiacion/fondo-nacional-de-eficiencia-energetica",
-      "etag": "\"1788060433-gzip\"",
-      "lastModified": "Sun, 30 Aug 2026 03:27:13 GMT",
-      "fingerprint": "7860eb9126e0842c61a04a8b12e7ee1949d06da2585dc33799fda1c0669a0cb6",
-      "checkedAt": "2026-08-30T06:50:08.769Z"
+      "etag": "\"1788140103-gzip\"",
+      "lastModified": "Mon, 31 Aug 2026 01:35:03 GMT",
+      "fingerprint": "a7b1a6dd5f0411982e0f7a772764565a11287e5c36559f17b2cd1fd2b5f17363",
+      "checkedAt": "2026-08-31T06:50:01.916Z"
     },
     "4bf0b7371eda733a0af78c741bd17250015cdd427790c3f40651a783e8c3dc02": {
       "url": "https://www.enac.es/",
       "finalUrl": "https://www.enac.es/",
       "etag": null,
       "lastModified": null,
-      "fingerprint": "4a29ad5a10445c79d8dfd61fc8ea3da47cd6afcfceaeee06361ef8e53b5b8ebd",
-      "checkedAt": "2026-08-30T06:50:09.914Z"
+      "fingerprint": "173c26634be63056b70c57c3b9251758367991d323efac3b43230c7b5610bd16",
+      "checkedAt": "2026-08-31T06:50:02.562Z"
     },
     "d5d04d2a58057ace204d4c344680fa3d03cbc83d74cfec98ecc6dba7a97ba25a": {
       "url": "https://www.boe.es/buscar/legislacion.php",
@@ -71,7 +71,7 @@
       "etag": null,
       "lastModified": null,
       "fingerprint": "d76a948c0568014ab04b02b1fe5fa1bafe1e69d1cefd6827072aceb0d7e48cfa",
-      "checkedAt": "2026-08-30T06:50:10.786Z"
+      "checkedAt": "2026-08-31T06:50:02.713Z"
     },
     "ed3df9255db5dbe841ef74a5a559138e64b02a11a1eb71579832b21b4f1ba12b": {
       "url": "https://www.boe.es/buscar/doc.php?id=BOE-A-2023-2027",
@@ -79,7 +79,7 @@
       "etag": null,
       "lastModified": null,
       "fingerprint": "552e3c532068676b39bb7df14e7d3b7e87931922cbd4efc17d62113ccb68f0a2",
-      "checkedAt": "2026-08-30T06:50:11.991Z"
+      "checkedAt": "2026-08-31T06:50:04.294Z"
     },
     "f2a64ff3a58e6bae238c14fc709579d07c8ef5898358dd23dcfafc68d3176856": {
       "url": "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2023-16940",
@@ -87,7 +87,7 @@
       "etag": null,
       "lastModified": null,
       "fingerprint": "7f1c537630b58c0e4597aaf399562b410031a31525128b324ca0d1f9b138cd0b",
-      "checkedAt": "2026-08-30T06:50:12.547Z"
+      "checkedAt": "2026-08-31T06:50:04.608Z"
     }
   }
 }
