@@ -9,5 +9,16 @@
     "rawType": "statistiques-cee",
     "detectedAt": "2026-08-27T06:05:29.388Z",
     "status": "pending"
+  },
+  {
+    "externalId": "ecologie-cee-publications:a1f2dac24df8e47fa4de8d0f9b5b9611dedf8839ed40d5c0acbf68237d5f826c",
+    "sourceName": "Lettres d’information & Flash Info CEE — ecologie.gouv.fr",
+    "sourceUrl": "https://www.ecologie.gouv.fr/politiques-publiques/comites-pilotage-lettres-dinformation-statistiques-du-dispositif-certificats",
+    "title": "Télécharger 2026-09-02 Flash Info Vente de CEE par l'ANAH PDF – 236.59 Ko",
+    "url": "https://www.ecologie.gouv.fr/sites/default/files/documents/2026-09-02%20Flash%20Info%20Vente%20de%20CEE%20par%20l%27ANAH.pdf",
+    "publishedAt": "2026-09-02",
+    "rawType": "flash-info",
+    "detectedAt": "2026-09-03T06:05:25.851Z",
+    "status": "pending"
   }
 ]
