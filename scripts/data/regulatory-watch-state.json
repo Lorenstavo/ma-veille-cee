@@ -7,23 +7,23 @@
       "etag": null,
       "lastModified": null,
       "fingerprint": "95d9edfaf8a679cb7c9bc10fc655101025910ab62f2855b7faf18d3d0296b48d",
-      "checkedAt": "2026-09-07T07:25:10.004Z"
+      "checkedAt": "2026-09-08T06:09:04.988Z"
     },
     "877a02789c0b9b52aefe4552e2322fd6ebf21735afc48773d24b6abd6c7d466d": {
       "url": "https://www.consultations-publiques.developpement-durable.gouv.fr/",
       "finalUrl": "https://www.consultations-publiques.developpement-durable.gouv.fr/",
       "etag": null,
-      "lastModified": "Mon, 07 Sep 2026 07:25:10 GMT",
-      "fingerprint": "f86419b7094259a649a07d676184f9b2b253b8ca944e291f9662f6a374379868",
-      "checkedAt": "2026-09-07T07:25:10.604Z"
+      "lastModified": "Tue, 08 Sep 2026 06:09:05 GMT",
+      "fingerprint": "6bc4b3f3c6ccb54012ae56f8be738d408bd2c0dd26a35248f7b9312410381bf1",
+      "checkedAt": "2026-09-08T06:09:05.894Z"
     },
     "7a288c6a35a8c4534abf36e556df323e5fc9e94d28d09f6cc6fcd62c901c072e": {
       "url": "https://atee.fr/efficacite-energetique/club-c2e/actualites-evenements",
       "finalUrl": "https://atee.fr/efficacite-energetique/club-c2e/actualites-evenements",
-      "etag": "\"1788759880-gzip\"",
-      "lastModified": "Mon, 07 Sep 2026 05:44:40 GMT",
-      "fingerprint": "7a459475c45aec94ac7eb1a212b21158348a7af1d318cf8582d98f9355f1c191",
-      "checkedAt": "2026-09-07T07:26:09.604Z"
+      "etag": "\"1788846779-gzip\"",
+      "lastModified": "Tue, 08 Sep 2026 05:52:59 GMT",
+      "fingerprint": "8bb82f9a98cf84f3264a71f53af7cdb69dfc2ae0bc396c8158f65e2731edbdc5",
+      "checkedAt": "2026-09-08T06:10:08.178Z"
     },
     "3bfca28be4796c42c46b9aaf5d9b9eedcebda1e7b8f8b2ce835468457ed51a46": {
       "url": "https://www.emmy.fr/public/registre",
@@ -31,31 +31,31 @@
       "etag": null,
       "lastModified": null,
       "fingerprint": "01fe4183dca75f3c7e46a31a23228c493f808e9ef5155354af07d6760da9d959",
-      "checkedAt": "2026-09-07T07:28:09.883Z"
+      "checkedAt": "2026-09-08T06:12:07.722Z"
     },
     "0a51c55b1db8f68128d72df477f39391575ff7c62746bb465451d0678e51d024": {
       "url": "https://bonus-pac.ademe.fr/",
       "finalUrl": "https://bonus-pac.ademe.fr/",
       "etag": null,
       "lastModified": null,
-      "fingerprint": "fdb35c666a83454270c85f6b901d2f38f6d31d524c8bfa1cf91fb457dcef6289",
-      "checkedAt": "2026-09-07T07:30:15.576Z"
+      "fingerprint": "7f8f4876f1dd42283198728618eeddb297b2c7c0721e6a25213ef78165c814b6",
+      "checkedAt": "2026-09-08T06:14:10.816Z"
     },
     "c47e8f3ab12fe8d542ec48cfe9964a26f1272653f9fe8f19bac879bb6301c34a": {
       "url": "https://questions.assemblee-nationale.fr/",
       "finalUrl": "https://www.assemblee-nationale.fr/dyn/questions/recherche",
       "etag": null,
       "lastModified": null,
-      "fingerprint": "8276364c86a3c1194c50cd002f71f6565a3a7cd98401aa59374e96f546931c7b",
-      "checkedAt": "2026-09-07T07:30:17.175Z"
+      "fingerprint": "8146e205639707f858443d3b087e8570c22349ca9919e77af8c651c90a645d76",
+      "checkedAt": "2026-09-08T06:14:12.055Z"
     },
     "3fce69a6af68be293a5fd6124285638f3175435da88184f97aff275235aaa226": {
       "url": "https://www.senat.fr/questions/base/2026/",
       "finalUrl": "https://www.senat.fr/questions/base/2026/",
       "etag": null,
       "lastModified": null,
-      "fingerprint": "e65247d8b64a3240584bd5aff2346bf60c8b2025eaeb1d2e26ee2455f5c78543",
-      "checkedAt": "2026-09-07T07:30:18.758Z"
+      "fingerprint": "ca55308f16808fa3312d9d41bb18bc2ebe02af08e8fc914f3ffb6554c65c5c2c",
+      "checkedAt": "2026-09-08T06:14:14.449Z"
     }
   },
   "extractions": {
@@ -1347,7 +1347,7 @@
           "title": "Acceptation Form and General Conditions of Service (Bulletin d’acceptation et Conditions Générales de Service)",
           "publishedAt": "2025-12-11",
           "firstSeenAt": "2026-08-13T14:45:36.876Z",
-          "lastSeenAt": "2026-09-07T07:21:27.217Z"
+          "lastSeenAt": "2026-09-08T06:05:23.024Z"
         },
         "eex-emmy-documents:385b7755925ad28ef13dc7ce14dff3d8bc9dae8e2d40f7989196ff1cd4c13941": {
           "externalId": "eex-emmy-documents:385b7755925ad28ef13dc7ce14dff3d8bc9dae8e2d40f7989196ff1cd4c13941",
@@ -1355,7 +1355,7 @@
           "title": "White Certificates user guide (Guide utilisateur – plateforme EMMY)",
           "publishedAt": "2025-12-11",
           "firstSeenAt": "2026-08-13T14:45:36.876Z",
-          "lastSeenAt": "2026-09-07T07:21:27.217Z"
+          "lastSeenAt": "2026-09-08T06:05:23.024Z"
         },
         "eex-emmy-documents:2b0b0e82507ab9dee8e37d492404032dde6307d9add7ae6adf9bdc007b601369": {
           "externalId": "eex-emmy-documents:2b0b0e82507ab9dee8e37d492404032dde6307d9add7ae6adf9bdc007b601369",
@@ -1363,7 +1363,7 @@
           "title": "Sale volume declaration forms (formulaires de declaration de volume de vente)",
           "publishedAt": "2022-01-01",
           "firstSeenAt": "2026-08-13T14:45:36.876Z",
-          "lastSeenAt": "2026-09-07T07:21:27.217Z"
+          "lastSeenAt": "2026-09-08T06:05:23.024Z"
         },
         "eex-emmy-documents:aa28b031dc9128d50c92c3679796c61efdb778f6fc5f41b3c58ed711f5b883cc": {
           "externalId": "eex-emmy-documents:aa28b031dc9128d50c92c3679796c61efdb778f6fc5f41b3c58ed711f5b883cc",
@@ -1371,7 +1371,7 @@
           "title": "Sworn declaration (déclaration sur l'honneur)",
           "publishedAt": "2018-12-01",
           "firstSeenAt": "2026-08-13T14:45:36.876Z",
-          "lastSeenAt": "2026-09-07T07:21:27.217Z"
+          "lastSeenAt": "2026-09-08T06:05:23.024Z"
         },
         "eex-emmy-documents:bf64f82401e6cfd605dffb9499e4a695584b84321b2fb35760343b3ce6293f68": {
           "externalId": "eex-emmy-documents:bf64f82401e6cfd605dffb9499e4a695584b84321b2fb35760343b3ce6293f68",
@@ -1379,7 +1379,7 @@
           "title": "Authorised signature form (formulaire de signatures autorisées)",
           "publishedAt": "2018-01-01",
           "firstSeenAt": "2026-08-13T14:45:36.876Z",
-          "lastSeenAt": "2026-09-07T07:21:27.217Z"
+          "lastSeenAt": "2026-09-08T06:05:23.024Z"
         }
       }
     }
