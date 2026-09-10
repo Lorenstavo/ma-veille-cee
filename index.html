@@ -1194,6 +1194,7 @@
       <div class="filter-controls">
         <label class="sort-control">Trier par : <select id="sortOrder" aria-label="Trier le registre"><option value="recent">Plus récent</option><option value="priority">Priorité</option><option value="deadline">Échéance</option></select></label>
         <button class="filter-toggle" id="filterToggle" type="button" aria-expanded="false" aria-controls="filterDetails">Filtres</button>
+        <button class="btn" id="exportCsv" type="button" title="Exporter les entrées actuellement affichées (respecte la recherche et les filtres en cours)">Exporter en Excel</button>
         <button class="btn" id="markRead">Tout marquer comme lu</button>
       </div>
     </div>
@@ -4084,6 +4085,44 @@ function applyUserPreferences() {
   document.getElementById("sortOrder").value = state.sort;
 }
 
+// Échappe une valeur pour un champ CSV (séparateur ";", tel qu'attendu par Excel en
+// configuration régionale française) : entoure de guillemets et double les guillemets
+// internes dès que la valeur contient le séparateur, un guillemet ou un retour à la ligne.
+function csvField(value) {
+  const text = value === null || value === undefined ? "" : String(value);
+  return /[;"\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+}
+
+// Exporte en CSV (ouvrable directement dans Excel) exactement les entrées actuellement
+// affichées à l'écran — recherche et filtres en cours compris — plutôt que la totalité du
+// registre, pour que l'export corresponde toujours à ce que l'utilisateur voit.
+function exportRegistryCsv() {
+  const rows = getFilteredSortedItems().map(item => {
+    const action = actionInfo(item);
+    return [
+      item.date,
+      item.category,
+      item.title,
+      item.summary,
+      IMPACT_LABEL[item.impactLevel] || item.impactLevel,
+      (item.ficheCodes || []).join(", "),
+      action.actions.map(key => ACTION_LABEL[key]).join(", "),
+      TRACKING_LABEL[trackingStatus(item.id)] || "",
+      action.deadline ? action.deadline.days : "",
+      item.sourceName || "",
+      item.sourceUrl || "",
+      item.official ? "Oui" : "Non"
+    ];
+  });
+  const header = ["Date", "Catégorie", "Titre", "Résumé", "Niveau d'impact", "Fiches concernées", "Actions", "Mon suivi", "Échéance (jours)", "Source", "Lien", "Source officielle"];
+  const csv = [header, ...rows].map(row => row.map(csvField).join(";")).join("\r\n");
+  // Le BOM UTF-8 est nécessaire pour qu'Excel affiche correctement les accents à l'ouverture directe du fichier.
+  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob), link = document.createElement("a");
+  link.href = url; link.download = `ma-veille-cee-registre-${new Date().toISOString().slice(0, 10)}.csv`; link.click();
+  URL.revokeObjectURL(url);
+}
+
 function exportTracking() {
   const data = userStorage.get();
   const tracking = Object.fromEntries(Object.entries(data.tracking).filter(([id, entry]) => ITEMS.some(item => item.id === id) && entry && TRACKING_FILTERS.includes(entry.status)));
@@ -4600,13 +4639,14 @@ function priorityExplanation(item, action) {
   return `<button class="why-priority" type="button" data-why-id="${item.id}" aria-expanded="false">Pourquoi prioritaire ?</button><div class="priority-reasons" data-why-panel="${item.id}"><strong>${action.actions.length ? "Pourquoi cette évolution apparaît ici ?" : "Critères présents dans les données"}</strong><ul>${(reasons.length ? reasons : ["Aucun critère de priorisation additionnel n’est déduit."]).map(reason => `<li>${reason}</li>`).join("")}</ul></div>`;
 }
 
-function render() {
-  const feed = document.getElementById("feed");
+// Filtre + trie ITEMS selon l'état courant des contrôles (recherche, filtres, tri) — utilisé
+// à la fois par render() pour l'affichage et par exportRegistryCsv() pour exporter exactement
+// ce que l'utilisateur voit à l'écran, plutôt que la totalité du registre.
+function getFilteredSortedItems() {
   const seen = seenIds();
-  const favorites = favoriteIds();
   const q = state.q.trim().toLowerCase();
 
-  const filtered = ITEMS.filter(i => {
+  return ITEMS.filter(i => {
     if (state.cats.size && !state.cats.has(i.category)) return false;
     if (state.impacts.size && !state.impacts.has(i.impactLevel)) return false;
     if (state.actions.size && ![...state.actions].some(action => actionInfo(i).actions.includes(action))) return false;
@@ -4638,6 +4678,14 @@ function render() {
     }
     return b.date.localeCompare(a.date);
   });
+}
+
+function render() {
+  const feed = document.getElementById("feed");
+  const seen = seenIds();
+  const favorites = favoriteIds();
+  const q = state.q.trim().toLowerCase();
+  const filtered = getFilteredSortedItems();
 
   if (!filtered.length) {
     feed.innerHTML = `<div class="empty-state">Aucune entrée ne correspond à ces filtres.</div>`;
@@ -4794,6 +4842,7 @@ function render() {
 
 document.getElementById("search").addEventListener("input", e => { state.q = e.target.value; updateKpiSelection(); render(); });
 document.getElementById("markRead").addEventListener("click", () => { markAllSeen(); buildPrioritiesPanel(); render(); });
+document.getElementById("exportCsv").addEventListener("click", exportRegistryCsv);
 document.getElementById("sortOrder").addEventListener("change", e => { state.sort = e.target.value; userStorage.savePreferences({ defaultSort: state.sort }); queueRemotePreferencesSync(); render(); });
 document.getElementById("tabFeed").addEventListener("click", () => setView("feed"));
 document.getElementById("tabChrono").addEventListener("click", () => setView("chrono"));
