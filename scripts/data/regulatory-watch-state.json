@@ -1,85 +1,29 @@
 {
   "version": 2,
   "sources": {
-    "cf7ffd515813e655beaeb8709027e5fbbc6ab8fb50069a6661c6f647a60280b4": {
-      "url": "https://www.ecologie.gouv.fr/politiques-publiques/energies",
-      "finalUrl": "https://www.ecologie.gouv.fr/politiques-publiques/energies",
-      "etag": "W/\"1789037303\"",
-      "lastModified": "Thu, 10 Sep 2026 10:48:23 GMT",
-      "fingerprint": "c616142825835b1228731e74b4de7fb0f595786b61215a00d61abe824ce8ad82",
-      "checkedAt": "2026-09-10T11:13:45.174Z"
-    },
-    "b4dad8e8250596a75146e982c1e369a2992b027e48e4e8a1c75e42bd158b75bb": {
-      "url": "https://www.ecologie.gouv.fr/politiques-publiques/dispositif-certificats-deconomies-denergie",
-      "finalUrl": "https://www.ecologie.gouv.fr/politiques-publiques/dispositif-certificats-deconomies-denergie",
-      "etag": "W/\"1789033001\"",
-      "lastModified": "Thu, 10 Sep 2026 09:36:41 GMT",
-      "fingerprint": "f0ca3ab4f22d39005f9729bc24f2b43280691bd360566e9a66756c4443268b31",
-      "checkedAt": "2026-09-10T11:14:02.690Z"
-    },
-    "73d57d13c47b5ad33117fd6e2fe0d15d4e19a63b7463564c44d9468093be27ac": {
-      "url": "https://www.ecologie.gouv.fr/politiques-publiques/operations-standardisees-deconomies-denergie",
-      "finalUrl": "https://www.ecologie.gouv.fr/politiques-publiques/operations-standardisees-deconomies-denergie",
-      "etag": "W/\"1789032952\"",
-      "lastModified": "Thu, 10 Sep 2026 09:35:52 GMT",
-      "fingerprint": "978b6a0dec132814371f282f855ccff13edd15c81884a56547c39ab054b59ce4",
-      "checkedAt": "2026-09-10T11:14:25.866Z"
-    },
-    "60e33f0db8eeb850a8e24662c8b353182c1a2779739314b3dfe6546f76defe99": {
-      "url": "https://www.ecologie.gouv.fr/politiques-publiques/questions-reponses-dispositif-cee",
-      "finalUrl": "https://www.ecologie.gouv.fr/politiques-publiques/questions-reponses-dispositif-cee",
-      "etag": "W/\"1789033049\"",
-      "lastModified": "Thu, 10 Sep 2026 09:37:29 GMT",
-      "fingerprint": "e4492a22f008bd7a439e85bfb7a09c072d4d52d183a4e3794eafdd3fa838af17",
-      "checkedAt": "2026-09-10T11:14:42.799Z"
-    },
     "49cd4b80968a7ef77da15b7002126c30bcfbef388c5ce355b3c6f41164d9f792": {
       "url": "https://www.legifrance.gouv.fr/",
       "finalUrl": "https://api.piste.gouv.fr/dila/legifrance/lf-engine-app/consult/lastNJo",
       "etag": null,
       "lastModified": null,
       "fingerprint": "95d9edfaf8a679cb7c9bc10fc655101025910ab62f2855b7faf18d3d0296b48d",
-      "checkedAt": "2026-09-10T11:14:44.377Z"
+      "checkedAt": "2026-09-11T06:09:08.439Z"
     },
     "877a02789c0b9b52aefe4552e2322fd6ebf21735afc48773d24b6abd6c7d466d": {
       "url": "https://www.consultations-publiques.developpement-durable.gouv.fr/",
       "finalUrl": "https://www.consultations-publiques.developpement-durable.gouv.fr/",
       "etag": null,
-      "lastModified": "Thu, 10 Sep 2026 11:14:45 GMT",
-      "fingerprint": "27f40db301d252de0f5bfa92441cc74352eef6f5d334e13703d0a1ffd1b92456",
-      "checkedAt": "2026-09-10T11:14:45.428Z"
-    },
-    "cc15c8c523dd9144f464adc3edc4ef4603603cfc1adde711c0117a2283102f8e": {
-      "url": "https://www.ecologie.gouv.fr/politiques-publiques/modalites-detaillees-deposer-dossier-demande-certificats-deconomies-denergie",
-      "finalUrl": "https://www.ecologie.gouv.fr/politiques-publiques/modalites-detaillees-deposer-dossier-demande-certificats-deconomies-denergie",
-      "etag": "W/\"1789032926\"",
-      "lastModified": "Thu, 10 Sep 2026 09:35:26 GMT",
-      "fingerprint": "944322ea0667f65fb7966e3017aaa5dd32104eb7bc94b55aba737f6b8e08b207",
-      "checkedAt": "2026-09-10T11:15:05.346Z"
+      "lastModified": "Fri, 11 Sep 2026 06:09:09 GMT",
+      "fingerprint": "32247b72786a413b01c962c0916a464756db3c6778347f174e831999a442b1c2",
+      "checkedAt": "2026-09-11T06:09:09.420Z"
     },
     "7a288c6a35a8c4534abf36e556df323e5fc9e94d28d09f6cc6fcd62c901c072e": {
       "url": "https://atee.fr/efficacite-energetique/club-c2e/actualites-evenements",
       "finalUrl": "https://atee.fr/efficacite-energetique/club-c2e/actualites-evenements",
-      "etag": "\"1789033240-gzip\"",
-      "lastModified": "Thu, 10 Sep 2026 09:40:40 GMT",
-      "fingerprint": "7d730764b1f6f7f696c05bdaa1a77631eb2e1845ac074cff00ec7e5c6a362103",
-      "checkedAt": "2026-09-10T11:15:06.293Z"
-    },
-    "947b4e5ae18483333697ec1058323e8585c302b94c7ba78d9e399d26e51492fd": {
-      "url": "https://www.ecologie.gouv.fr/politiques-publiques/comites-pilotage-lettres-dinformation-statistiques-du-dispositif-certificats",
-      "finalUrl": "https://www.ecologie.gouv.fr/politiques-publiques/comites-pilotage-lettres-dinformation-statistiques-du-dispositif-certificats",
-      "etag": "W/\"1789033064\"",
-      "lastModified": "Thu, 10 Sep 2026 09:37:44 GMT",
-      "fingerprint": "850c3d3eb95fe2c033069ea922667d22c5b9ffa5b178063ebabf38a81ef28fb8",
-      "checkedAt": "2026-09-10T11:15:23.403Z"
-    },
-    "0053c6250c932435c66c1002f824afc82164e2b09105d22567432c5a1b3f4e67": {
-      "url": "https://www.ecologie.gouv.fr/politiques-publiques/conseil-superieur-lenergie-cse",
-      "finalUrl": "https://www.ecologie.gouv.fr/politiques-publiques/conseil-superieur-lenergie-cse",
-      "etag": "W/\"1789034108\"",
-      "lastModified": "Thu, 10 Sep 2026 09:55:08 GMT",
-      "fingerprint": "86fc9e886aab595223e07fca018898f36507da5d7f5ad5ad1c7644f061aadc3f",
-      "checkedAt": "2026-09-10T11:15:40.976Z"
+      "etag": "\"1789107012-gzip\"",
+      "lastModified": "Fri, 11 Sep 2026 06:10:12 GMT",
+      "fingerprint": "126132457b914e16d3660899185693b66c1b8380cf25d0d55c89dec0b5fa57bd",
+      "checkedAt": "2026-09-11T06:10:14.716Z"
     },
     "3bfca28be4796c42c46b9aaf5d9b9eedcebda1e7b8f8b2ce835468457ed51a46": {
       "url": "https://www.emmy.fr/public/registre",
@@ -87,39 +31,31 @@
       "etag": null,
       "lastModified": null,
       "fingerprint": "01fe4183dca75f3c7e46a31a23228c493f808e9ef5155354af07d6760da9d959",
-      "checkedAt": "2026-09-10T11:15:42.133Z"
-    },
-    "73b1ca317c1fa245a3499675a20f5ac0b5c5c8e2137301c93d5ba1062edf56b5": {
-      "url": "https://www.ecologie.gouv.fr/politiques-publiques/cee-programmes-daccompagnement",
-      "finalUrl": "https://www.ecologie.gouv.fr/politiques-publiques/cee-programmes-daccompagnement",
-      "etag": "W/\"1789033070\"",
-      "lastModified": "Thu, 10 Sep 2026 09:37:50 GMT",
-      "fingerprint": "16f9194845c9833b69397e86d7708d3debb205587f704fc75ef22b8e2a50f21e",
-      "checkedAt": "2026-09-10T11:17:06.664Z"
+      "checkedAt": "2026-09-11T06:12:13.946Z"
     },
     "0a51c55b1db8f68128d72df477f39391575ff7c62746bb465451d0678e51d024": {
       "url": "https://bonus-pac.ademe.fr/",
       "finalUrl": "https://bonus-pac.ademe.fr/",
       "etag": null,
       "lastModified": null,
-      "fingerprint": "cdd0ff3fec31275f1e9008628e18af683591464b349f314395a137f58d0b7f5c",
-      "checkedAt": "2026-09-10T11:17:07.882Z"
+      "fingerprint": "5e145ba820a725cc8717780ce0a9647381a77e8daafe4e7a9d70325cdd2ea104",
+      "checkedAt": "2026-09-11T06:14:16.335Z"
     },
     "c47e8f3ab12fe8d542ec48cfe9964a26f1272653f9fe8f19bac879bb6301c34a": {
       "url": "https://questions.assemblee-nationale.fr/",
       "finalUrl": "https://www.assemblee-nationale.fr/dyn/questions/recherche",
       "etag": null,
       "lastModified": null,
-      "fingerprint": "3811414ac33841cca06de47c29ea79d47f28450cb4c1b3d9af11c36733d5d867",
-      "checkedAt": "2026-09-10T11:17:10.788Z"
+      "fingerprint": "97812999cbb0945abd43254b13d1cc5fb123e1c6c3f1e1ab5e164dd0c62b9ab4",
+      "checkedAt": "2026-09-11T06:14:19.700Z"
     },
     "3fce69a6af68be293a5fd6124285638f3175435da88184f97aff275235aaa226": {
       "url": "https://www.senat.fr/questions/base/2026/",
       "finalUrl": "https://www.senat.fr/questions/base/2026/",
       "etag": null,
       "lastModified": null,
-      "fingerprint": "fa0ae9e8982ef40bde59505c5a389e3162e1687453331254d93a46b397aae2e0",
-      "checkedAt": "2026-09-10T11:17:13.372Z"
+      "fingerprint": "0226bb31ff5843be21f6d432e93bb5914fdf16a0e5eac6ae500f9865920f9d8b",
+      "checkedAt": "2026-09-11T06:14:21.546Z"
     }
   },
   "extractions": {
@@ -1411,7 +1347,7 @@
           "title": "Acceptation Form and General Conditions of Service (Bulletin d’acceptation et Conditions Générales de Service)",
           "publishedAt": "2025-12-11",
           "firstSeenAt": "2026-08-13T14:45:36.876Z",
-          "lastSeenAt": "2026-09-10T11:13:44.059Z"
+          "lastSeenAt": "2026-09-11T06:05:21.907Z"
         },
         "eex-emmy-documents:385b7755925ad28ef13dc7ce14dff3d8bc9dae8e2d40f7989196ff1cd4c13941": {
           "externalId": "eex-emmy-documents:385b7755925ad28ef13dc7ce14dff3d8bc9dae8e2d40f7989196ff1cd4c13941",
@@ -1419,7 +1355,7 @@
           "title": "White Certificates user guide (Guide utilisateur – plateforme EMMY)",
           "publishedAt": "2025-12-11",
           "firstSeenAt": "2026-08-13T14:45:36.876Z",
-          "lastSeenAt": "2026-09-10T11:13:44.059Z"
+          "lastSeenAt": "2026-09-11T06:05:21.907Z"
         },
         "eex-emmy-documents:2b0b0e82507ab9dee8e37d492404032dde6307d9add7ae6adf9bdc007b601369": {
           "externalId": "eex-emmy-documents:2b0b0e82507ab9dee8e37d492404032dde6307d9add7ae6adf9bdc007b601369",
@@ -1427,7 +1363,7 @@
           "title": "Sale volume declaration forms (formulaires de declaration de volume de vente)",
           "publishedAt": "2022-01-01",
           "firstSeenAt": "2026-08-13T14:45:36.876Z",
-          "lastSeenAt": "2026-09-10T11:13:44.059Z"
+          "lastSeenAt": "2026-09-11T06:05:21.907Z"
         },
         "eex-emmy-documents:aa28b031dc9128d50c92c3679796c61efdb778f6fc5f41b3c58ed711f5b883cc": {
           "externalId": "eex-emmy-documents:aa28b031dc9128d50c92c3679796c61efdb778f6fc5f41b3c58ed711f5b883cc",
@@ -1435,7 +1371,7 @@
           "title": "Sworn declaration (déclaration sur l'honneur)",
           "publishedAt": "2018-12-01",
           "firstSeenAt": "2026-08-13T14:45:36.876Z",
-          "lastSeenAt": "2026-09-10T11:13:44.059Z"
+          "lastSeenAt": "2026-09-11T06:05:21.907Z"
         },
         "eex-emmy-documents:bf64f82401e6cfd605dffb9499e4a695584b84321b2fb35760343b3ce6293f68": {
           "externalId": "eex-emmy-documents:bf64f82401e6cfd605dffb9499e4a695584b84321b2fb35760343b3ce6293f68",
@@ -1443,7 +1379,7 @@
           "title": "Authorised signature form (formulaire de signatures autorisées)",
           "publishedAt": "2018-01-01",
           "firstSeenAt": "2026-08-13T14:45:36.876Z",
-          "lastSeenAt": "2026-09-10T11:13:44.059Z"
+          "lastSeenAt": "2026-09-11T06:05:21.907Z"
         }
       }
     }
