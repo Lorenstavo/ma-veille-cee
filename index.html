@@ -2133,6 +2133,114 @@
           { "label": "Fiche BAR-TH-148 (v. A78.4), texte intégral et annexe 1 (attestation sur l'honneur, partie A)", "url": "https://www.ecologie.gouv.fr/sites/default/files/documents/BAR-TH-148%20vA78.4%20%C3%A0%20compter%20du%2001-01-2026.pdf" },
           { "label": "Arrêté du 28 septembre 2021, version consolidée (référentiel de contrôle applicable à BAR-TH-148)", "url": "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000044162840" }
         ]
+      },
+      "BAR-TH-127": {
+        "version": "v. A58.6",
+        "appliesFrom": "2024-04-01",
+        "appliesUntil": "2028-06-30",
+        "lastReviewed": "2026-09-13",
+        "scope": "Mise en place d'un système de ventilation mécanique contrôlée (VMC) simple flux hygroréglable, ou d'un système de ventilation mécanique basse pression (VMBP) collectif simple flux hygroréglable (type A ou B), dans un bâtiment résidentiel existant en France métropolitaine.",
+        "eligibleSectors": null,
+        "exclusions": null,
+        "requiredWorks": [
+          "Mise en place réalisée par un professionnel titulaire d'un signe de qualité conforme à l'article 2 du décret n° 2014-812 du 16 juillet 2014 (travaux relevant du 8° du I de l'article 1er du décret).",
+          "Le système bénéficie d'un avis technique de la Commission chargée de formuler des Avis Techniques (CCFAT) en cours de validité à la date d'engagement de l'opération.",
+          "Installation individuelle : seul un système de VMC simple flux hygroréglable est éligible (le VMBP est exclu) ; caisson de classe d'efficacité énergétique B ou supérieure (règlement (UE) n° 1254/2014) ; caisson basse consommation si puissance électrique absorbée pondérée ≤ 15 WThC en configuration T4 avec salle de bain et WC.",
+          "Installation collective — VMC : puissance électrique absorbée pondérée du caisson ≤ 0,25 WThC/(m³/h) ; dite basse consommation si ≤ 0,10 WThC/(m³/h) au débit pondéré avec courbe aéraulique montante, sinon standard.",
+          "Installation collective — VMBP : puissance électrique absorbée pondérée du caisson ≤ 0,12 WThC/(m³/h).",
+          "Document justificatif spécifique : avis technique du système de ventilation installé, délivré par la CCFAT (téléchargeable sur le site du CSTB).",
+          "La présente fiche s'applique aux opérations engagées jusqu'au 30 juin 2028."
+        ],
+        "valuation": {
+          "unit": "kWh cumac, selon la zone climatique, le type d'installation (individuelle ou collective) et le type de caisson.",
+          "lifetime": "17 ans",
+          "climateCoefficients": null,
+          "formula": "Installation individuelle : AE = Montant unitaire (zone climatique) × Facteur correctif de surface habitable × Facteur correctif R (type d'installation/caisson). Installation collective : AE = Montant par logement (zone climatique) × Nombre de logements (N) × Facteur correctif R.",
+          "table": {
+            "columns": ["Zone climatique", "Individuel (kWh cumac)", "Collectif (kWh cumac/logement)"],
+            "rows": [
+              ["H1", 31600, 21800],
+              ["H2", 25900, 17800],
+              ["H3", 17200, 11900]
+            ]
+          },
+          "notes": "Facteur correctif de surface habitable (installation individuelle uniquement) : 0,3 (S < 35 m²) · 0,5 (35 ≤ S < 60) · 0,6 (60 ≤ S < 70) · 0,7 (70 ≤ S < 90) · 1 (90 ≤ S < 110) · 1,1 (110 ≤ S ≤ 130) · 1,6 (S > 130 m²). Facteur correctif R selon le type d'installation et de caisson : type A caisson basse consommation 0,9 (individuel) / 0,96 (collectif) ; type A caisson standard — non applicable (individuel) / 0,91 (collectif) ; type A caisson basse pression — non applicable (individuel) / 0,76 (collectif) ; type B caisson basse consommation 1 (individuel) / 1 (collectif) ; type B caisson standard — non applicable (individuel) / 0,95 (collectif) ; type B caisson basse pression — non applicable (individuel) / 0,78 (collectif)."
+        },
+        "controlPoints": {
+          "regulationLabel": "Arrêté du 28 septembre 2021 relatif aux contrôles dans le cadre du dispositif des CEE (version consolidée) — taux spécifiques à BAR-TH-127 non confirmés à ce jour",
+          "regulationUrl": "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000044162840",
+          "appliesFrom": null,
+          "onSiteRate": null,
+          "contactRate": null,
+          "nonConformCriteria": null,
+          "contactChecks": null
+        },
+        "justificationDocs": [
+          "Attestation sur l'honneur signée (partie A, annexe 1 de la fiche) : type d'installation (individuelle/collective), type de ventilation (A ou B), nombre de logements desservis (collectif) ou surface habitable (individuel).",
+          "Classe d'efficacité énergétique du système de ventilation selon le règlement (UE) n° 1254/2014 (installation individuelle).",
+          "Référence et date de validité de l'avis technique CCFAT du système de ventilation installé.",
+          "Type de caisson (standard, basse consommation ou basse pression) et puissance électrique absorbée pondérée (WThC ou WThC/(m³/h)).",
+          "Marque et référence du caisson, des bouches d'extraction et des entrées d'air, si non mentionnées sur la preuve de réalisation.",
+          "Justificatif du signe de qualité du professionnel ayant réalisé l'opération.",
+          "Coût de l'opération HT et TTC, et montant total des autres aides publiques perçues."
+        ],
+        "sources": [
+          { "label": "Fiche BAR-TH-127 (v. A58.6) — texte intégral (ADEME, calculateur CEE)", "url": "https://calculateur-cee.ademe.fr/pdf/display/299/BAR-TH-127" },
+          { "label": "Annexe 1 à la fiche BAR-TH-127 — attestation sur l'honneur, partie A", "url": "https://www.ecologie.gouv.fr/sites/default/files/documents/BAR-TH-127%20vA58-6%20%C3%A0%20compter%20du%2001-01-2024%20-%20Partie%20A%20%C3%A0%20compter%20du%2001-07-2026.pdf" },
+          { "label": "Arrêté du 28 septembre 2021, version consolidée (référentiel de contrôle applicable au dispositif CEE)", "url": "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000044162840" }
+        ]
+      },
+      "BAT-EN-102": {
+        "version": "v. A64.3",
+        "appliesFrom": "2025-01-01",
+        "appliesUntil": "2027-04-30",
+        "lastReviewed": "2026-09-13",
+        "scope": "Mise en place d'un doublage isolant (complexe ou sur ossature) sur murs par l'intérieur ou par l'extérieur, dans un local du secteur tertiaire existant réservé à une utilisation professionnelle.",
+        "eligibleSectors": ["Bureaux", "Enseignement", "Commerces", "Hôtellerie / Restauration", "Santé", "Autres secteurs"],
+        "exclusions": null,
+        "requiredWorks": [
+          "Mise en place réalisée par un professionnel.",
+          "Résistance thermique R de l'isolation installée ≥ 3,7 m².K/W.",
+          "Résistance thermique évaluée selon NF EN 12664, NF EN 12667 ou NF EN 12939 (isolants non réfléchissants) ou NF EN ISO 22097 (isolants réfléchissants).",
+          "En cas de pose superposée de plusieurs isolants : indiquer marque et référence de chacun, le R global, et la surface résultant de la superposition.",
+          "Bâtiment tertiaire existant depuis plus de 2 ans à la date d'engagement de l'opération.",
+          "La présente fiche est abrogée à compter du 1er mai 2027."
+        ],
+        "valuation": {
+          "unit": "kWh cumac par m² d'isolant posé, selon la zone climatique, l'énergie de chauffage et le secteur d'activité.",
+          "lifetime": "30 ans",
+          "climateCoefficients": null,
+          "formula": "AE = Montant unitaire (selon zone climatique et énergie de chauffage) × Facteur correctif selon le secteur d'activité × Surface d'isolant posée (S en m²)",
+          "table": {
+            "columns": ["Zone climatique", "Électricité (kWh cumac/m²)", "Combustible (kWh cumac/m²)"],
+            "rows": [
+              ["H1", 3000, 4800],
+              ["H2", 2500, 3900],
+              ["H3", 1600, 2600]
+            ]
+          },
+          "notes": "Facteur correctif selon le secteur d'activité : Bureaux / Enseignement / Commerces 0,6 · Hôtellerie-Restauration 0,7 · Santé 1,3 · Autres secteurs 0,6."
+        },
+        "controlPoints": {
+          "regulationLabel": "Arrêté du 28 septembre 2021 relatif aux contrôles dans le cadre du dispositif des CEE (version consolidée) — taux spécifiques à BAT-EN-102 non confirmés à ce jour",
+          "regulationUrl": "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000044162840",
+          "appliesFrom": null,
+          "onSiteRate": null,
+          "contactRate": null,
+          "nonConformCriteria": null,
+          "contactChecks": null
+        },
+        "justificationDocs": [
+          "Attestation sur l'honneur signée (partie A, annexe 1 de la fiche) : secteur d'activité, énergie de chauffage, surface d'isolant posé et résistance thermique R.",
+          "Épaisseur de l'isolant, si la résistance thermique n'est pas mentionnée sur la preuve de réalisation.",
+          "Marque et référence de l'isolant posé, si non mentionnées sur la preuve de réalisation, complétées par un document du fabricant ou d'un organisme accrédité COFRAC/EA précisant les caractéristiques thermiques.",
+          "Confirmation que le bâtiment tertiaire est existant depuis plus de deux ans à la date d'engagement.",
+          "Coût de l'opération HT et TTC, et montant total des autres aides publiques perçues."
+        ],
+        "sources": [
+          { "label": "Fiche BAT-EN-102 (v. A64.3) — texte intégral (ADEME, calculateur CEE)", "url": "https://calculateur-cee.ademe.fr/pdf/display/203/BAT-EN-102" },
+          { "label": "Arrêté du 28 septembre 2021, version consolidée (référentiel de contrôle applicable au dispositif CEE)", "url": "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000044162840" }
+        ]
       }
     }
   },
