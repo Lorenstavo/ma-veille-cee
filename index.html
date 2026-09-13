@@ -1195,7 +1195,7 @@
         <label class="sort-control">Trier par : <select id="sortOrder" aria-label="Trier le registre"><option value="recent">Plus récent</option><option value="priority">Priorité</option><option value="deadline">Échéance</option></select></label>
         <button class="filter-toggle" id="filterToggle" type="button" aria-expanded="false" aria-controls="filterDetails">Filtres</button>
         <button class="filter-toggle" id="controlBodyFilter" type="button" aria-pressed="false" title="Filtrer sur les fiches suivies par le bureau de contrôle (BAR-TH-127, BAR-EN-102, BAT-EN-102, BAR-TH-174, BAR-TH-171)">Mes fiches de contrôle</button>
-        <button class="btn" id="exportCsv" type="button" title="Exporter les entrées actuellement affichées (respecte la recherche et les filtres en cours)">Exporter en Excel</button>
+        <button class="btn" id="exportCsv" type="button" title="Rapport bureau de contrôle : toujours restreint aux fiches BAR-TH-127, BAR-EN-102, BAT-EN-102, BAR-TH-174 et BAR-TH-171, quels que soient la recherche et les filtres à l'écran">Exporter en Excel</button>
         <button class="btn" id="markRead">Tout marquer comme lu</button>
       </div>
     </div>
@@ -4221,36 +4221,64 @@ function sujetReglementaire(item) {
   return "Pour information";
 }
 
-// Exporte en CSV (ouvrable directement dans Excel) exactement les entrées actuellement
-// affichées à l'écran — recherche et filtres en cours compris — plutôt que la totalité du
-// registre, pour que l'export corresponde toujours à ce que l'utilisateur voit.
+// Correspondance avec "Analyse d'impact" (vocabulaire fermé du modèle : Pas d'impact, Impact
+// documentaire, Impact sur les trames de rapports, Impact sur les guides méthodologiques,
+// Impact sur l'activité) — déduite de actorImpacts.bureauControle.level, déjà rédigé pour ce
+// profil précis. Heuristique, pas une relecture individuelle du texte : à vérifier avant de
+// s'y fier sur un cas limite.
+function analyseImpactControle(item) {
+  const level = actorImpactOf(item, "bureauControle").level;
+  if (level === "none") return "Pas d'impact";
+  const fiches = (item.ficheCodes || []).filter(ref => CONTROL_BODY_FOS.includes(ref));
+  const suffix = fiches.length ? ` (${fiches.join(", ")})` : "";
+  if (level === "high") return `Impact sur l'activité${suffix}`;
+  if (level === "medium") return `Impact sur les guides méthodologiques${suffix}`;
+  return `Impact documentaire${suffix}`;
+}
+
+// Exporte en CSV (ouvrable directement dans Excel), toujours restreint aux fiches suivies par
+// le bureau de contrôle (CONTROL_BODY_FOS) — peu importe la recherche/les filtres actifs à
+// l'écran : cet export est un rapport dédié, pas une vue de ce qui est affiché (demande du
+// 2026-09-14, remplace le comportement "exporte ce qui est affiché" du 2026-09-11).
 //
 // Colonnes calquées sur le modèle Excel réel d'un bureau de contrôle CEE ("Veille
-// règlementaire CEE.xlsx", onglet "Veille 2026", Tableau1) : Source à Entrée en vigueur sont
-// remplies depuis les données du registre. Date d'analyse, Conforme?, Analyse d'impact,
-// Commentaire/Actions et Date d'échéance relèvent du jugement du bureau de contrôle sur CE
-// texte précis (conformité, impact sur ses propres procédures et guides méthodologiques) —
-// aucune donnée de ce site ne peut en tenir lieu, elles sont donc volontairement laissées
-// vides plutôt que devinées, à remplir dans Excel après lecture du texte.
+// règlementaire CEE.xlsx", onglet "Veille 2026", Tableau1). Champs auto-remplis à partir de
+// actorImpacts.bureauControle (déjà rédigé pour ce profil précis, pas une donnée nouvelle) :
+// - Date d'analyse : date d'export (jour de la revue), comme dans l'usage réel constaté du
+//   fichier (une même date pour tout un lot de textes revus le même jour).
+// - Conforme ? : "Applicable" si le texte concerne réellement le bureau de contrôle
+//   (bureauControle.level ≠ none), sinon "Pour information". Ne renvoie JAMAIS "Conforme" :
+//   ce jugement suppose d'avoir vérifié la pratique réelle de l'organisation face au texte,
+//   ce que ce site ne peut pas savoir à sa place.
+// - Analyse d'impact : voir analyseImpactControle ci-dessus.
+// - Commentaire / Actions : le texte de actorImpacts.bureauControle, déjà rédigé comme un
+//   conseil actionnable pour ce profil.
+// - Date d'échéance : laissée vide — c'est le bureau de contrôle qui fixe son propre délai
+//   selon son plan d'actions, pas une échéance réglementaire déductible du registre.
 function exportRegistryCsv() {
-  const rows = getFilteredSortedItems().map(item => {
-    const [year, month, day] = item.date.split("-").map(Number);
-    return [
-      item.sourceName || "",
-      day,
-      month,
-      year,
-      sujetReglementaire(item),
-      item.title,
-      item.summary,
-      item.statusLabel || "",
-      "", // Date d'analyse — jugement du bureau de contrôle, à remplir après lecture du texte
-      "", // Conforme? — jugement du bureau de contrôle
-      "", // Analyse d'impact — jugement du bureau de contrôle
-      "", // Commentaire / Actions — jugement du bureau de contrôle
-      ""  // Date d'échéance — fixée par le bureau de contrôle selon son plan d'actions
-    ];
-  });
+  const analysisDate = new Date().toISOString().slice(0, 10); // format ISO, comme dans le fichier réel de l'utilisateur
+  const rows = ITEMS
+    .filter(item => (item.ficheCodes || []).some(ref => CONTROL_BODY_FOS.includes(ref)))
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .map(item => {
+      const [year, month, day] = item.date.split("-").map(Number);
+      const bureauControle = actorImpactOf(item, "bureauControle");
+      return [
+        item.sourceName || "",
+        day,
+        month,
+        year,
+        sujetReglementaire(item),
+        item.title,
+        item.summary,
+        item.statusLabel || "",
+        analysisDate,
+        bureauControle.level === "none" ? "Pour information" : "Applicable",
+        analyseImpactControle(item),
+        bureauControle.level === "none" ? "" : bureauControle.text,
+        "" // Date d'échéance — fixée par le bureau de contrôle selon son plan d'actions
+      ];
+    });
   const header = ["Source", "Jour", "Mois", "Année", "Sujet réglementaire", "Titre du texte", "Résumé", "Entrée en vigueur", "Date d'analyse", "Conforme ?", "Analyse d'impact", "Commentaire / Actions", "Date d'échéance"];
   const csv = [header, ...rows].map(row => row.map(csvField).join(";")).join("\r\n");
   // Le BOM UTF-8 est nécessaire pour qu'Excel affiche correctement les accents à l'ouverture directe du fichier.
