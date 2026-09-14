@@ -1051,6 +1051,20 @@
   .auth-field input { width: 100%; padding: 10px; border: 1px solid var(--border-strong); border-radius: 8px; color: var(--navy-950); font: 14px var(--font-ui); }
   .auth-field input:focus { border-color: var(--blue-600); box-shadow: 0 0 0 3px rgba(37, 99, 235, .12); outline: none; }
   .auth-resend { width: 100%; margin-top: 4px; padding: 8px; border: 0; background: transparent; color: var(--blue-600); font: 800 12px var(--font-ui); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+  .access-gate { position: fixed; inset: 0; z-index: 25; display: grid; place-items: center; padding: 24px; background: var(--bg); }
+  .access-gate[hidden] { display: none !important; }
+  .access-gate-card { width: min(420px, 100%); padding: 32px 28px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow); text-align: center; }
+  .access-gate-brand { margin: 0 0 14px; color: var(--primary-strong); font: 800 13px var(--font-ui); text-transform: uppercase; letter-spacing: .04em; }
+  .access-gate-status { display: inline-block; margin-bottom: 12px; padding: 5px 13px; border-radius: 999px; font: 800 11.5px var(--font-ui); }
+  .access-gate-status.pending { background: var(--amber-50); color: var(--amber-600); }
+  .access-gate-status.rejected, .access-gate-status.error { background: var(--red-50); color: var(--red-600); }
+  .access-gate-card h1 { margin: 0 0 10px; color: var(--ink); font-size: 19px; }
+  .access-gate-card p { margin: 0 0 22px; color: var(--ink-muted); font-size: 13.5px; line-height: 1.55; }
+  .access-gate-action { width: 100%; padding: 11px; border: 1px solid var(--primary); border-radius: 9px; background: var(--primary); color: #fff; font: 800 13px var(--font-ui); cursor: pointer; }
+  .access-gate-action:hover { background: var(--primary-strong); border-color: var(--primary-strong); }
+  .access-gate-action.secondary { margin-top: 10px; background: transparent; border-color: var(--line-strong); color: var(--ink-muted); }
+  .access-gate-action.secondary:hover { border-color: var(--primary); color: var(--primary-strong); background: transparent; }
+  .access-gate-action[hidden] { display: none !important; }
   .personal-view { margin-left: auto; padding: 5px 8px; border: 1px solid var(--border-strong); border-radius: 7px; background: #fff; color: var(--blue-600); font: 800 10.5px var(--font-ui); cursor: pointer; }
   .personal-view.is-active { border-color: var(--blue-600); background: var(--blue-50); }
   .analysis-note { display: grid; gap: 7px; }
@@ -1109,6 +1123,16 @@
 <symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></symbol>
 </defs>
 </svg>
+<div class="access-gate" id="accessGate">
+  <div class="access-gate-card">
+    <p class="access-gate-brand">Ma Veille CEE</p>
+    <span class="access-gate-status" id="accessGateStatus" hidden></span>
+    <h1 id="accessGateTitle">Accès sur validation</h1>
+    <p id="accessGateMessage">Ce site est réservé aux comptes validés. Connectez-vous ou créez un compte pour demander l'accès.</p>
+    <button class="access-gate-action" id="accessGateSignin" type="button">Se connecter / créer un compte</button>
+    <button class="access-gate-action secondary" id="accessGateSignout" type="button" hidden>Se déconnecter</button>
+  </div>
+</div>
 <div class="top-accent"></div>
 <div class="site-switch">
   <div class="site-brand" aria-label="Ma Veille CEE"><strong>Ma Veille CEE</strong><small>Veille réglementaire automatisée</small></div>
@@ -4017,6 +4041,7 @@ async function handleAuthUser(user) {
   const nextUser = user || null;
   userStorage.switchContext(nextUser ? nextUser.id : null);
   updateAuthInterface(nextUser);
+  applyAccessGate(await checkSiteAccess(nextUser));
   await loadAlertPreferences();
   if (nextUser) await synchronizeUserData(nextUser);
   else {
@@ -4026,6 +4051,63 @@ async function handleAuthUser(user) {
     render();
   }
   await initializeNotifications();
+}
+
+/* ============================================================
+   ACCESS GATE — le site est réservé aux comptes validés manuellement
+   par l'administrateur (demande du 2026-09-14). Garde-fou côté client
+   uniquement ("écran de connexion simple" choisi par l'utilisateur) :
+   le contenu reste techniquement présent dans la page, ce n'est pas
+   une protection cryptographique — voir supabase/migrations pour la
+   table site_access_requests et sa politique RLS.
+   ============================================================ */
+
+// Détermine le statut d'accès du visiteur : "signed-out" (pas connecté),
+// "pending"/"approved"/"rejected" (statut de sa demande), "error" (vérification
+// impossible — on bloque plutôt que de laisser passer par défaut). Un admin
+// (table admin_users, déjà utilisée par regulatory_pending_reviews) est toujours
+// "approved" sans avoir besoin d'une ligne dans site_access_requests.
+async function checkSiteAccess(user) {
+  if (!user || !supabaseClient) return "signed-out";
+  try {
+    const { data: isAdmin, error: adminError } = await supabaseClient.rpc("is_regulatory_admin");
+    if (adminError) return "error";
+    if (isAdmin) return "approved";
+
+    const { data: existing, error: selectError } = await supabaseClient
+      .from("site_access_requests").select("status").eq("user_id", user.id).maybeSingle();
+    if (selectError) return "error";
+    if (existing) return existing.status;
+
+    // Première connexion de ce compte : enregistre la demande d'accès (statut "pending" par défaut).
+    const { error: insertError } = await supabaseClient
+      .from("site_access_requests").insert({ user_id: user.id, email: user.email });
+    return insertError ? "error" : "pending";
+  } catch {
+    return "error";
+  }
+}
+
+const ACCESS_GATE_COPY = {
+  "signed-out": { badge: null, title: "Accès sur validation", message: "Ce site est réservé aux comptes validés. Connectez-vous ou créez un compte pour demander l'accès.", showSignin: true, showSignout: false },
+  "pending": { badge: "pending", badgeLabel: "En attente", title: "Demande en attente de validation", message: "Votre demande d'accès a bien été enregistrée. Vous pourrez consulter le site dès qu'elle aura été validée.", showSignin: false, showSignout: true },
+  "rejected": { badge: "rejected", badgeLabel: "Accès refusé", title: "Accès non accordé", message: "L'accès à ce compte n'a pas été validé.", showSignin: false, showSignout: true },
+  "error": { badge: "error", badgeLabel: "Erreur", title: "Vérification impossible", message: "La vérification de l'accès a échoué. Réessayez dans quelques instants ou rechargez la page.", showSignin: false, showSignout: true }
+};
+
+function applyAccessGate(status) {
+  const gate = document.getElementById("accessGate");
+  if (status === "approved") { gate.hidden = true; return; }
+  gate.hidden = false;
+
+  const copy = ACCESS_GATE_COPY[status] || ACCESS_GATE_COPY.error;
+  const badge = document.getElementById("accessGateStatus");
+  badge.hidden = !copy.badge;
+  if (copy.badge) { badge.textContent = copy.badgeLabel; badge.className = `access-gate-status ${copy.badge}`; }
+  document.getElementById("accessGateTitle").textContent = copy.title;
+  document.getElementById("accessGateMessage").textContent = copy.message;
+  document.getElementById("accessGateSignin").hidden = !copy.showSignin;
+  document.getElementById("accessGateSignout").hidden = !copy.showSignout;
 }
 
 function actorImpactOf(item, key) {
@@ -5018,6 +5100,8 @@ document.getElementById("controlBodyFilter").addEventListener("click", () => {
   render();
 });
 document.getElementById("sortOrder").addEventListener("change", e => { state.sort = e.target.value; userStorage.savePreferences({ defaultSort: state.sort }); queueRemotePreferencesSync(); render(); });
+document.getElementById("accessGateSignin").addEventListener("click", () => openAuthModal("signin"));
+document.getElementById("accessGateSignout").addEventListener("click", signOut);
 document.getElementById("tabFeed").addEventListener("click", () => setView("feed"));
 document.getElementById("tabChrono").addEventListener("click", () => setView("chrono"));
 document.getElementById("tabCatalog").addEventListener("click", () => setView("catalog"));
