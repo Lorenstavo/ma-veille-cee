@@ -26,7 +26,11 @@ const RELEVANT_FILENAME = /^(Tableau|Groupes de comp[ée]tences)/i;
 // Bornes en lookaround plutôt que \b : ces noms de fichier séparent systématiquement les
 // codes par "_" (ex. "Tableau_BAR-TH-113_TOP_vf.xls"), qui est un caractère de mot au sens
 // regex — \b ne verrait donc aucune frontière entre "_" et "B", ni entre "113" et "_TOP".
-const FICHE_CODE = /(?<![A-Za-z0-9])([A-Z]{2,4})-([A-Z]{2})-(\d{2,4})(-SE)?(?![A-Za-z0-9])/g;
+// Séparateur [ -]+ plutôt que "-" strict : certains fichiers de cette page écrivent les
+// codes avec des espaces plutôt que des tirets (ex. "Tableau_BAR%20EN%20101_..." → décodé en
+// "BAR EN 101"). Un code non reconnu à cause d'un séparateur inattendu se traduirait par un
+// ficheCodes vide — voir la note dans ficheCodesFromFilename sur pourquoi ça serait dangereux.
+const FICHE_CODE = /(?<![A-Za-z0-9])([A-Z]{2,4})[ -]([A-Z]{2})[ -](\d{2,4})(-SE)?(?![A-Za-z0-9])/g;
 
 function decodeEntities(value) {
   return value.replace(/&nbsp;/gi, " ").replace(/&amp;/gi, "&").replace(/&quot;/gi, '"').replace(/&#39;|&apos;/gi, "'").replace(/&#(?:x([0-9a-f]+)|([0-9]+));/gi, (_match, hex, decimal) => String.fromCodePoint(parseInt(hex || decimal, hex ? 16 : 10)));
@@ -80,7 +84,7 @@ export function ficheCodesFromFilename(filename) {
     cursor = match.index + match[0].length;
   }
   if (lastPrefix) {
-    const bareNumbers = filename.slice(cursor).matchAll(/^[_-](\d{2,4})(?![A-Za-z0-9])/g);
+    const bareNumbers = filename.slice(cursor).matchAll(/^[_ -](\d{2,4})(?![A-Za-z0-9])/g);
     for (const bare of bareNumbers) codes.add(`${lastPrefix}-${bare[1]}`);
   }
   return [...codes];
@@ -89,6 +93,79 @@ export function ficheCodesFromFilename(filename) {
 function categoryFor(filename) {
   if (/^Groupes de comp[ée]tences/i.test(filename)) return "Groupe de compétences (inspection CEE)";
   return "Tableau de synthèse des contrôles";
+}
+
+// Type de bénéficiaire visé par le modèle, quand le nom de fichier le précise — deux
+// conventions coexistent sur cette page (TOP/TPM d'un côté, PP/PM de l'autre), jamais
+// unifiées ici : les regrouper à tort ferait comparer deux documents qui ne sont peut-être
+// pas de vrais équivalents. Sous-grouper par excès de prudence est le risque accepté.
+export function partyTypeFrom(filename) {
+  const match = filename.match(/(?<![A-Za-z0-9])(TOP|TPM|PP|PM)(?![A-Za-z0-9])/i);
+  return match ? match[1].toUpperCase() : null;
+}
+
+// Signal de récence relative extrait du nom de fichier, comparable UNIQUEMENT entre documents
+// d'un même groupe (mêmes fiches + catégorie + type de bénéficiaire) — jamais entre groupes
+// différents. Paliers, du plus au moins fiable :
+//   3 = date d'entrée en vigueur explicite ("à compter du/de DD-MM-YYYY")
+//   2 = version de fiche explicite ("vXX-X", même convention que meta.ficheDetails.version)
+//   1 = mention "NOUVEAU MODELE" sans date ni numéro
+//   0 = simple suffixe "_vf" / "_vfN"
+//  -1 = aucun signal
+// Un document sans signal, ou à égalité stricte de palier ET de valeur avec un autre du même
+// groupe, ne doit jamais être désigné vainqueur par annotateApplicability — l'ambiguïté est
+// assumée plutôt que résolue au hasard.
+export function recencySignal(filename) {
+  const dateMatch = filename.match(/à compter d[eu]?\s*(\d{2})[-/.](\d{2})[-/.](\d{4})/i);
+  if (dateMatch) return { tier: 3, value: `${dateMatch[3]}-${dateMatch[2]}-${dateMatch[1]}` };
+  const versionMatch = filename.match(/(?<![A-Za-z0-9])v\s?(\d{2,3})-(\d{1,2})(?![A-Za-z0-9])/i);
+  if (versionMatch) return { tier: 2, value: Number(versionMatch[1]) * 100 + Number(versionMatch[2]) };
+  if (/nouveau[ _]mod[eè]le/i.test(filename)) return { tier: 1, value: 1 };
+  const vfMatch = filename.match(/(?<![A-Za-z0-9])vf\s?(\d*)(?![A-Za-z0-9])/i);
+  if (vfMatch) return { tier: 0, value: vfMatch[1] ? Number(vfMatch[1]) : 1 };
+  return { tier: -1, value: 0 };
+}
+
+// Compare deux signaux de récence : positif si a > b, négatif si a < b, 0 si à égalité
+// (y compris quand aucun des deux n'a de signal exploitable).
+function compareRecency(a, b) {
+  if (a.tier !== b.tier) return a.tier - b.tier;
+  if (typeof a.value === "string" || typeof b.value === "string") return String(a.value).localeCompare(String(b.value));
+  return a.value - b.value;
+}
+
+// Regroupe les documents par fiche(s) + catégorie + type de bénéficiaire, puis désigne, au
+// sein de chaque groupe de plus d'un document, celui dont le signal de récence est
+// strictement le plus élevé comme "applicable" — les autres deviennent "superseded". En cas
+// d'égalité stricte au sommet (y compris "aucun signal des deux côtés"), tout le groupe est
+// marqué "ambiguous" plutôt que de désigner un vainqueur arbitraire. Un groupe d'un seul
+// document est trivialement "applicable-unique" (rien à départager).
+export function annotateApplicability(items) {
+  const groups = new Map();
+  for (const item of items) {
+    const fiches = item.ficheCodes || [];
+    // Un ficheCodes vide veut dire "codes non reconnus dans ce nom de fichier", pas "même
+    // document que les autres sans code reconnu" — les regrouper serait exactement le genre
+    // de confusion que ce badge doit éviter (deux documents sans rapport, groupés par excès
+    // de zèle, ont déjà produit un faux "superseded" en test). Chaque document sans code
+    // reconnu reste donc seul dans son groupe via une clé unique (externalId/url).
+    const key = fiches.length ? `${[...fiches].sort().join(",")}#${item.category}#${item.partyType || ""}` : `unknown:${item.externalId || item.url}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(item);
+  }
+  const result = [];
+  for (const group of groups.values()) {
+    if (group.length === 1) { result.push({ ...group[0], applicability: "applicable-unique" }); continue; }
+    const withFallback = group.map(item => ({ ...item, recency: item.recency || { tier: -1, value: 0 } }));
+    const sorted = withFallback.slice().sort((a, b) => compareRecency(b.recency, a.recency));
+    const [top, second] = sorted;
+    const tie = compareRecency(top.recency, second.recency) === 0;
+    for (const item of sorted) {
+      if (tie) result.push({ ...item, applicability: "ambiguous" });
+      else result.push({ ...item, applicability: item === top ? "applicable" : "superseded" });
+    }
+  }
+  return result;
 }
 
 function externalIdFor(url) {
@@ -115,6 +192,8 @@ export function extractSyntheseTableaux(html, { detectedAt = new Date().toISOStr
       url,
       ficheCodes: ficheCodesFromFilename(filename),
       category: categoryFor(filename),
+      partyType: partyTypeFrom(filename),
+      recency: recencySignal(filename),
       detectedAt
     });
   }
@@ -130,6 +209,8 @@ function baselineRecord(item, previous, seenAt) {
     title: item.title,
     ficheCodes: item.ficheCodes,
     category: item.category,
+    partyType: item.partyType,
+    recency: item.recency,
     firstSeenAt: previous?.firstSeenAt || seenAt,
     lastSeenAt: seenAt
   };

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFile } from "node:fs/promises";
-import { extractSyntheseTableaux, ficheCodesFromFilename, normalizeDocumentUrl, reconcileSyntheseTableaux } from "../scripts/sources/synthese-tableaux-cee.mjs";
+import { annotateApplicability, extractSyntheseTableaux, ficheCodesFromFilename, normalizeDocumentUrl, reconcileSyntheseTableaux, recencySignal } from "../scripts/sources/synthese-tableaux-cee.mjs";
 
 const archive = await readFile(new URL("./fixtures/synthese-tableaux-cee/archive.html", import.meta.url), "utf8");
 const detectedAt = "2026-09-15T08:00:00.000Z";
@@ -76,4 +76,59 @@ test("rejects an invalid URL scheme and empty/unavailable input safely", () => {
   assert.throws(() => normalizeDocumentUrl("javascript:alert(1)"));
   assert.throws(() => extractSyntheseTableaux("", { detectedAt }));
   assert.throws(() => extractSyntheseTableaux("<html><body>rien ici</body></html>", { detectedAt }));
+});
+
+test("recencySignal ranks an explicit effective date above an explicit fiche version, above 'NOUVEAU MODELE', above a bare vf suffix, above nothing", () => {
+  assert.equal(recencySignal("Tableau_X_à compter du 01-09-2026.xlsx").tier, 3);
+  assert.equal(recencySignal("Tableau_X_à compter de v78-4.xlsx").tier, 2);
+  assert.equal(recencySignal("Tableau_X_NOUVEAU MODELE.xlsx").tier, 1);
+  assert.equal(recencySignal("Tableau_X_vf4.xls").tier, 0);
+  assert.equal(recencySignal("Tableau_X.xls").tier, -1);
+});
+
+test("recencySignal parses the date and version values so they order correctly within their own tier", () => {
+  assert.equal(recencySignal("Tableau_X_à compter du 01-09-2026.xlsx").value, "2026-09-01");
+  assert.equal(recencySignal("Tableau_X_à compter du 01-01-2022.xlsx").value, "2022-01-01");
+  assert.ok(recencySignal("Tableau_X_v78-4.xlsx").value > recencySignal("Tableau_X_v62-2.xlsx").value);
+  assert.ok(recencySignal("Tableau_X_vf4.xls").value > recencySignal("Tableau_X_vf.xls").value);
+});
+
+test("annotateApplicability marks the sole document of a group as applicable-unique", () => {
+  const items = [{ ficheCodes: ["BAR-TH-113"], category: "Tableau de synthèse des contrôles", partyType: "TOP", recency: recencySignal("Tableau_BAR-TH-113_TOP_vf.xls") }];
+  const result = annotateApplicability(items);
+  assert.equal(result[0].applicability, "applicable-unique");
+});
+
+test("annotateApplicability picks the document with the highest recency signal in a group and marks the rest superseded", () => {
+  const older = { ficheCodes: ["BAR-TH-113"], category: "Tableau de synthèse des contrôles", partyType: "TOP", recency: recencySignal("Tableau_BAR-TH-113_TOP_vf.xls") };
+  const newer = { ficheCodes: ["BAR-TH-113"], category: "Tableau de synthèse des contrôles", partyType: "TOP", recency: recencySignal("Tableau_BAR-TH-113_TOP_vf4.xls") };
+  const result = annotateApplicability([older, newer]);
+  const byRecency = Object.fromEntries(result.map(item => [item.recency.value, item.applicability]));
+  assert.equal(byRecency[recencySignal("Tableau_BAR-TH-113_TOP_vf4.xls").value], "applicable");
+  assert.equal(byRecency[recencySignal("Tableau_BAR-TH-113_TOP_vf.xls").value], "superseded");
+});
+
+test("annotateApplicability never picks a winner when two documents in a group have no usable signal", () => {
+  const a = { ficheCodes: ["BAR-TH-113"], category: "Tableau de synthèse des contrôles", partyType: "TOP", recency: recencySignal("Tableau_BAR-TH-113_TOP_0.xls") };
+  const b = { ficheCodes: ["BAR-TH-113"], category: "Tableau de synthèse des contrôles", partyType: "TOP", recency: recencySignal("Tableau_BAR-TH-113_TOP_1.xls") };
+  const result = annotateApplicability([a, b]);
+  assert.ok(result.every(item => item.applicability === "ambiguous"));
+});
+
+test("annotateApplicability keeps TOP and TPM documents for the same fiche in separate groups", () => {
+  const top = { ficheCodes: ["BAR-TH-171", "BAR-TH-172"], category: "Tableau de synthèse des contrôles", partyType: "TOP", recency: recencySignal("Tableau_BAR-TH-171_172_TOP_vf.xls") };
+  const tpm = { ficheCodes: ["BAR-TH-171", "BAR-TH-172"], category: "Tableau de synthèse des contrôles", partyType: "TPM", recency: recencySignal("Tableau_BAR-TH-171_172_TPM_vf.xls") };
+  const result = annotateApplicability([top, tpm]);
+  assert.ok(result.every(item => item.applicability === "applicable-unique"), "TOP and TPM must not be compared against each other");
+});
+
+test("ficheCodesFromFilename also recognises space-separated segments (some filenames on this page use spaces instead of hyphens)", () => {
+  assert.deepEqual(ficheCodesFromFilename("Tableau_BAR EN 101_BAR EN 103_TOP_VF4.xls"), ["BAR-EN-101", "BAR-EN-103"]);
+});
+
+test("annotateApplicability never treats two documents with no recognised fiche code as versions of each other, even sharing category and party type", () => {
+  const unrelatedA = { externalId: "a", url: "https://x/Tableau_CDP_TOP_VF.xls", ficheCodes: [], category: "Tableau de synthèse des contrôles", partyType: "TOP", recency: recencySignal("Tableau_CDP_TOP_VF.xls") };
+  const unrelatedB = { externalId: "b", url: "https://x/Tableau_AUTRE_TOP_VF4.xls", ficheCodes: [], category: "Tableau de synthèse des contrôles", partyType: "TOP", recency: recencySignal("Tableau_AUTRE_TOP_VF4.xls") };
+  const result = annotateApplicability([unrelatedA, unrelatedB]);
+  assert.ok(result.every(item => item.applicability === "applicable-unique"), "two unrelated documents with no fiche code must never be compared against each other");
 });

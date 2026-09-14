@@ -6,7 +6,7 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { EXTRACTOR_ID, SOURCE_URL as ECOLOGIE_CEE_SOURCE_URL, extractEcologieCeePublications, reconcileEcologieCeePublications } from "./sources/ecologie-cee.mjs";
-import { EXTRACTOR_ID as SYNTHESE_EXTRACTOR_ID, SOURCE_URL as SYNTHESE_SOURCE_URL, extractSyntheseTableaux, reconcileSyntheseTableaux } from "./sources/synthese-tableaux-cee.mjs";
+import { EXTRACTOR_ID as SYNTHESE_EXTRACTOR_ID, SOURCE_URL as SYNTHESE_SOURCE_URL, annotateApplicability, extractSyntheseTableaux, reconcileSyntheseTableaux } from "./sources/synthese-tableaux-cee.mjs";
 import { checkCourDesComptes } from "./sources/cour-des-comptes.mjs";
 import { EXTRACTOR_ID as COUR_DES_COMPTES_RSS_EXTRACTOR_ID, SOURCE_URL as COUR_DES_COMPTES_RSS_URL, extractCourDesComptesRss, fetchCourDesComptesRss, reconcileCourDesComptesRss } from "./sources/cour-des-comptes-rss.mjs";
 import { checkEcologieGouvFr, isTemporaryEcologieNetworkError } from "./sources/ecologie-gouv-fr.mjs";
@@ -475,10 +475,14 @@ function upsertWatch(rawJson, watch) {
 
 // Transforme la carte { externalId: baselineRecord } accumulée par reconcileSyntheseTableaux
 // en la liste plate publiée dans meta.syntheseTableaux (tri stable : catégorie puis titre,
-// pour que le diff git ne bouge pas si aucun document n'a changé).
+// pour que le diff git ne bouge pas si aucun document n'a changé). annotateApplicability
+// tourne sur l'ensemble du catalogue à chaque run (pas seulement les documents nouveaux du
+// jour) : un document ajouté hier peut faire passer un document plus ancien de "applicable" à
+// "superseded" aujourd'hui — demande du 2026-09-15 ("un badge qui dit aujourd'hui c'est
+// celui-là qui est applicable").
 function syntheseTableauxCatalog(baselineItems) {
-  return Object.values(baselineItems)
-    .map(item => ({ id: item.externalId, title: item.title, url: item.url, ficheCodes: item.ficheCodes, category: item.category, firstSeenAt: item.firstSeenAt, lastSeenAt: item.lastSeenAt }))
+  return annotateApplicability(Object.values(baselineItems))
+    .map(item => ({ id: item.externalId, title: item.title, url: item.url, ficheCodes: item.ficheCodes, category: item.category, partyType: item.partyType, applicability: item.applicability, firstSeenAt: item.firstSeenAt, lastSeenAt: item.lastSeenAt }))
     .sort((a, b) => a.category.localeCompare(b.category) || a.title.localeCompare(b.title));
 }
 
