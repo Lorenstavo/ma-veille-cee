@@ -20,5 +20,16 @@
     "rawType": "flash-info",
     "detectedAt": "2026-09-03T06:05:25.851Z",
     "status": "pending"
+  },
+  {
+    "externalId": "ecologie-cee-publications:af309825a41248fc4733989aa0c7143ac44b81a7f39c164d34faf735989141ac",
+    "sourceName": "Lettres d’information & Flash Info CEE — ecologie.gouv.fr",
+    "sourceUrl": "https://www.ecologie.gouv.fr/politiques-publiques/comites-pilotage-lettres-dinformation-statistiques-du-dispositif-certificats",
+    "title": "Télécharger 20260911 - Statistiques dépôts et délivrance CEE.xlsx XLSX – 22.65 Ko",
+    "url": "https://www.ecologie.gouv.fr/sites/default/files/documents/20260911%20-%20Statistiques%20d%C3%A9p%C3%B4ts%20et%20d%C3%A9livrance%20CEE.xlsx",
+    "publishedAt": "2026-09-11",
+    "rawType": "statistiques-cee",
+    "detectedAt": "2026-09-14T06:05:24.067Z",
+    "status": "pending"
   }
 ]
