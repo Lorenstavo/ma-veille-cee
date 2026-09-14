@@ -53,6 +53,24 @@ automatiquement de cette routine de mise à jour sans code supplémentaire à é
 (pas de contenu inventé pour combler l'absence de clé) — seul le fingerprinting brut de
 l'étape 1 reste actif.
 
+## Tableaux de synthèse des contrôles (posé le 2026-09-15)
+
+`run-regulatory-watch.mjs` extrait aussi, directement depuis le corps HTML déjà récupéré pour
+la source "Questions-réponses CEE — ecologie.gouv.fr" (aucune requête réseau supplémentaire,
+important sur un domaine qui limite les accès répétés — voir `ecologie-gouv-fr.mjs`), la liste
+des "tableaux de synthèse des contrôles" et documents "Groupes de compétences (inspection
+CEE)" publiés sur cette page (`scripts/sources/synthese-tableaux-cee.mjs`). Aucune clé IA
+requise : extraction par motif sur les liens de la page, pas de génération de texte.
+
+- **Catalogue toujours à jour** : `meta.syntheseTableaux` dans `index.html`, alimenté à chaque
+  run réussi, affiché dans l'onglet "Fichiers de synthèse" du site.
+- **Alerte** : tout document dont l'URL n'était pas connue lors du run précédent est ajouté à
+  `pending-regulatory-items.json` (même mécanisme de revue que les autres extracteurs de ce
+  fichier) et porte un badge "Ajouté récemment" dans l'onglet pendant 14 jours. Une mise à
+  jour de contenu sur cette page se traduit presque toujours par un nouveau nom de fichier
+  (l'ancien restant en place) : un simple diff sur l'ensemble des URLs suffit donc à détecter
+  aussi bien les ajouts que les remplacements, sans vérification de contenu par fichier.
+
 ## Garde-fou de contenu
 
 `content-guard.yml` (déclenché sur tout push touchant `index.html` ou

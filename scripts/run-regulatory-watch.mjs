@@ -6,6 +6,7 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { EXTRACTOR_ID, SOURCE_URL as ECOLOGIE_CEE_SOURCE_URL, extractEcologieCeePublications, reconcileEcologieCeePublications } from "./sources/ecologie-cee.mjs";
+import { EXTRACTOR_ID as SYNTHESE_EXTRACTOR_ID, SOURCE_URL as SYNTHESE_SOURCE_URL, extractSyntheseTableaux, reconcileSyntheseTableaux } from "./sources/synthese-tableaux-cee.mjs";
 import { checkCourDesComptes } from "./sources/cour-des-comptes.mjs";
 import { EXTRACTOR_ID as COUR_DES_COMPTES_RSS_EXTRACTOR_ID, SOURCE_URL as COUR_DES_COMPTES_RSS_URL, extractCourDesComptesRss, fetchCourDesComptesRss, reconcileCourDesComptesRss } from "./sources/cour-des-comptes-rss.mjs";
 import { checkEcologieGouvFr, isTemporaryEcologieNetworkError } from "./sources/ecologie-gouv-fr.mjs";
@@ -265,7 +266,7 @@ async function checkEcologieSource(source) {
       etag: result.value.etag,
       lastModified: result.value.lastModified,
       fingerprint: createHash("sha256").update(result.value.body).digest("hex"),
-      bodyText: source.url === ECOLOGIE_CEE_SOURCE_URL ? result.value.body.toString("utf8") : undefined
+      bodyText: source.url === ECOLOGIE_CEE_SOURCE_URL || source.url === SYNTHESE_SOURCE_URL ? result.value.body.toString("utf8") : undefined
     },
     attempts: result.attempts,
     retries: result.retries
@@ -419,7 +420,12 @@ async function checkSources(sources, previousState) {
     log(`failed: ${ecologieSummary.failed}`);
     log(`retries: ${ecologieSummary.retries}`);
   }
-  return { results, nextState: { version: 2, sources: nextSources, extractions: previousState.extractions || {} }, pilotHtml: responses.get(ECOLOGIE_CEE_SOURCE_URL)?.ok ? responses.get(ECOLOGIE_CEE_SOURCE_URL).value.bodyText : null };
+  return {
+    results,
+    nextState: { version: 2, sources: nextSources, extractions: previousState.extractions || {} },
+    pilotHtml: responses.get(ECOLOGIE_CEE_SOURCE_URL)?.ok ? responses.get(ECOLOGIE_CEE_SOURCE_URL).value.bodyText : null,
+    syntheseTableauxHtml: responses.get(SYNTHESE_SOURCE_URL)?.ok ? responses.get(SYNTHESE_SOURCE_URL).value.bodyText : null
+  };
 }
 
 function replaceLastRun(rawJson, nextDate) {
@@ -465,6 +471,35 @@ function upsertWatch(rawJson, watch) {
   if (!lastRun) throw new Error("META.lastRun insertion point was not found");
   const insertAt = lastRun.index + lastRun[0].length;
   return `${rawJson.slice(0, insertAt)}    "watch": ${serialised},${newline}${rawJson.slice(insertAt)}`;
+}
+
+// Transforme la carte { externalId: baselineRecord } accumulée par reconcileSyntheseTableaux
+// en la liste plate publiée dans meta.syntheseTableaux (tri stable : catégorie puis titre,
+// pour que le diff git ne bouge pas si aucun document n'a changé).
+function syntheseTableauxCatalog(baselineItems) {
+  return Object.values(baselineItems)
+    .map(item => ({ id: item.externalId, title: item.title, url: item.url, ficheCodes: item.ficheCodes, category: item.category, firstSeenAt: item.firstSeenAt, lastSeenAt: item.lastSeenAt }))
+    .sort((a, b) => a.category.localeCompare(b.category) || a.title.localeCompare(b.title));
+}
+
+function serialiseSyntheseTableaux(list, newline) {
+  return JSON.stringify(list, null, 2).replace(/\n/g, `${newline}    `);
+}
+
+// Même technique que upsertWatch : remplace la valeur si meta.syntheseTableaux existe déjà,
+// sinon l'insère comme dernière clé de meta (juste après la fermeture de ficheDetails).
+function upsertSyntheseTableaux(rawJson, list) {
+  const newline = rawJson.includes("\r\n") ? "\r\n" : "\n";
+  const serialised = serialiseSyntheseTableaux(list, newline);
+  const existing = /\r?\n    "syntheseTableaux"\s*:\s*/.exec(rawJson);
+  if (existing) {
+    const valueStart = existing.index + existing[0].length;
+    const valueEnd = findJsonValueEnd(rawJson, valueStart);
+    return `${rawJson.slice(0, valueStart)}${serialised}${rawJson.slice(valueEnd)}`;
+  }
+  const anchor = /(\r?\n    \})(\r?\n  \},\r?\n  "items": \[)/.exec(rawJson);
+  if (!anchor) throw new Error("META.ficheDetails closing brace (insertion anchor for syntheseTableaux) was not found");
+  return rawJson.slice(0, anchor.index) + anchor[1] + `,${newline}    "syntheseTableaux": ${serialised}` + anchor[2] + rawJson.slice(anchor.index + anchor[0].length);
 }
 
 function buildWatchMetadata({ results, status, completedAt, previousWatch }) {
@@ -534,7 +569,7 @@ async function main() {
   const previousPending = await readPending();
   log(`Configured sources: ${data.meta.sources.length} (${new Set(data.meta.sources.map(source => source.url)).size} unique URLs)`);
 
-  const { results, nextState, pilotHtml } = await checkSources(data.meta.sources, previousState);
+  const { results, nextState, pilotHtml, syntheseTableauxHtml } = await checkSources(data.meta.sources, previousState);
   const courDesComptesRss = await checkCourDesComptesRss();
   const eexEmmyDocuments = await checkEexEmmyDocuments();
   const courDesComptesResult = results.find(result => isCourDesComptesSource(result));
@@ -542,6 +577,7 @@ async function main() {
   let extraction = null;
   let courDesComptesRssExtraction = null;
   let eexEmmyExtraction = null;
+  let syntheseExtraction = null;
   const pilotResult = results.find(result => result.url === ECOLOGIE_CEE_SOURCE_URL);
   if (pilotHtml && pilotResult) {
     try {
@@ -568,6 +604,36 @@ async function main() {
   } else {
     log(`Extractor: ${EXTRACTOR_ID}`);
     log("Extraction skipped: pilot source was unavailable.");
+  }
+
+  // Tableaux de synthèse des contrôles / groupes de compétences (Questions-réponses CEE) —
+  // demande du 2026-09-15 : catalogue toujours à jour dans meta.syntheseTableaux (voir
+  // upsertSyntheseTableaux plus bas) + alerte (pending) à chaque nouveau document.
+  const syntheseResult = results.find(result => result.url === SYNTHESE_SOURCE_URL);
+  if (syntheseTableauxHtml && syntheseResult) {
+    try {
+      const extracted = extractSyntheseTableaux(syntheseTableauxHtml, { detectedAt: now.toISOString() });
+      const previousItems = previousState.extractions?.[SYNTHESE_EXTRACTOR_ID]?.items || {};
+      syntheseExtraction = reconcileSyntheseTableaux({ extracted, previousItems, pendingItems: nextPending, registryUrls: registrySourceUrls(data.items), seenAt: now.toISOString() });
+      nextState.extractions[SYNTHESE_EXTRACTOR_ID] = { sourceName: extracted.sourceName, sourceUrl: extracted.sourceUrl, items: syntheseExtraction.baselineItems };
+      nextPending = [...nextPending, ...syntheseExtraction.addedPending];
+      log(`Extractor: ${SYNTHESE_EXTRACTOR_ID}`);
+      log(`Items extracted: ${extracted.items.length}`);
+      log(`Known: ${syntheseExtraction.known}`);
+      log(`New: ${syntheseExtraction.initialBaseline ? 0 : syntheseExtraction.newlyExtracted}`);
+      log(`Modified: ${syntheseExtraction.modified.length}`);
+      log(`Pending added: ${syntheseExtraction.addedPending.length}`);
+      log(`Baseline initialized: ${syntheseExtraction.initialBaseline ? "yes" : "no"}`);
+      if (syntheseExtraction.initialBaseline) log(`Initial baseline created with ${syntheseExtraction.newlyExtracted} documents; no pending items generated.`);
+      for (const item of syntheseExtraction.addedPending) log(`Potential new synthesis table: ${item.title} — ${item.url}`);
+    } catch (error) {
+      syntheseResult.status = "failed";
+      syntheseResult.message = `Extraction error: ${error instanceof Error ? error.message : "Unknown extractor failure"}`;
+      log(`Extraction error for ${SYNTHESE_EXTRACTOR_ID}: ${syntheseResult.message}`);
+    }
+  } else {
+    log(`Extractor: ${SYNTHESE_EXTRACTOR_ID}`);
+    log("Extraction skipped: source was unavailable.");
   }
 
   if (courDesComptesRss.ok) {
@@ -654,7 +720,7 @@ async function main() {
   log(`Sources succeeded: ${successful}`);
   log(`Sources failed: ${failed.length}`);
   log(`Source-content changes detected: ${changedSources.length}`);
-  log(`New regulatory entries detected: 0 (pending technical review: ${(extraction?.addedPending.length || 0) + (courDesComptesRssExtraction?.addedPending.length || 0) + (eexEmmyExtraction?.addedPending.length || 0)})`);
+  log(`New regulatory entries detected: 0 (pending technical review: ${(extraction?.addedPending.length || 0) + (courDesComptesRssExtraction?.addedPending.length || 0) + (eexEmmyExtraction?.addedPending.length || 0) + (syntheseExtraction?.addedPending.length || 0)})`);
   log("Entries added: 0");
   log("Entries modified: 0");
 
@@ -667,6 +733,7 @@ async function main() {
 
   let updatedRawJson = status === "success" ? replaceLastRun(rawJson, paris.date) : rawJson;
   updatedRawJson = upsertWatch(updatedRawJson, watch);
+  if (syntheseExtraction) updatedRawJson = upsertSyntheseTableaux(updatedRawJson, syntheseTableauxCatalog(syntheseExtraction.baselineItems));
   const updatedHtml = originalHtml.replace(rawJson, updatedRawJson);
   const finalData = parseEmbeddedData(updatedHtml).data;
   const finalIds = validateData(finalData);

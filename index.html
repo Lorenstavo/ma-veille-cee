@@ -485,6 +485,20 @@
   .catalog-note strong { color: var(--ink); }
   .catalog-search-row { display: flex; gap: 8px; margin-top: 12px; }
   .catalog-search-row input[type="search"] { flex: 1; }
+  .synthese-search-row { display: flex; gap: 8px; margin-top: 12px; }
+  .synthese-search-row input[type="search"] { flex: 1; }
+  .synthese-group { margin-top: 22px; }
+  .synthese-group-title { font-family: var(--font-ui); font-weight: 800; font-size: 15px; color: var(--ink); display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .synthese-group-count { font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); font-weight: 600; }
+  .synthese-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 8px; }
+  .synthese-card {
+    position: relative; display: block; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm);
+    padding: 10px 12px; box-shadow: var(--shadow); text-decoration: none; transition: transform .15s, box-shadow .15s;
+  }
+  .synthese-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(15,35,65,.12); }
+  .synthese-badge { display: inline-block; margin-bottom: 6px; padding: 2px 9px; border-radius: 999px; background: var(--amber-50); color: var(--amber-600); font: 800 10px var(--font-ui); }
+  .synthese-card-title { font-size: 12.5px; color: var(--ink); line-height: 1.4; margin: 0 0 6px; }
+  .synthese-card-link { display: block; margin-top: 8px; font-size: 11.5px; font-weight: 800; color: var(--primary-strong); }
   .catalog-stats { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
   .sector-block { margin-top: 22px; }
   .sector-title {
@@ -1209,6 +1223,7 @@
       <button class="view-tab active" id="tabFeed" data-view="feed"><svg class="tab-icon"><use href="#icon-list"></use></svg><span>Registre</span></button>
       <button class="view-tab" id="tabChrono" data-view="chrono"><svg class="tab-icon"><use href="#icon-timeline"></use></svg><span>Chronologie normative</span></button>
       <button class="view-tab" id="tabCatalog" data-view="catalog"><svg class="tab-icon"><use href="#icon-grid"></use></svg><span>Catalogue des fiches</span></button>
+      <button class="view-tab" id="tabSynthese" data-view="synthese"><svg class="tab-icon"><use href="#icon-doc"></use></svg><span>Fichiers de synthèse</span></button>
     </div>
   </header>
 
@@ -1258,6 +1273,16 @@
       <span class="label">Secteur</span>
     </div>
     <div id="catalogSectors"></div>
+  </div>
+
+  <div id="syntheseView" style="display:none;">
+    <p class="catalog-note">
+      <strong>Tableaux de synthèse des contrôles &amp; groupes de compétences</strong> — modèles Excel/PDF publiés sur la page <a href="https://www.ecologie.gouv.fr/politiques-publiques/questions-reponses-dispositif-cee" target="_blank" rel="noopener">Questions-réponses CEE d'ecologie.gouv.fr</a>, à utiliser par les organismes d'inspection pour leurs rapports de contrôle. Listing vérifié automatiquement à chaque run de veille : un badge « Ajouté récemment » signale tout document apparu dans les 14 derniers jours (nouveau tableau ou remplacement d'une version existante — ce site ne remplace jamais un fichier en place sur cette page, il ajoute une entrée).
+    </p>
+    <div class="synthese-search-row">
+      <input type="search" id="syntheseSearch" placeholder="Rechercher un code ou un intitulé (ex. BAR-TH-171)…" aria-label="Rechercher un tableau de synthèse" />
+    </div>
+    <div id="syntheseList"></div>
   </div>
 
   <footer class="page-foot">
@@ -4822,15 +4847,55 @@ function renderCatalog() {
   });
 }
 
+const syntheseState = { q: "" };
+const SYNTHESE_RECENT_MS = 14 * 24 * 60 * 60 * 1000; // seuil "Ajouté récemment"
+
+function buildSynthese() {
+  const wrap = document.getElementById("syntheseList");
+  const docs = META.syntheseTableaux || [];
+  const q = syntheseState.q.trim().toLowerCase();
+  const filtered = q ? docs.filter(d => (d.title + " " + (d.ficheCodes || []).join(" ")).toLowerCase().includes(q)) : docs;
+
+  if (!filtered.length) {
+    wrap.innerHTML = `<div class="empty-state">${docs.length ? "Aucun document ne correspond à cette recherche." : "Aucun tableau de synthèse suivi pour l'instant — le prochain run de veille alimentera cette liste."}</div>`;
+    return;
+  }
+
+  const now = Date.now();
+  const byCategory = new Map();
+  for (const doc of filtered) {
+    if (!byCategory.has(doc.category)) byCategory.set(doc.category, []);
+    byCategory.get(doc.category).push(doc);
+  }
+
+  wrap.innerHTML = [...byCategory.entries()].map(([category, docsInCategory]) => `
+    <section class="synthese-group">
+      <h3 class="synthese-group-title">${escAttr(category)} <span class="synthese-group-count">${docsInCategory.length}</span></h3>
+      <div class="synthese-grid">${docsInCategory.map(doc => {
+        const isRecent = doc.firstSeenAt && (now - new Date(doc.firstSeenAt).getTime()) < SYNTHESE_RECENT_MS;
+        return `<a class="synthese-card" href="${escAttr(doc.url)}" target="_blank" rel="noopener">
+          ${isRecent ? `<span class="synthese-badge">Ajouté récemment</span>` : ""}
+          <p class="synthese-card-title">${escAttr(doc.title)}</p>
+          ${doc.ficheCodes && doc.ficheCodes.length ? `<ul class="pill-list">${doc.ficheCodes.map(code => `<li>${escAttr(code)}</li>`).join("")}</ul>` : ""}
+          <span class="synthese-card-link">Télécharger ↗</span>
+        </a>`;
+      }).join("")}</div>
+    </section>
+  `).join("");
+}
+
 function setView(view) {
   state.view = view;
   document.getElementById("tabFeed").classList.toggle("active", view === "feed");
   document.getElementById("tabChrono").classList.toggle("active", view === "chrono");
   document.getElementById("tabCatalog").classList.toggle("active", view === "catalog");
+  document.getElementById("tabSynthese").classList.toggle("active", view === "synthese");
   document.getElementById("filterBar").style.display = view === "feed" ? "" : "none";
   document.getElementById("feed").style.display = view === "feed" ? "" : "none";
   document.getElementById("chronoView").style.display = view === "chrono" ? "" : "none";
   document.getElementById("catalogView").style.display = view === "catalog" ? "" : "none";
+  document.getElementById("syntheseView").style.display = view === "synthese" ? "" : "none";
+  if (view === "synthese") buildSynthese();
 }
 
 function buildOverviewCard(item) {
@@ -5106,6 +5171,8 @@ document.getElementById("tabFeed").addEventListener("click", () => setView("feed
 document.getElementById("tabChrono").addEventListener("click", () => setView("chrono"));
 document.getElementById("tabCatalog").addEventListener("click", () => setView("catalog"));
 document.getElementById("catalogSearch").addEventListener("input", e => { catalogState.q = e.target.value; renderCatalog(); });
+document.getElementById("tabSynthese").addEventListener("click", () => setView("synthese"));
+document.getElementById("syntheseSearch").addEventListener("input", e => { syntheseState.q = e.target.value; buildSynthese(); });
 document.getElementById("actionPanel").addEventListener("click", e => {
   if (!e.target.closest("#showHighImpact")) return;
   activateImpactFilter("high");
