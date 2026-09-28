@@ -31,5 +31,44 @@
     "rawType": "statistiques-cee",
     "detectedAt": "2026-09-14T06:05:24.067Z",
     "status": "pending"
+  },
+  {
+    "externalId": "synthese-tableaux-cee:ebec6f003aec6b9e84b244fcfd272ccaa6fa2f819d2e2e1875db083eabc357ea",
+    "sourceName": "Questions-réponses CEE — ecologie.gouv.fr",
+    "sourceUrl": "https://www.ecologie.gouv.fr/politiques-publiques/questions-reponses-dispositif-cee",
+    "title": "Tableau IND-UT-137 TPM TOP",
+    "url": "https://www.ecologie.gouv.fr/sites/default/files/documents/Tableau_IND-UT-137_TPM_TOP.xls",
+    "ficheCodes": [
+      "IND-UT-137"
+    ],
+    "category": "Tableau de synthèse des contrôles",
+    "detectedAt": "2026-09-28T06:05:25.588Z",
+    "status": "pending"
+  },
+  {
+    "externalId": "synthese-tableaux-cee:77cc93d59ac74683d0bc1cf2bf668fec09b6a576c0aad74652a7c3bb30d2c562",
+    "sourceName": "Questions-réponses CEE — ecologie.gouv.fr",
+    "sourceUrl": "https://www.ecologie.gouv.fr/politiques-publiques/questions-reponses-dispositif-cee",
+    "title": "Tableau Controle TRA-EQ-133 PM",
+    "url": "https://www.ecologie.gouv.fr/sites/default/files/documents/Tableau_Controle_TRA-EQ-133%20PM.xlsx",
+    "ficheCodes": [
+      "TRA-EQ-133"
+    ],
+    "category": "Tableau de synthèse des contrôles",
+    "detectedAt": "2026-09-28T06:05:25.588Z",
+    "status": "pending"
+  },
+  {
+    "externalId": "synthese-tableaux-cee:5fca81fd51c9d4a08aad1e6e4d23b0b2814437a70dea0ca4e7549c3040582de9",
+    "sourceName": "Questions-réponses CEE — ecologie.gouv.fr",
+    "sourceUrl": "https://www.ecologie.gouv.fr/politiques-publiques/questions-reponses-dispositif-cee",
+    "title": "Tableau Controle TRA-EQ-133",
+    "url": "https://www.ecologie.gouv.fr/sites/default/files/documents/Tableau_Controle_TRA-EQ-133.xlsx",
+    "ficheCodes": [
+      "TRA-EQ-133"
+    ],
+    "category": "Tableau de synthèse des contrôles",
+    "detectedAt": "2026-09-28T06:05:25.588Z",
+    "status": "pending"
   }
 ]
