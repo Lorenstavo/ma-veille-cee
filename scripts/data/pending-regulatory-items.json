@@ -70,5 +70,16 @@
     "category": "Tableau de synthèse des contrôles",
     "detectedAt": "2026-09-28T06:05:25.588Z",
     "status": "pending"
+  },
+  {
+    "externalId": "ecologie-cee-publications:b63d6b6ed09026aa79e9b321c2e060fbf78c9903d2b8ee2ae80a8559357f3e47",
+    "sourceName": "Lettres d’information & Flash Info CEE — ecologie.gouv.fr",
+    "sourceUrl": "https://www.ecologie.gouv.fr/politiques-publiques/comites-pilotage-lettres-dinformation-statistiques-du-dispositif-certificats",
+    "title": "Télécharger 2026-09 lettre d'infos CEE PDF – 709.92 Ko",
+    "url": "https://www.ecologie.gouv.fr/sites/default/files/documents/2026-09%20lettre%20d%27infos%20CEE%20vf.pdf",
+    "publishedAt": null,
+    "rawType": "lettre-information",
+    "detectedAt": "2026-10-01T06:05:22.565Z",
+    "status": "pending"
   }
 ]
